@@ -79,7 +79,7 @@ namespace EpidSimulation.Backend
                 CourseDisease();
                 WashHands();
                 Handshake(simulation);
-                if (Condition == 2 || Condition == 4)
+                if (Condition == 2 || Condition == 4 || Condition == 0)
                     Meet(simulation);
                 if (Condition == 0)
                     TouchTheFace(simulation);
@@ -164,6 +164,7 @@ namespace EpidSimulation.Backend
         {
             if (_timeMeet == 0)
             {
+                int oldcond = Condition;
                 simulation.MakeMeet(this);
                 _timeMeet = Config.GetTimeMeet();
             }
@@ -203,7 +204,6 @@ namespace EpidSimulation.Backend
             {
                 _timeHandToFaceContact--;
             }
-
         }
 
         private void SetHandsDirty()

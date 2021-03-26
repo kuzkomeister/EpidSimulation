@@ -12,8 +12,6 @@ namespace EpidSimulation.Backend
         private QuadTree _root;
         public QuadTree Root { get => _root; }
 
-        public string DebugString = "";
-
         //===== Параметры карты
         public readonly double SizeX;
         public readonly double SizeY;
@@ -205,51 +203,45 @@ namespace EpidSimulation.Backend
         }
 
         
-
+        // Выполнение итерации симуляции
         public void Iterate()
         {
+            // Получение списка узлов и их списка людей, с количеством людей на момент получения
             LinkedList<(QuadTree, int, LinkedList<Human>)> nodes = new LinkedList<(QuadTree, int, LinkedList<Human>)>();
             _root.GetAllPeople(nodes);
             
-            int countDel = 0;
-            DebugString = ""; 
-
+            // Проход по списку узлов
             foreach ((QuadTree node, int countNode, LinkedList<Human> list) pair in nodes) 
             {
-                LinkedListNode<Human> currentHuman = pair.list.First;     
-                int n = pair.countNode;
-                for (int i = 0; i < n; ++i)
+                // Проход по списку людей для их обработки
+                LinkedListNode<Human> currentHuman = pair.list.First;   // Ссылка на текущий узел списка
+                for (int i = 0; i < pair.countNode; ++i)
                 {
-                    countDel++;
-                    currentHuman.Value.DoDela(this);
-
-                    LinkedListNode<Human> temp = currentHuman;
-                    currentHuman = currentHuman.Next;
-                    pair.node.Update(temp.Value);   
+                    currentHuman.Value.DoDela(this);                    // Обработка человека
+                    LinkedListNode<Human> updateHuman = currentHuman;   // Ссылка на предыдущий, для обновления
+                    currentHuman = currentHuman.Next;                   // Переход на следующий узел
+                    pair.node.Update(updateHuman.Value);                // Обновление человека в дереве
                 }
             }
 
-            DebugString += "Количество совершенных делишек: " + countDel + "\n";
-            DebugString += "Количество узлов дерева: " + QuadTree.AmountNodes + "\n";
-            //DebugIter += _root.GetInfo(0);
+            _root.Join();   // Объединение неполных узлов
 
-            _root.Join();
-
-
+            // Вычисление итерации на которой закончились инфицированные
             if (_amountInfSymp == 0 && _amountInfInc == 0 && _amountInfNotSymp == 0)
                 _iterFinal = _iter;
 
             _iter++;
         }
 
+        // Произвести общение/контакт/беседу/встречу
         public void MakeMeet(Human human)
         {
-            LinkedList<Human> tempList = GetRegionPeople(human);
+            LinkedList<Human> tempList = GetRegionPeople(human);    
             foreach (Human tempHuman in tempList)
             {
                 if (Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y, 2) < Human.Config.RadiusInfOptim)
                 {
-                    IncStContacts();
+                    IncStContacts();    
                     if ((human.Condition == 2 || human.Condition == 4) && tempHuman.Condition == 0)
                     {
                         if (Human.Config.GetPermissionInfect(human.Mask, tempHuman.Mask))
@@ -257,6 +249,15 @@ namespace EpidSimulation.Backend
                             tempHuman.Condition = 1;
                             SetAmountCond(0, 1);
                             IncStContactsInf();
+                        }
+                    }
+                    else if ((tempHuman.Condition == 2 || tempHuman.Condition == 4) && human.Condition == 0)
+                    {
+                        if (Human.Config.GetPermissionInfect(tempHuman.Mask, human.Mask))
+                        {
+                            human.Condition = 1;
+                            IncStContactsInf();
+                            break;
                         }
                     }
                 }
@@ -273,6 +274,11 @@ namespace EpidSimulation.Backend
                     IncStHandshakes();
                     if (human.InfectHand)
                         tempHuman.InfectHand = true;
+                    if (tempHuman.InfectHand)
+                    {
+                        human.InfectHand = true;
+                        break;
+                    }
                 }
             }
         }

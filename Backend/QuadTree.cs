@@ -21,10 +21,12 @@ namespace EpidSimulation.Backend
 
     class QuadTree
     {
-        private QuadTree _parent;
+        // Родительский узел
+        private QuadTree _parent;               
         public QuadTree Parent { get => _parent; }
 
-        private QuadTree[] _childs;
+        // Дочерние узлы
+        private QuadTree[] _childs;             
         public QuadTree Child(int ind) { return _childs[ind]; }
         /* Индексы дочерних квадрантов
             +---+---+
@@ -33,18 +35,20 @@ namespace EpidSimulation.Backend
             | 2 | 3 |
             +---+---+                   */
 
-        private LinkedList<Human> _people;
-        private int _count;
-        private Rectangle _region;
+        private LinkedList<Human> _people;      // Список объектов
+        private int _count;                     // Количество объектов находящихся в данной области
+        private Rectangle _region;              // Область
 
 
-        static int MIN_SIZE = 8;
-        public static double RADIUS;
-        static int MAX_OBJECTS = 50;
+        static int MIN_SIZE = 8;        // Минимальный размер области 
+        public static double RADIUS;    // Радиус для распределения по областям
+        static int MAX_OBJECTS = 50;    // Максимальное количество объектов на узле до деления
 
+        // Количество созданных узлов
         private static int _amountNodes = -1;
         public static int AmountNodes { get => _amountNodes; }
 
+        //==========
         public QuadTree(Rectangle region, QuadTree parent)
         {
             _region = region;
@@ -55,29 +59,7 @@ namespace EpidSimulation.Backend
             _amountNodes++;
         }
 
-        public string GetInfo(int t)
-        {
-            string s = "";
-            if (_childs[0] != null)
-            {
-                s += _childs[0].GetInfo(t + 1);
-                s += _childs[1].GetInfo(t + 1);
-                s += _childs[2].GetInfo(t + 1);
-                s += _childs[3].GetInfo(t + 1);
-            }
-            for (int i = 0; i < t; ++i) s += "\t";
-            s += "ЛП: (" +_region.X + ", " + _region.Y + ") ШВ: (" + _region.Width + ", " + _region.Height + ")\n";
-            for (int i = 0; i < t; ++i) s += "\t";
-            s += "Челики:\n";
-            foreach (Human human in _people)
-            {
-                for (int i = 0; i < t; ++i) s += "\t";
-                s += "(" + human.X + ", " + human.Y + ")\n";
-            }
-
-            return s;
-        }
-
+        // Удаление узла
         public void Clear()
         {
             _people.Clear();
@@ -94,6 +76,7 @@ namespace EpidSimulation.Backend
             }
         }
 
+        // Деление узла
         private void Split()
         {
             double subWidth = _region.Width / 2;
@@ -107,6 +90,8 @@ namespace EpidSimulation.Backend
             _childs[3] = new QuadTree(new Rectangle(x + subWidth, y + subHeight, subWidth, subHeight), this);
         }
 
+        // Получение индекса области, в которой находится объект
+        // Индекс = -1 означает, что он находится на пересечении дочерних узлов
         private int GetIndex(Human human)
         {
             int index;
@@ -138,6 +123,8 @@ namespace EpidSimulation.Backend
             return index;
         }
 
+        // Вставка объекта в узел
+        // Перемещение объекта по дереву вниз
         public void Insert(Human human)
         {
             _count++;
@@ -175,6 +162,7 @@ namespace EpidSimulation.Backend
             }
         }
 
+        // Получение списка объектов, которые могут пересекаться с заданным объектом
         public LinkedList<Human> Retrieve(LinkedList<Human> returnPeople, Human human)
         {
             int index = GetIndex(human);
@@ -188,6 +176,7 @@ namespace EpidSimulation.Backend
             return returnPeople;
         }
 
+        // Объединение неполных узлов
         public void Join()
         {
             if (_childs[0] != null)
@@ -212,6 +201,7 @@ namespace EpidSimulation.Backend
             }
         }
 
+        // Обновление объекта в узле
         public void Update(Human human)
         {
             _people.Remove(human);
@@ -219,6 +209,7 @@ namespace EpidSimulation.Backend
                 Relocate(human);
         }
 
+        // Перемещение объекта по дереву вверх
         private void Relocate(Human human)
         {
             _count--;
@@ -237,6 +228,7 @@ namespace EpidSimulation.Backend
 
         }
 
+        // Получение списка узлов и списков их объектов
         public LinkedList<(QuadTree, int, LinkedList<Human>)> GetAllPeople(LinkedList<(QuadTree, int, LinkedList<Human>)> returnList)
         {
             returnList.AddFirst((this, _people.Count, _people));

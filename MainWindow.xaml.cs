@@ -90,14 +90,15 @@ namespace EpidSimulation
                 50, 100,    // InfHand
                 90, 100,    // InfInc
                 900, 1000,  // Recovery
-                0.2f, 0.1f,
-                0.1f,
-                0.5f, 0.25f,
-                2.0f, 1.0f, 1.5f, 0.5f,
-                0.3f, 2);
+                0.2f,       // ProbabilityNotSymp
+                0.1f,       // ProbabilityDied
+                0.1f,       // ProbabilityInfHand
+                0.5f, 0.25f,// MaskProtection: For, From
+                2.0f, 1.0f, 1.5f, 1.0f, // Radius: SocDist, Man, Inf, Handshake
+                0.3f, 2);   // MaxDist, MaxTryes
 
             Sim = new Simulation(150, 150,
-            0, 0, 250, 0,
+            350, 0, 0, 0,
             0, 0, 0, 0,
             50, 0, 0, 0,
             0, 0, 0, 0,
@@ -148,7 +149,7 @@ namespace EpidSimulation
             CanvasMap.RenderTransform = st;
             st.ScaleX += 2.5;
             st.ScaleY += 2.5;
-
+            
 
             timer = new DispatcherTimer();
             timer.Tick += new EventHandler(TimerTick);
@@ -172,7 +173,12 @@ namespace EpidSimulation
                            "Инфицированных бессимптомных: " + Sim.AmountInfNotSymp + "\n" +
                            "С иммунитетом: " + Sim.AmountVzd + "\n" +
                            "Умерших: " + Sim.AmountDied;
-            debug.Content = Sim.DebugString;
+
+            debug.Content = "Статистика:\n" +
+                           "Всего контактов: " + Sim.StContacts + "\n" +
+                           "Инфицированных контактов: " + Sim.StContactsInf + "\n" +
+                           "Всего рукопожатий: " + Sim.StHandShakes + "\n" +
+                           "Заражений с рук: " + Sim.StHandshakesInf + "\n";
         }
 
         private void miSimOnOff_Click(object sender, RoutedEventArgs e)
