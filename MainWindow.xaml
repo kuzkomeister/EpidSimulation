@@ -5,13 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EpidSimulation"
         mc:Ignorable="d"
-        Title="COVID-19" Height="528" Width="1178" ResizeMode="CanResize" WindowStartupLocation="CenterScreen" WindowState="Normal">
+        Title="COVID-19" Height="528" Width="1178" ResizeMode="CanResize" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Canvas Margin="0,0,421,0">
         <Menu Height="434" Width="379">
             <MenuItem Header="Симуляция">
                 <MenuItem x:Name="miSimOnOff" Header="Запустить" Click="miSimOnOff_Click"/>
-                <MenuItem x:Name="miLog" Header="Создать лог файл"/>
                 <MenuItem x:Name="miDebugOnOff" Header="Включить дебаг" Click="miDebugOnOff_Click"/>
+            </MenuItem>
+            <MenuItem Header="Узел">
+                <MenuItem x:Name="miNodeParent" Header="Родительский" Click="miNodeParent_Click"/>
+                <MenuItem Header="Дочерний">
+                    <MenuItem x:Name="miNodeChild0" Header="Правая верхняя клетка" Click="miNodeChild_Click" Tag="0"/>
+                    <MenuItem x:Name="miNodeChild1" Header="Левая верхняя клетка" Click="miNodeChild_Click" Tag="1"/>
+                    <MenuItem x:Name="miNodeChild2" Header="Левая нижняя клетка" Click="miNodeChild_Click" Tag="2"/>
+                    <MenuItem x:Name="miNodeChild3" Header="Правая нижняя клетка" Click="miNodeChild_Click" Tag="3"/>
+                </MenuItem>
             </MenuItem>
         </Menu>
         <Canvas x:Name="CanvasMap" Height="411" Width="379" Canvas.Top="23"/>

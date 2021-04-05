@@ -36,8 +36,10 @@ namespace EpidSimulation.Backend
             +---+---+                   */
 
         private LinkedList<Human> _people;      // Список объектов
+        public LinkedList<Human> People { get => _people; }
         private int _count;                     // Количество объектов находящихся в данной области
         private Rectangle _region;              // Область
+        public (double, double) LVPoint { get => (_region.X, _region.Y); }
 
 
         static int MIN_SIZE = 8;        // Минимальный размер области 
@@ -229,21 +231,30 @@ namespace EpidSimulation.Backend
         }
 
         // Получение списка узлов и списков их объектов
-        public LinkedList<(QuadTree, int, LinkedList<Human>)> GetAllPeople(LinkedList<(QuadTree, int, LinkedList<Human>)> returnList)
+        public LinkedList<(QuadTree, int, LinkedList<Human>)> GetNodeWithObjects(LinkedList<(QuadTree, int, LinkedList<Human>)> returnList)
         {
             returnList.AddFirst((this, _people.Count, _people));
             if (_childs[0] != null)
             {
                 for (int i = 0; i < _childs.Length; ++i)
                 {
-                    _childs[i].GetAllPeople(returnList);
+                    _childs[i].GetNodeWithObjects(returnList);
                 }
             }
-            
             return returnList;
         }
 
-        
+        // Получение списка списков объектов
+        public LinkedList<LinkedList<Human>> GetListObjects(LinkedList<LinkedList<Human>> returnList)
+        {
+            returnList.AddFirst(_people);
+            if (_childs[0] != null)
+            {
+                for (int i = 0; i < _childs.Length; ++i)
+                    _childs[i].GetListObjects(returnList);
+            }
+            return returnList;
+        }
 
     }
 

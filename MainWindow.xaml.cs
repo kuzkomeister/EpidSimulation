@@ -19,12 +19,17 @@ namespace EpidSimulation
         LinkedList<FigureHuman> Figures;
 
         QuadTree curNode;
-        ScaleTransform st;
+        System.Windows.Shapes.Rectangle regionBackground;
+        Line lineVMP;
+        Line lineHMP;
+ 
+        ScaleTransform scaleNode;
+        TranslateTransform transNode;
 
         DispatcherTimer timer;
         bool StatusTimer = false;
 
-        bool Debug = true;
+        bool Debug = false;
 
         private void CreateFigures(LinkedList<Human> people)
         {
@@ -79,6 +84,37 @@ namespace EpidSimulation
             }
         }
 
+        
+
+        private void MakeVisibleNodeHumans()
+        {
+            LinkedList<LinkedList<Human>> tempList = new LinkedList<LinkedList<Human>>();
+            curNode.GetListObjects(tempList);
+
+            foreach (FigureHuman figure in Figures)
+            {
+                bool vis = false;
+                foreach(LinkedList<Human> l in tempList)
+                {
+                    if (l.Find(figure.human) != null)
+                    {
+                        vis = true;
+                    }
+                    if (vis)
+                        break;
+                }
+
+                if (vis)
+                {
+                    figure.SetVisible(0, Debug);
+                }
+                else
+                {
+                    figure.SetVisible(1, Debug);
+                }
+            }
+        }
+
         public MainWindow()
         {
             Config = new ConfigDisease(
@@ -93,21 +129,22 @@ namespace EpidSimulation
                 0.2f,       // ProbabilityNotSymp
                 0.1f,       // ProbabilityDied
                 0.1f,       // ProbabilityInfHand
-                0.5f, 0.25f,// MaskProtection: For, From
+                0.0f, 0.1f,// MaskProtection: For, From
                 2.0f, 1.0f, 1.5f, 1.0f, // Radius: SocDist, Man, Inf, Handshake
                 0.3f, 2);   // MaxDist, MaxTryes
 
             Sim = new Simulation(150, 150,
-            350, 0, 0, 0,
-            0, 0, 0, 0,
-            50, 0, 0, 0,
+            100, 0, 650, 0,
+            0, 0, 0, 0, 
+            10, 0, 40, 0,
             0, 0, 0, 0,
             0, 0, 0, 0,
             Config);
+            curNode = Sim.Root;
 
             InitializeComponent();
 
-            System.Windows.Shapes.Rectangle rectangle = new System.Windows.Shapes.Rectangle
+            regionBackground = new System.Windows.Shapes.Rectangle
             {
                 Width = Sim.SizeX,
                 Height = Sim.SizeY,
@@ -115,11 +152,11 @@ namespace EpidSimulation
                 Stroke = Brushes.Black,
                 StrokeThickness = 0.1
             };
-            Canvas.SetLeft(rectangle, 0);
-            Canvas.SetTop(rectangle, 0);
-            CanvasMap.Children.Add(rectangle);
+            Canvas.SetLeft(regionBackground, 0);
+            Canvas.SetTop(regionBackground, 0);
+            CanvasMap.Children.Add(regionBackground);
 
-            Line lineVMP = new Line
+            lineVMP = new Line
             {
                 X1 = Sim.SizeX / 2,
                 Y1 = 0,
@@ -130,7 +167,7 @@ namespace EpidSimulation
             };
             CanvasMap.Children.Add(lineVMP);
 
-            Line lineHMP = new Line
+            lineHMP = new Line
             {
                 X1 = 0,
                 Y1 = Sim.SizeY / 2,
@@ -141,28 +178,39 @@ namespace EpidSimulation
             };
             CanvasMap.Children.Add(lineHMP);
             
-
             CreateFigures(Sim.People);
             AddFigures();
 
-            st = new ScaleTransform();
-            CanvasMap.RenderTransform = st;
-            st.ScaleX += 2.5;
-            st.ScaleY += 2.5;
-            
+            TransformGroup tfGroupNode = new TransformGroup();
+            //tfGroupNode.Children.Add(scaleNode);
+            //tfGroupNode.Children.Add(transNode);
+
+            scaleNode = new ScaleTransform();
+            CanvasMap.RenderTransform = scaleNode;
+            scaleNode.ScaleX = 4;
+            scaleNode.ScaleY = 4;
+
+            transNode = new TranslateTransform();
+            //CanvasMap.RenderTransform = transNode;
+            transNode.X = 0;
+            transNode.Y = 0;
+
+            //CanvasMap.RenderTransform = tfGroupNode;
 
             timer = new DispatcherTimer();
             timer.Tick += new EventHandler(TimerTick);
-            timer.Interval = new TimeSpan(10000);
-            
+            timer.Interval = new TimeSpan(10000);            
         }
 
 
         
-
+        // Итерация основного таймера 
         private void TimerTick(object sender, EventArgs e)
         {
             Sim.Iterate();
+
+            if (curNode != Sim.Root)
+                MakeVisibleNodeHumans();
 
             ClearDeads();
 
@@ -181,13 +229,14 @@ namespace EpidSimulation
                            "Заражений с рук: " + Sim.StHandshakesInf + "\n";
         }
 
+        // Включить/Выключить симуляцию
         private void miSimOnOff_Click(object sender, RoutedEventArgs e)
         {
             if (StatusTimer)
             {
                 timer.Stop();
                 StatusTimer = false;
-                miSimOnOff.Header = "Выключить";
+                miSimOnOff.Header = "Включить";
             }
             else
             {
@@ -197,17 +246,18 @@ namespace EpidSimulation
             }
         }
 
+        // Включить/Выключить отображение соц дистанции
         private void miDebugOnOff_Click(object sender, RoutedEventArgs e)
         {
-            if (Debug)
+            if (!Debug)
             {
                 foreach (FigureHuman figure in Figures)
                 {
-                    if (figure.SocDistCircle != null)
+                    if (figure.SocDistCircle != null && figure.CondCircle.Visibility == 0)
                         figure.SocDistCircle.Visibility = Visibility.Visible;
                 }
                 miDebugOnOff.Header = "Выключить дебаг";
-                Debug = false;
+                Debug = true;
             }
             else
             {
@@ -217,10 +267,43 @@ namespace EpidSimulation
                         figure.SocDistCircle.Visibility = Visibility.Hidden;
                 }
                 miDebugOnOff.Header = "Включить дебаг";
-                Debug = true;
+                Debug = false;
             }
         }
 
-       
+
+        //===== Переключение между клетками
+        private void miNodeChild_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem mi = (MenuItem)sender;
+            if (curNode.Child(Convert.ToInt32(mi.Tag)) != null)
+            {
+                curNode = curNode.Child(Convert.ToInt32(mi.Tag));
+                (double x, double y) p = curNode.LVPoint;
+                double tsx = scaleNode.ScaleX;
+                double tsy = scaleNode.ScaleY;
+                scaleNode.ScaleX = 1;
+                scaleNode.ScaleY = 1;
+                transNode.X -= p.x;
+                transNode.Y -= p.y;
+                scaleNode.ScaleX = tsx;
+                scaleNode.ScaleY = tsy;
+                MakeVisibleNodeHumans();
+            }
+        }
+
+        private void miNodeParent_Click(object sender, RoutedEventArgs e)
+        {
+            if (curNode.Parent != null)
+            {
+                curNode = curNode.Parent;
+                MakeVisibleNodeHumans();
+            }
+        }
+
+
+
+
+
     }
 }

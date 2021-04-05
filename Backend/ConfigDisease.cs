@@ -116,15 +116,15 @@ namespace EpidSimulation.Backend
             if (maskFor)
             {
                 if (maskFrom)
-                    return random.NextDouble() < _maskProtectionFor * _maskProtectionFrom;
+                    return random.NextDouble() > _maskProtectionFor * _maskProtectionFrom;
                 else
-                    return random.NextDouble() < _maskProtectionFor;
+                    return random.NextDouble() > _maskProtectionFor;
                 
             }
             else
             {
                 if (maskFrom)
-                    return random.NextDouble() < _maskProtectionFrom;
+                    return random.NextDouble() > _maskProtectionFrom;
                 else
                     return true;                
             }

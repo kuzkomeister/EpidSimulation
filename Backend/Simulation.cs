@@ -208,7 +208,7 @@ namespace EpidSimulation.Backend
         {
             // Получение списка узлов и их списка людей, с количеством людей на момент получения
             LinkedList<(QuadTree, int, LinkedList<Human>)> nodes = new LinkedList<(QuadTree, int, LinkedList<Human>)>();
-            _root.GetAllPeople(nodes);
+            _root.GetNodeWithObjects(nodes);
             
             // Проход по списку узлов
             foreach ((QuadTree node, int countNode, LinkedList<Human> list) pair in nodes) 
@@ -321,7 +321,7 @@ namespace EpidSimulation.Backend
             get
             {
                 LinkedList<(QuadTree, int, LinkedList<Human>)> nodes = new LinkedList<(QuadTree, int, LinkedList<Human>)>();
-                _root.GetAllPeople(nodes);
+                _root.GetNodeWithObjects(nodes);
                 LinkedList<Human> people = new LinkedList<Human>();
                 foreach ((QuadTree, int, LinkedList<Human> nodePeople) pair in nodes)
                 {

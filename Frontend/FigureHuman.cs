@@ -138,5 +138,20 @@ namespace EpidSimulation.Frontend
             Canvas.SetTop(circle, y);
             return circle;
         }
+
+        public void SetVisible(int visible, bool debug)
+        {
+            CondCircle.Visibility = (System.Windows.Visibility)visible;
+            if (MaskCircle != null)
+                MaskCircle.Visibility = (System.Windows.Visibility)visible;
+            if (SocDistCircle != null)
+            {
+                if (debug && visible == 0)
+                    SocDistCircle.Visibility = System.Windows.Visibility.Visible;
+                else
+                    SocDistCircle.Visibility = System.Windows.Visibility.Hidden;
+            }
+        }
+    
     }
 }
