@@ -134,7 +134,7 @@ namespace EpidSimulation
                 0.3f, 2);   // MaxDist, MaxTryes
 
             Sim = new Simulation(150, 150,
-            100, 0, 650, 0,
+            0, 0, 250, 0,
             0, 0, 0, 0, 
             10, 0, 40, 0,
             0, 0, 0, 0,

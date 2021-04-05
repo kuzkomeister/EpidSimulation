@@ -19,9 +19,12 @@ namespace EpidSimulation.Backend
         private int _condition;  // Состояние человека
         public int Condition { get => _condition; set { _condition = value; OnPropertyChanged("Condition"); } }
         /*
-         0 - здоровый, 1 - инфицированный в инкубационном периоде
-         2 - инфицированный в клиническом периоде, 3 - выздоровевший
-         4 - инфицированный без проявления симптомов, 5 - мертвый
+            0 - здоровый 
+            1 - инфицированный в инкубационном периоде
+            2 - инфицированный в клиническом периоде
+            3 - выздоровевший
+            4 - инфицированный без проявления симптомов 
+            5 - мертвый
          */
 
         //===== Параметры перемещения
@@ -31,6 +34,9 @@ namespace EpidSimulation.Backend
         public double Y { get => _y; set { _y = value; OnPropertyChanged("Y"); } }
 
         private double[] _vectorDirection;   // Вектор направления и скорости человека
+
+        private delegate void MethodMove(Simulation simulation);
+        private MethodMove Move;            // Метод перемещения 
 
         //===== Параметры влияющие на эпид ситуацию в случае конкретного человека
         public readonly bool Mask;      // Наличие маски на лице
@@ -52,10 +58,15 @@ namespace EpidSimulation.Backend
         public Human(int condition, bool mask, bool socDist, double x, double y)
         {
             Condition = condition;
-            _x = x; _y = y;
-            Mask = mask; SocDist = socDist;
+            _x = x; 
+            _y = y;
+            
+            Mask = mask; 
+            SocDist = socDist;
             _infectHand = false;
+            Move = SocDist == true ? MoveWithSocDist : MoveWithoutSocDist;
 
+            // Направление движения
             _vectorDirection = new double[2];
             _vectorDirection[0] = Config.GetDirection();
             _vectorDirection[1] = Config.GetDirection();
@@ -90,15 +101,13 @@ namespace EpidSimulation.Backend
             }
         }
 
-        private void Move(Simulation simulation)
+        private void MoveWithSocDist(Simulation simulation)
         {
-            double oldDist = 100;
-            if (SocDist)
-                oldDist = simulation.GetNearDistance(this);
-            bool res = false;
-            for (int i = 0; i < Config.MaxTryes; ++i)
+            bool needChangeDir = true;
+            double oldDistance = simulation.GetNearDistance(this);
+
+            for (int i = 0; i < Config.MaxTryes && needChangeDir; ++i)
             {
-                res = true;
                 if (simulation.CheckBarrier(X + _vectorDirection[0], Y + _vectorDirection[1]))
                 {
                     double oldX = X;
@@ -106,43 +115,65 @@ namespace EpidSimulation.Backend
 
                     X += _vectorDirection[0];
                     Y += _vectorDirection[1];
+                    needChangeDir = false;
 
                     double distance = simulation.GetNearDistance(this);
 
-                    if (distance != -1)
+                    if (distance < Config.RadiusSocOptim && distance < oldDistance)
                     {
-                        if (SocDist)
-                        {
-                            if (distance < Config.RadiusSocOptim && distance < oldDist)
-                            {
-                                X = oldX;
-                                Y = oldY;
-                                res = false;
-                            }
-                        }
-                        else
-                        {
-                            if (distance < Config.RadiusManOptim)
-                            {
-                                X = oldX;
-                                Y = oldY;
-                                res = false;
-                            }
-                        }
+                        X = oldX;
+                        Y = oldY;
+                        needChangeDir = true;
                     }
                 }
                 else
                 {
-                    res = false;
+                    needChangeDir = true;
                 }
 
-                if (!res)
+                if (needChangeDir)
                 {
                     _vectorDirection[0] = Config.GetDirection();
                     _vectorDirection[1] = Config.GetDirection();
                     _timeChangeDirect = Config.GetTimeChangeDirect();
                 }
+            }
+        }
 
+        private void MoveWithoutSocDist(Simulation simulation)
+        {
+            bool needChangeDir = true;
+            for (int i = 0; i < Config.MaxTryes && needChangeDir; ++i)
+            {
+                if (simulation.CheckBarrier(X + _vectorDirection[0], Y + _vectorDirection[1]))
+                {
+                    double oldX = X;
+                    double oldY = Y;
+
+                    X += _vectorDirection[0];
+                    Y += _vectorDirection[1];
+                    needChangeDir = false;
+
+                    double distance = simulation.GetNearDistance(this);
+
+                    if (distance != -1 && distance < Config.RadiusManOptim)
+                    {
+                        X = oldX;
+                        Y = oldY;
+                        needChangeDir = true;
+                    }
+                }
+                else
+                {
+                    needChangeDir = true;
+                }
+
+                if (needChangeDir)
+                {
+                    _vectorDirection[0] = Config.GetDirection();
+                    _vectorDirection[1] = Config.GetDirection();
+                    _timeChangeDirect = Config.GetTimeChangeDirect();
+                }
             }
         }
 
