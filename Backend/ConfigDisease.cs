@@ -29,8 +29,8 @@ namespace EpidSimulation.Backend
         private double _maskProtectionFrom;  // Защиты в сторону заразиться от кого-то
 
         //===== Радиусы
-        public readonly double RadiusInf;           // Радиус Заражения
-        public readonly double RadiusInfOptim;      // Радиус Заражения (в квадрате)
+        public readonly double RadiusMeet;           // Радиус Заражения
+        public readonly double RadiusMeetOptim;      // Радиус Заражения (в квадрате)
         public readonly double RadiusMan;           // Радиус размера человека
         public readonly double RadiusManOptim;      // Радиус размера человека (в квадрате)
         public readonly double RadiusSoc;           // Радиус социальной дистанции
@@ -59,9 +59,9 @@ namespace EpidSimulation.Backend
             // Эффективность маски
             float maskProtectionFor, float maskProtectionFrom,
             // Радиусы
-            float radiusSoc, float radiusMan, float radiusInf, float radiusHandshake,
+            float radiusSoc, float radiusMan, float radiusMeet, float radiusHandshake,
             
-            float maxDist, int maxTryes
+            float maxDist
             )
         {
             // Настройки времени
@@ -84,13 +84,13 @@ namespace EpidSimulation.Backend
             RadiusManOptim = (double)(4.2 * Math.Pow(this.RadiusMan, 2));
             this.RadiusSoc = radiusSoc + radiusMan;
             RadiusSocOptim = (double)(4.1 * Math.Pow(this.RadiusSoc, 2));
-            this.RadiusInf = radiusInf + radiusMan;
-            RadiusInfOptim = (double)Math.Pow(this.RadiusInf, 2);
+            this.RadiusMeet = radiusMeet + radiusMan;
+            RadiusMeetOptim = (double)Math.Pow(this.RadiusMeet, 2);
             this.RadiusHandshake = radiusHandshake + radiusMan;
             RadiusHandshakeOptim = (double)Math.Pow(this.RadiusHandshake, 2);
 
             this.MaxDist = maxDist;
-            this.MaxTryes = maxTryes;
+            this.MaxTryes = 3;
 
             random = new Random(333);
         }

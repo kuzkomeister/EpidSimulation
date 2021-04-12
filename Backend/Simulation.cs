@@ -79,7 +79,7 @@ namespace EpidSimulation.Backend
             Human.Config = config;  
             QuadTree.RADIUS = Math.Max(
                 Math.Max(config.RadiusMan, config.RadiusSoc),
-                Math.Max(config.RadiusHandshake, config.RadiusInf));        
+                Math.Max(config.RadiusHandshake, config.RadiusMeet));        
             _root = new QuadTree(new Rectangle(0, 0, sizeX, sizeY), null);
             //===== Параметры карты
             SizeX = sizeX;
@@ -239,7 +239,7 @@ namespace EpidSimulation.Backend
             LinkedList<Human> tempList = GetRegionPeople(human);    
             foreach (Human tempHuman in tempList)
             {
-                if (Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y, 2) < Human.Config.RadiusInfOptim)
+                if (Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y, 2) < Human.Config.RadiusMeetOptim)
                 {
                     IncStContacts();    
                     if ((human.Condition == 2 || human.Condition == 4) && tempHuman.Condition == 0)

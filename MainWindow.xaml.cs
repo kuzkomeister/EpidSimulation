@@ -131,7 +131,7 @@ namespace EpidSimulation
                 0.1f,       // ProbabilityInfHand
                 0.0f, 0.1f,// MaskProtection: For, From
                 2.0f, 1.0f, 1.5f, 1.0f, // Radius: SocDist, Man, Inf, Handshake
-                0.3f, 2);   // MaxDist, MaxTryes
+                0.3f);   // MaxDist
 
             Sim = new Simulation(150, 150,
             0, 0, 250, 0,
@@ -303,7 +303,13 @@ namespace EpidSimulation
 
 
 
-
-
+        private void miCreateConfigDisease_Click(object sender, RoutedEventArgs e)
+        {
+            ConfigDiseaseWindow wConfigDisease = new ConfigDiseaseWindow();
+            if (wConfigDisease.ShowDialog() == true)
+            {
+                // Создание ConfigDisease
+            }
+        }
     }
 }

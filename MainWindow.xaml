@@ -11,6 +11,7 @@
             <MenuItem Header="Симуляция">
                 <MenuItem x:Name="miSimOnOff" Header="Запустить" Click="miSimOnOff_Click"/>
                 <MenuItem x:Name="miDebugOnOff" Header="Включить дебаг" Click="miDebugOnOff_Click"/>
+                <MenuItem x:Name="miCreateConfigDisease" Header="Создать болезнь" Click="miCreateConfigDisease_Click"/>
             </MenuItem>
             <MenuItem Header="Узел">
                 <MenuItem x:Name="miNodeParent" Header="Родительский" Click="miNodeParent_Click"/>

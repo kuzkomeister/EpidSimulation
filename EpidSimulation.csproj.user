@@ -7,7 +7,51 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Pages\ConfigDisease\MaskProtection.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Pages\ConfigDisease\Probabilities.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Pages\ConfigDisease\Radiuses.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Pages\ConfigDisease\Result.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Pages\ConfigDisease\Stages.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Pages\ConfigDisease\Timers.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="ConfigDiseaseWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\ConfigDisease\MaskProtection.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\ConfigDisease\Probabilities.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\ConfigDisease\Radiuses.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\ConfigDisease\Result.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\ConfigDisease\Stages.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\ConfigDisease\Timers.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="ConfigDiseaseWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
