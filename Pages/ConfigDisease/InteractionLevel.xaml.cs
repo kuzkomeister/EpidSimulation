@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace EpidSimulation.Pages.ConfigDisease
 {
     /// <summary>
-    /// Логика взаимодействия для Result.xaml
+    /// Логика взаимодействия для InteractionLevel.xaml
     /// </summary>
-    public partial class Result : Page
+    public partial class InteractionLevel : Page
     {
-        public Result()
+        public InteractionLevel()
         {
             InitializeComponent();
         }

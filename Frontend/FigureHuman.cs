@@ -32,7 +32,7 @@ namespace EpidSimulation.Frontend
             }
             if (human.SocDist)
             {
-                SocDistCircle = CreateCircle(human.X, human.Y, Human.Config.RadiusSoc, Brushes.LightBlue, null);
+                SocDistCircle = CreateCircle(human.X, human.Y, Human.Config.RadiusSoc, Brushes.DeepSkyBlue, null);
                 SocDistCircle.Visibility = System.Windows.Visibility.Hidden;
             }
 

@@ -7,11 +7,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resource\Mask.png" />
+    <None Remove="Resource\Sneeze.png" />
+    <None Remove="Resource\virus.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Pages\MainWindow\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resource\Mask.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Sneeze.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\virus.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

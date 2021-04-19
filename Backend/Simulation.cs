@@ -17,6 +17,11 @@ namespace EpidSimulation.Backend
         public readonly double SizeY;
 
         //===== Статистика
+
+        /*
+         *            СДЕЛАТЬ СТАТИСТИКУ ЛЮДЕЙ КОНТАКТИРОВАВШИХ С БОЛЬНЫМ, НО НЕ ЗАРАЗИВШИМСЯ
+         */
+
         private int _stContacts = 0;        
         public int StContacts { get => _stContacts; }
         

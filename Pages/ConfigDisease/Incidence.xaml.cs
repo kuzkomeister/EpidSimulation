@@ -16,14 +16,13 @@ using System.Windows.Shapes;
 namespace EpidSimulation.Pages.ConfigDisease
 {
     /// <summary>
-    /// Логика взаимодействия для Stages.xaml
+    /// Логика взаимодействия для Incidence.xaml
     /// </summary>
-    public partial class Stages : Page
+    public partial class Incidence : Page
     {
-        public Stages()
+        public Incidence()
         {
             InitializeComponent();
-            
         }
     }
 }

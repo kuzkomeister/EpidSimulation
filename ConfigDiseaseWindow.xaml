@@ -16,7 +16,7 @@
         <Frame 
             Content="{Binding CurrentPage}"
             NavigationUIVisibility="Hidden"
-            Opacity="{Binding FrameOpacity}" d:IsHidden="True"
+            Opacity="{Binding FrameOpacity}" Grid.ColumnSpan="2" Margin="0,0,0,86"
             />
         <Button IsCancel="True" Content="Отмена" HorizontalAlignment="Center" Margin="0,374,0,0" VerticalAlignment="Top"/>
         <Button IsDefault="True" Content="Подтвердить" HorizontalAlignment="Left" Margin="531,374,0,0" VerticalAlignment="Top"/>

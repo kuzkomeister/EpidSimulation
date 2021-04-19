@@ -1,0 +1,49 @@
+﻿<Page x:Class="EpidSimulation.Pages.ConfigDisease.DiseaseParam"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:EpidSimulation.Pages.ConfigDisease"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="DiseaseParam"
+      Background="White">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Orientation="Vertical">
+            <Label Content="Настройки болезни:"/>
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <Label Content="Латентный период:"/>
+                <TextBox Width="100" Margin="13,0,0,0"/>
+                <Label Content="±"/>
+                <TextBox Width="30"/>
+                <Label Content="итераций"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <Label Content="Клинический период:"/>
+                <TextBox Width="100"/>
+                <Label Content="±"/>
+                <TextBox Width="30"/>
+                <Label Content="итераций"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <Label Content="Летальность:"/>
+                <TextBox Width="100" Margin="49,0,0,0"/>
+                <Label Content="%"/>
+            </StackPanel>
+        </StackPanel>
+        <Image Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Source="/Resource/virus.png"/>
+
+
+    </Grid>
+</Page>

@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace EpidSimulation.Pages.ConfigDisease
 {
     /// <summary>
-    /// Логика взаимодействия для Probabilities.xaml
+    /// Логика взаимодействия для DiseaseParam.xaml
     /// </summary>
-    public partial class Probabilities : Page
+    public partial class DiseaseParam : Page
     {
-        public Probabilities()
+        public DiseaseParam()
         {
             InitializeComponent();
         }

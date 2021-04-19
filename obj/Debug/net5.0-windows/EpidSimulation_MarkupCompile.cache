@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET5_0;NETCOREAPP
 C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\App.xaml
-81089146242
+6-1157117279
 
-19261441312
+17-1668340228
 197-844408422
-ConfigDiseaseWindow.xaml;MainWindow.xaml;Pages\ConfigDisease\MaskProtection.xaml;Pages\ConfigDisease\Probabilities.xaml;Pages\ConfigDisease\Radiuses.xaml;Pages\ConfigDisease\Result.xaml;Pages\ConfigDisease\Stages.xaml;Pages\ConfigDisease\Timers.xaml;
+ConfigDiseaseWindow.xaml;MainWindow.xaml;Pages\ConfigDisease\DiseaseParam.xaml;Pages\ConfigDisease\Incidence.xaml;Pages\ConfigDisease\InteractionLevel.xaml;Pages\ConfigDisease\Prevalence.xaml;
 
 False
 

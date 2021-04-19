@@ -118,20 +118,17 @@ namespace EpidSimulation
         public MainWindow()
         {
             Config = new ConfigDisease(
-                100, 120,   // Meet
-                140, 160,   // HandToFaceContact
-                130, 200,   // Wash
-                50, 100,    // ChangeDirect
-                50, 200,    // Handshake
-                50, 100,    // InfHand
-                90, 100,    // InfInc
-                900, 1000,  // Recovery
-                0.2f,       // ProbabilityNotSymp
-                0.1f,       // ProbabilityDied
-                0.1f,       // ProbabilityInfHand
-                0.0f, 0.1f,// MaskProtection: For, From
-                2.0f, 1.0f, 1.5f, 1.0f, // Radius: SocDist, Man, Inf, Handshake
-                0.3f);   // MaxDist
+                90, 100,                    // Latent
+                900, 1000,                  // Recovery
+                0.1,                        // Die
+                1.0, 2.0, 1.5, 1.0,         // Radiuses: Human, SocDist, Meet, Handshake
+                0.5, 0.8, 0.9, 0.1,         // Probabilities: InfHand, InfMeet, MaskFor, MaskFrom
+                100, 120,                   // Times: Meet
+                140, 160,                   // HandToFaceContact
+                130, 200,                   // Wash
+                50, 200,                    // Handshake
+                50, 100);                   // InfHand
+            
 
             Sim = new Simulation(150, 150,
             0, 0, 250, 0,

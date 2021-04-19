@@ -2,10 +2,8 @@
 
 FC:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\ConfigDiseaseWindow.xaml;;
 FC:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\MainWindow.xaml;;
-FC:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\Pages\ConfigDisease\MaskProtection.xaml;;
-FC:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\Pages\ConfigDisease\Probabilities.xaml;;
-FC:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\Pages\ConfigDisease\Radiuses.xaml;;
-FC:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\Pages\ConfigDisease\Result.xaml;;
-FC:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\Pages\ConfigDisease\Stages.xaml;;
-FC:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\Pages\ConfigDisease\Timers.xaml;;
+FC:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\Pages\ConfigDisease\DiseaseParam.xaml;;
+FC:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\Pages\ConfigDisease\Incidence.xaml;;
+FC:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\Pages\ConfigDisease\InteractionLevel.xaml;;
+FC:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\Pages\ConfigDisease\Prevalence.xaml;;
 

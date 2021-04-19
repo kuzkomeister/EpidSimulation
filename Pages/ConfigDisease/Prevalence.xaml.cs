@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace EpidSimulation.Pages.ConfigDisease
 {
     /// <summary>
-    /// Логика взаимодействия для MaskProtection.xaml
+    /// Логика взаимодействия для Prevalence.xaml
     /// </summary>
-    public partial class MaskProtection : Page
+    public partial class Prevalence : Page
     {
-        public MaskProtection()
+        public Prevalence()
         {
             InitializeComponent();
         }
