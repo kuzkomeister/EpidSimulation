@@ -20,10 +20,9 @@ namespace EpidSimulation.Backend
         public int Condition { get => _condition; set { _condition = value; OnPropertyChanged("Condition"); } }
         /*
             0 - здоровый 
-            1 - инфицированный в инкубационном периоде
+            1 - инфицированный в латентном периоде
             2 - инфицированный в клиническом периоде
             3 - выздоровевший
-            4 - инфицированный без проявления симптомов 
             5 - мертвый
          */
 
@@ -46,7 +45,7 @@ namespace EpidSimulation.Backend
 
         //===== Параметры для действия таймеров
         private int _timeChangeDirect;       // Время до смены направления
-        private int _timeInfInc;             // Время до окончания инкубационного периода
+        private int _timeLatent;             // Время до окончания латентного периода
         private int _timeRecovery;           // Время до выздоровления
         private int _timeInfHand;            // Время до "загрязнения" своих рук
         private int _timeMeet;               // Время до инициирования встречи/беседы
@@ -72,7 +71,7 @@ namespace EpidSimulation.Backend
             _vectorDirection[1] = Config.GetDirection();
 
             // Устанавливаем таймеры
-            _timeInfInc = Config.GetTimeInfInc();
+            _timeLatent = Config.GetTimeInfInc();
             _timeRecovery = Config.GetTimeRecovery();
             _timeMeet = Config.GetTimeMeet();
             _timeHandToFaceContact = Config.GetTimeHandToFaceContact();
@@ -267,20 +266,13 @@ namespace EpidSimulation.Backend
         {
             if (Condition == 1)
             {
-                if (_timeInfInc == 0)
-                {
-                    if (Config.GetPermissionNotSymp())
-                    {
-                        Condition = 4;
-                    }
-                    else
-                    {
-                        Condition = 2;
-                    }
+                if (_timeLatent == 0)
+                { 
+                    Condition = 2;   
                 }
                 else
                 {
-                    _timeInfInc--;
+                    _timeLatent--;
                 }
             }
             else if (Condition == 2 || Condition == 4)
