@@ -12,8 +12,9 @@ namespace EpidSimulation.Backend
 
         //===== Основные характеристики болезни
         private int _timeLatent_a, _timeLatent_b;       // Латентный период
+        private int _timeIncub_a, _timeIncub_b;         // Инкубационный период
         private int _timeRecovery_a, _timeRecovery_b;   // Клинический период
-        private double _probabilityDied;                // Летальность болезни
+        private double _probabilityDie;                // Летальность болезни
 
         //===== Уровень взаимодействия
         public readonly double RadiusMeet;          // Радиус Заражения
@@ -24,6 +25,7 @@ namespace EpidSimulation.Backend
         public readonly double RadiusSocOptim;      // Радиус социальной дистанции (в квадрате)
         public readonly double RadiusHandshake;     // Радиус возможного рукопожатия
         public readonly double RadiusHandshakeOptim;// Радиус возможного рукопожатия (в квадрате)
+        private double _probabilitySelfIsolation;   // Вероятность, что человек уйдет на самоизоляцию
 
         //===== Уровень распространения
         private double _probabilityInfHand;  // Заразиться от контакта рук с лицом
@@ -51,6 +53,7 @@ namespace EpidSimulation.Backend
         public ConfigDisease(
             // Основные характеристики болезни
             int timeLatent_a, int timeLatent_b,
+            int timeIncub_a, int timeIncub_b,
             int timeRecovery_a, int timeRecovery_b,
             double probabilityDied,
             // Уровень взаимодействия
@@ -76,11 +79,12 @@ namespace EpidSimulation.Backend
             _timeHandToFaceContact_a = timeHandToFaceContact_a; _timeHandToFaceContact_b = timeHandToFaceContact_b;
             _timeWash_a = timeWash_a; _timeWash_b = timeWash_b;
             _timeLatent_a = timeLatent_a; _timeLatent_b = timeLatent_b;
+            _timeIncub_a = timeIncub_a; _timeIncub_b = timeIncub_b;
             _timeRecovery_a = timeRecovery_a; _timeRecovery_b = timeRecovery_b;
             _timeHandshake_a = timeHandshake_a; _timeHandshake_b = timeHandshake_b;
             _timeInfHand_a = timeInfHand_a; _timeInfHand_b = timeInfHand_b;
             // Вероятности
-            this._probabilityDied = probabilityDied;
+            this._probabilityDie = probabilityDied;
             this._probabilityInfMeet = probabilityInfMeet;
             this._probabilityInfHand = probabilityInfHand;
             //this._maskProtectionFor = maskProtectionFor;
@@ -110,9 +114,9 @@ namespace EpidSimulation.Backend
             return random.NextDouble() <= _probabilityInfHand;
         }
 
-        public bool GetPermissionDied()
+        public bool GetPermissionDie()
         {
-            return random.NextDouble() <= _probabilityDied;
+            return random.NextDouble() <= _probabilityDie;
         }
 
         public bool GetPermissionInfect(bool maskFrom, bool maskFor)
@@ -165,9 +169,14 @@ namespace EpidSimulation.Backend
             return random.Next(_timeInfHand_a, _timeInfHand_b);
         }
 
-        public int GetTimeInfInc()
+        public int GetTimeLatent()
         {
             return random.Next(_timeLatent_a, _timeLatent_b);
+        }
+
+        public int GetTimeIncub()
+        {
+            return random.Next(_timeIncub_a, _timeIncub_b);
         }
 
         public int GetTimeRecovery()

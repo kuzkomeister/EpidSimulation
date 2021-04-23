@@ -20,9 +20,10 @@ namespace EpidSimulation.Backend
         public int Condition { get => _condition; set { _condition = value; OnPropertyChanged("Condition"); } }
         /*
             0 - здоровый 
-            1 - инфицированный в латентном периоде
-            2 - инфицированный в клиническом периоде
-            3 - выздоровевший
+            1 - инфицированный в инкубационном и латентном периоде
+            2 - инфицированный в инкубационном периоде
+            3 - инфицированный в клиническом периоде
+            4 - выздоровевший
             5 - мертвый
          */
 
@@ -40,12 +41,14 @@ namespace EpidSimulation.Backend
         //===== Параметры влияющие на эпид ситуацию в случае конкретного человека
         public readonly bool Mask;      // Наличие маски на лице
         public readonly bool SocDist;   // Соблюдает социальную дистанцию
+
         private bool _infectHand;        // Наличие вируса на руках
         public bool InfectHand { get => _infectHand; set { _infectHand = value; OnPropertyChanged("InfectHand"); } }
 
         //===== Параметры для действия таймеров
         private int _timeChangeDirect;       // Время до смены направления
         private int _timeLatent;             // Время до окончания латентного периода
+        private int _timeIncub;              // Время до окончания инкубационного периода
         private int _timeRecovery;           // Время до выздоровления
         private int _timeInfHand;            // Время до "загрязнения" своих рук
         private int _timeMeet;               // Время до инициирования встречи/беседы
@@ -71,7 +74,8 @@ namespace EpidSimulation.Backend
             _vectorDirection[1] = Config.GetDirection();
 
             // Устанавливаем таймеры
-            _timeLatent = Config.GetTimeInfInc();
+            _timeLatent = Config.GetTimeLatent();
+            _timeIncub = Config.GetTimeIncub();
             _timeRecovery = Config.GetTimeRecovery();
             _timeMeet = Config.GetTimeMeet();
             _timeHandToFaceContact = Config.GetTimeHandToFaceContact();
@@ -89,12 +93,11 @@ namespace EpidSimulation.Backend
                 CourseDisease();
                 WashHands();
                 Handshake(simulation);
-                if (Condition == 2 || Condition == 4 || Condition == 0)
-                    Meet(simulation);
+                Meet(simulation);
                 if (Condition == 0)
                     TouchTheFace(simulation);
                 Rotate();
-                Move(simulation);
+                Move?.Invoke(simulation);
 
                 simulation.SetAmountCond(oldCond, Condition);
             }
@@ -226,9 +229,10 @@ namespace EpidSimulation.Backend
                     if (Config.GetPermissionInfHand())
                     {
                         Condition = 1;
-                        simulation.IncStHandshakeInf();
+                        simulation.StHandshakesInf++;
                     }
                 }
+                _timeHandToFaceContact = Config.GetTimeHandToFaceContact();
             }
             else
             {
@@ -275,19 +279,31 @@ namespace EpidSimulation.Backend
                     _timeLatent--;
                 }
             }
-            else if (Condition == 2 || Condition == 4)
+            else if (Condition == 2)
+            {
+                SetHandsDirty();
+                if (_timeIncub == 0)
+                {
+                    Condition = 3;                    
+                }
+                else
+                {
+                    _timeIncub--;
+                }
+            }
+            else if (Condition == 3)
             {
                 SetHandsDirty();
                 if (_timeRecovery == 0)
                 {
-                    if (Config.GetPermissionDied() && Condition != 4)
+                    if (Config.GetPermissionDie())
                     {
                         Condition = 5;
                         _infectHand = false;
                     }
                     else
                     {
-                        Condition = 3;
+                        Condition = 4;
                     }
                 }
                 else

@@ -118,7 +118,8 @@ namespace EpidSimulation
         public MainWindow()
         {
             Config = new ConfigDisease(
-                90, 100,                    // Latent
+                400, 500,                    // Latent
+                100, 200,                   // Incub
                 900, 1000,                  // Recovery
                 0.1,                        // Die
                 1.0, 2.0, 1.5, 1.0,         // Radiuses: Human, SocDist, Meet, Handshake
@@ -130,13 +131,14 @@ namespace EpidSimulation
                 50, 100);                   // InfHand
             
 
-            Sim = new Simulation(150, 150,
-            0, 0, 250, 0,
-            0, 0, 0, 0, 
-            10, 0, 40, 0,
-            0, 0, 0, 0,
-            0, 0, 0, 0,
-            Config);
+            Sim = new Simulation(
+                150, 150,               // Размеры карты
+                200, 0, 0, 0,           // Здоровые
+                50, 0, 0, 0,            // Латентные
+                0, 0, 0, 0,             // Инкубационные
+                0, 0, 0, 0,             // Клинические
+                0, 0, 0, 0,             // Выздоровевшие
+                Config);                // Параметры 
             curNode = Sim.Root;
 
             InitializeComponent();
@@ -213,9 +215,9 @@ namespace EpidSimulation
 
             curIter.Content = "Текущая итерация: " + Sim.Iter;
             stat.Content = "Здоровых: " + Sim.AmountZd + "\n" +
-                           "Инфицированных в инкубационном периоде: " + Sim.AmountInfInc + "\n" +
-                           "Инфицированных в клиническом периоде: " + Sim.AmountInfSymp + "\n" +
-                           "Инфицированных бессимптомных: " + Sim.AmountInfNotSymp + "\n" +
+                           "Инфицированных в латентном периоде: " + Sim.AmountLat + "\n" +
+                           "Инфицированных в инкубационном периоде: " + Sim.AmountInc + "\n" +
+                           "Инфицированных в клиническом периоде: " + Sim.AmountClin + "\n" +
                            "С иммунитетом: " + Sim.AmountVzd + "\n" +
                            "Умерших: " + Sim.AmountDied;
 

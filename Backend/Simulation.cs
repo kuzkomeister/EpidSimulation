@@ -19,46 +19,142 @@ namespace EpidSimulation.Backend
         //===== Статистика
 
         /*
-         *            СДЕЛАТЬ СТАТИСТИКУ ЛЮДЕЙ КОНТАКТИРОВАВШИХ С БОЛЬНЫМ, НО НЕ ЗАРАЗИВШИМСЯ
+         *            СДЕЛАТЬ СТАТИСТИКУ: 
+         *              1. ЛЮДЕЙ КОНТАКТИРОВАВШИХ С БОЛЬНЫМ, НО НЕ ЗАРАЗИВШИМСЯ
+         *              2. Средняя по параметрам
+         *              
          */
 
         private int _stContacts = 0;        
-        public int StContacts { get => _stContacts; }
+        public int StContacts 
+        { 
+            set
+            {
+                _stContacts = value;
+            }
+            get => _stContacts; 
+        }
         
         private int _stContactsInf = 0;     
-        public int StContactsInf { get => _stContactsInf; }
+        public int StContactsInf 
+        { 
+            set
+            {
+                _stContactsInf = value;
+            } 
+            get => _stContactsInf; 
+        }
 
         private int _stHandshakes = 0;
-        public int StHandShakes { get => _stHandshakes; }
+        public int StHandShakes 
+        { 
+            set
+            {
+                _stHandshakes = value;
+            }
+            get => _stHandshakes; 
+        }
 
         private int _stHandshakesInf = 0;
-        public int StHandshakesInf { get => _stHandshakesInf; }
-        public int _stChecks = 0;
+        public int StHandshakesInf 
+        { 
+            set
+            {
+                _stHandshakesInf = value;
+            } 
+            get => _stHandshakesInf; 
+        }
+      
+        private int _stChecks = 0;
+        public int StChecks
+        {
+            set
+            {
+                _stChecks = value;
+            }
+            get => _stChecks;
+        }
 
         private int _iter = 0;
-        public int Iter { get => _iter; }
+        public int Iter 
+        { 
+            set
+            {
+                _iter = value;
+            }
+            get => _iter; 
+        }
         
         private int _iterFinal = 0;
-        public int IterFinal { get => _iterFinal; }
+        public int IterFinal 
+        { 
+            set
+            {
+                _iterFinal = value;
+            }
+            get => _iterFinal; 
+        }
 
         //===== Количество людей
         private int _amountZd = 0;          // Здоровых
-        public int AmountZd { get => _amountZd; }
+        public int AmountZd 
+        {
+            set
+            {
+                _amountZd = value;
+            } 
+            get => _amountZd; 
+        }
 
-        private int _amountInfInc = 0;       // Инфицированных в инкубационном периоде
-        public int AmountInfInc { get => _amountInfInc; }
+        private int _amountLat = 0;   // Инфицированных в инкубационном и латентном периоде
+        public int AmountLat
+        {
+            set
+            {
+                _amountLat = value;
+            }
+            get => _amountLat;
+        }
 
-        private int _amountInfSymp = 0;     // Инфицированных в клиническом периоде
-        public int AmountInfSymp { get => _amountInfSymp; }
+        private int _amountInc = 0;       // Инфицированных в инкубационном периоде
+        public int AmountInc 
+        {
+            set
+            {
+                _amountInc = value;
+            }
+            get => _amountInc; 
+        }
 
-        private int _amountInfNotSymp = 0;  // Инфицированных бессимптомных
-        public int AmountInfNotSymp { get => _amountInfNotSymp; }
+        private int _amountClin = 0;     // Инфицированных в клиническом периоде
+        public int AmountClin 
+        {
+            set
+            {
+                _amountClin = value;
+            }
+            get => _amountClin; 
+        }
 
         private int _amountVzd = 0;         // Выздоровевших
-        public int AmountVzd { get => _amountVzd; }
+        public int AmountVzd 
+        {
+            set
+            {
+                _amountVzd = value;
+            }
+            get => _amountVzd; 
+        }
 
         private int _amountDied = 0;        // Умерших
-        public int AmountDied { get => _amountDied; }
+        public int AmountDied 
+        {
+            set
+            {
+                _amountDied = value;
+            }
+            get => _amountDied; 
+        }
 
         public Simulation(
             // Размер области
@@ -66,15 +162,15 @@ namespace EpidSimulation.Backend
             // Настройки здоровых:
             // кол-во (здоровых, носящих маски, соблюдающих соц дистанцию, носящих и соблюдающих)
             int amountZd, int amountMaskZd, int amountSocDistZd, int amountGoodHumanZd,
+            // Настройки инфицированных в латентном периоде:
+            // кол-во (здоровых, носящих маски, соблюдающих соц дистанцию, носящих и соблюдающих)
+            int amountLat, int amountMaskLat, int amountSocDistLat, int amountGoodHumanLat,
             // Настройки инфицированных в инкубационном периоде:
             // кол-во (здоровых, носящих маски, соблюдающих соц дистанцию, носящих и соблюдающих)
-            int amountInfInc, int amountMaskInfInc, int amountSocDistInfInc, int amountGoodHumanInfInc,
+            int amountInc, int amountMaskInc, int amountSocDistInc, int amountGoodHumanInc,
             // Настройки инфицированных в клиническом периоде:
             // кол-во (здоровых, носящих маски, соблюдающих соц дистанцию, носящих и соблюдающих)
-            int amountInfSymp, int amountMaskInfSymp, int amountSocDistInfSymp, int amountGoodHumanInfSymp,
-            // Настройки инфицированных бессимптомных:
-            // кол-во (здоровых, носящих маски, соблюдающих соц дистанцию, носящих и соблюдающих)
-            int amountInfNotSymp, int amountMaskInfNotSymp, int amountSocDistInfNotSymp, int amountGoodHumanInfNotSymp,
+            int amountClin, int amountMaskClin, int amountSocDistClin, int amountGoodHumanClin,
             // Настройки выздоровевших:
             // кол-во (здоровых, носящих маски, соблюдающих соц дистанцию, носящих и соблюдающих)
             int amountVzd, int amountMaskVzd, int amountSocDistVzd, int amountGoodHumanVzd,
@@ -91,29 +187,29 @@ namespace EpidSimulation.Backend
             SizeY = sizeY;
 
             //===== Количество людей в состояниях
-            _amountZd = amountZd + amountMaskZd + amountSocDistZd + amountGoodHumanZd;
-            _amountInfInc = amountInfInc + amountMaskInfInc + amountSocDistInfInc + amountGoodHumanInfInc;
-            _amountInfSymp = amountInfSymp + amountMaskInfSymp + amountSocDistInfSymp + amountGoodHumanInfSymp;
-            _amountInfNotSymp = amountInfNotSymp + amountMaskInfNotSymp + amountSocDistInfNotSymp + amountGoodHumanInfNotSymp;
-            _amountVzd = amountVzd + amountMaskVzd + amountSocDistVzd + amountGoodHumanVzd;
+            AmountZd = amountZd + amountMaskZd + amountSocDistZd + amountGoodHumanZd;
+            AmountLat = amountLat + amountMaskLat + amountSocDistLat + amountGoodHumanLat;
+            AmountInc = amountInc + amountMaskInc + amountSocDistInc + amountGoodHumanInc;
+            AmountClin = amountClin + amountMaskClin + amountSocDistClin + amountGoodHumanClin;
+            AmountVzd = amountVzd + amountMaskVzd + amountSocDistVzd + amountGoodHumanVzd;
 
             int[,] amounts = new int[5,4];
             // Здоровые
             amounts[0, 0] = amountZd; amounts[0, 1] = amountMaskZd; amounts[0, 2] = amountSocDistZd;
             amounts[0, 3] = amountGoodHumanZd;
+            // Инфицированные в инкубационном и латентном периоде
+            amounts[1, 0] = amountLat; amounts[1, 1] = amountMaskLat; amounts[1, 2] = amountSocDistLat;
+            amounts[1, 3] = amountGoodHumanLat;
             // Инфицированные в инкубационном периоде
-            amounts[1, 0] = amountInfInc; amounts[1, 1] = amountMaskInfInc; amounts[1, 2] = amountSocDistInfInc;
-            amounts[1, 3] = amountGoodHumanInfInc;
+            amounts[2, 0] = amountInc; amounts[2, 1] = amountMaskInc; amounts[2, 2] = amountSocDistInc;
+            amounts[2, 3] = amountGoodHumanInc;
             // Инфицированные в клиническом периоде
-            amounts[2, 0] = amountInfSymp; amounts[2, 1] = amountMaskInfSymp; amounts[2, 2] = amountSocDistInfSymp;
-            amounts[2, 3] = amountGoodHumanInfSymp;
+            amounts[3, 0] = amountClin; amounts[3, 1] = amountMaskClin; amounts[3, 2] = amountSocDistClin;
+            amounts[3, 3] = amountGoodHumanClin;
             // Выздоровевшие
-            amounts[3, 0] = amountVzd; amounts[3, 1] = amountMaskVzd; amounts[3, 2] = amountSocDistVzd;
-            amounts[3, 3] = amountGoodHumanVzd;
-            // Инфицированные бессимптомные
-            amounts[4, 0] = amountInfNotSymp; amounts[4, 1] = amountMaskInfNotSymp; amounts[4, 2] = amountSocDistInfNotSymp;
-            amounts[4, 3] = amountGoodHumanInfNotSymp;
-
+            amounts[4, 0] = amountVzd; amounts[4, 1] = amountMaskVzd; amounts[4, 2] = amountSocDistVzd;
+            amounts[4, 3] = amountGoodHumanVzd;
+            
             Random random = new Random(322);
             int maxTryes = 10;
 
@@ -180,16 +276,16 @@ namespace EpidSimulation.Backend
                                         _amountZd--;
                                         break;
                                     case 1:
-                                        _amountInfInc--;
+                                        _amountLat--;
                                         break;
                                     case 2:
-                                        _amountInfSymp--;
+                                        _amountInc--;
                                         break;
                                     case 3:
-                                        _amountVzd--;
+                                        _amountClin--;
                                         break;
                                     case 4:
-                                        _amountInfNotSymp--;
+                                        _amountVzd--;
                                         break;
                                 }
                             }
@@ -232,10 +328,10 @@ namespace EpidSimulation.Backend
             _root.Join();   // Объединение неполных узлов
 
             // Вычисление итерации на которой закончились инфицированные
-            if (_amountInfSymp == 0 && _amountInfInc == 0 && _amountInfNotSymp == 0)
-                _iterFinal = _iter;
+            if (_amountClin == 0 && _amountInc == 0 && _amountLat == 0)
+                IterFinal = Iter;
 
-            _iter++;
+            Iter++;
         }
 
         // Произвести общение/контакт/беседу/встречу
@@ -246,22 +342,22 @@ namespace EpidSimulation.Backend
             {
                 if (Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y, 2) < Human.Config.RadiusMeetOptim)
                 {
-                    IncStContacts();    
-                    if ((human.Condition == 2 || human.Condition == 4) && tempHuman.Condition == 0)
+                    StContacts++;
+                    if ((human.Condition == 2 || human.Condition == 3) && tempHuman.Condition == 0)
                     {
                         if (Human.Config.GetPermissionInfect(human.Mask, tempHuman.Mask))
                         {
                             tempHuman.Condition = 1;
                             SetAmountCond(0, 1);
-                            IncStContactsInf();
+                            StContactsInf++;
                         }
                     }
-                    else if ((tempHuman.Condition == 2 || tempHuman.Condition == 4) && human.Condition == 0)
+                    else if ((tempHuman.Condition == 2 || tempHuman.Condition == 3) && human.Condition == 0)
                     {
                         if (Human.Config.GetPermissionInfect(tempHuman.Mask, human.Mask))
                         {
                             human.Condition = 1;
-                            IncStContactsInf();
+                            StContactsInf++;
                             break;
                         }
                     }
@@ -276,7 +372,7 @@ namespace EpidSimulation.Backend
             {
                 if (Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y,2) < Human.Config.RadiusHandshakeOptim)
                 {
-                    IncStHandshakes();
+                    StHandShakes++;
                     if (human.InfectHand)
                         tempHuman.InfectHand = true;
                     if (tempHuman.InfectHand)
@@ -296,13 +392,13 @@ namespace EpidSimulation.Backend
             {
                 resDistance = Math.Pow(human.X - tempList.First.Value.X, 2) + Math.Pow(human.Y - tempList.First.Value.Y, 2);
                 tempList.RemoveFirst();
-                _stChecks++;
+                StChecks++;
                 foreach (Human tempHuman in tempList){
                     double distance = Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y, 2);
                     if (distance < resDistance)
                         resDistance = distance;
                 }
-                _stChecks++;
+                StChecks++;
             }
             return resDistance;
         }
@@ -348,66 +444,47 @@ namespace EpidSimulation.Backend
                 switch (oldCond)
                 {
                     case 0:
-                        _amountZd--;
+                        AmountZd--;
                         break;
                     case 1:
-                        _amountInfInc--;
+                        AmountLat--;
                         break;
                     case 2:
-                        _amountInfSymp--;
+                        AmountInc--;
                         break;
                     case 3:
-                        _amountVzd--;
+                        AmountClin--;
                         break;
                     case 4:
-                        _amountInfNotSymp--;
+                        AmountVzd--;
                         break;
                     case 5:
-                        _amountDied--;
+                        AmountDied--;
                         break;
                 }
                 switch (newCond)
                 {
                     case 0:
-                        _amountZd++;
+                        AmountZd++;
                         break;
                     case 1:
-                        _amountInfInc++;
+                        AmountLat++;
                         break;
                     case 2:
-                        _amountInfSymp++;
+                        AmountInc++;
                         break;
                     case 3:
-                        _amountVzd++;
+                        AmountClin++;
                         break;
                     case 4:
-                        _amountInfNotSymp++;
+                        AmountVzd++;
                         break;
                     case 5:
-                        _amountDied++;
+                        AmountDied++;
                         break;
                 }
             }
         }
 
-        public void IncStContacts()
-        {
-            _stContacts++;
-        }
-
-        public void IncStContactsInf()
-        {
-            _stContactsInf++;
-        }
-
-        public void IncStHandshakes()
-        {
-            _stHandshakes++;
-        }
-
-        public void IncStHandshakeInf()
-        {
-            _stHandshakesInf++;
-        }
     }
 }

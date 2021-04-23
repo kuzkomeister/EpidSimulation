@@ -25,12 +25,15 @@ namespace EpidSimulation.Frontend
                             resColor = Brushes.Green;
                             break;
                         case 1:
-                            resColor = Brushes.Pink;
+                            resColor = Brushes.LightPink;
                             break;
                         case 2:
-                            resColor = Brushes.Red;
+                            resColor = Brushes.HotPink;
                             break;
                         case 3:
+                            resColor = Brushes.Red;
+                            break;
+                        case 4:
                             resColor = Brushes.Blue;
                             break;
                         case 5:
