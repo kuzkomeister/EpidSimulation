@@ -23,18 +23,19 @@ namespace EpidSimulation.Frontend
         {
             this.human = human;
             //===== Создание фигур
-            CondCircle = CreateCircle(human.X, human.Y, Human.Config.RadiusMan, Brushes.Green, Brushes.Black);
-            CondCircle.StrokeThickness = Human.Config.RadiusMan / 10;
+            CondCircle = CreateCircle(human.X, human.Y, Human.Config.RadiusHuman, Brushes.Green, Brushes.Black);
+            CondCircle.StrokeThickness = Human.Config.RadiusHuman / 10;
+
+            MaskCircle = CreateCircle(human.X, human.Y, Human.Config.RadiusHuman / 2, Brushes.White, Brushes.Black);
+            MaskCircle.StrokeThickness = Human.Config.RadiusHuman / 10;
+            MaskCircle.Visibility = System.Windows.Visibility.Hidden;
             if (human.Mask)
             {
-                MaskCircle = CreateCircle(human.X, human.Y, Human.Config.RadiusMan / 2, Brushes.White, Brushes.Black);
-                MaskCircle.StrokeThickness = Human.Config.RadiusMan / 10;
+                MaskCircle.Visibility = System.Windows.Visibility.Visible;
             }
-            if (human.SocDist)
-            {
-                SocDistCircle = CreateCircle(human.X, human.Y, Human.Config.RadiusSoc, Brushes.DeepSkyBlue, null);
-                SocDistCircle.Visibility = System.Windows.Visibility.Hidden;
-            }
+
+            SocDistCircle = CreateCircle(human.X, human.Y, Human.Config.RadiusSocDist, Brushes.DeepSkyBlue, null);
+            SocDistCircle.Visibility = System.Windows.Visibility.Hidden;
 
             //==== Привязка координаты Х
             Binding bind = new Binding
@@ -42,65 +43,57 @@ namespace EpidSimulation.Frontend
                 Source = human,
                 Path = new System.Windows.PropertyPath("X"),
                 Converter = new LeftToCenterConverter(),
-                ConverterParameter = -Human.Config.RadiusMan
+                ConverterParameter = -Human.Config.RadiusHuman
             };
             CondCircle.SetBinding(Canvas.LeftProperty, bind);
 
-            if (MaskCircle != null)
+            
+            bind = new Binding
             {
-                bind = new Binding
+                Source = human,
+                Path = new System.Windows.PropertyPath("X"),
+                Converter = new LeftToCenterConverter(),
+                ConverterParameter = -Human.Config.RadiusHuman / 2
+            };
+            MaskCircle.SetBinding(Canvas.LeftProperty, bind);
+                        
+            bind = new Binding
                 {
                     Source = human,
                     Path = new System.Windows.PropertyPath("X"),
                     Converter = new LeftToCenterConverter(),
-                    ConverterParameter = -Human.Config.RadiusMan / 2
+                    ConverterParameter = -Human.Config.RadiusSocDist 
                 };
-                MaskCircle.SetBinding(Canvas.LeftProperty, bind);
-            }
-            if (SocDistCircle != null)
-            {
-                bind = new Binding
-                {
-                    Source = human,
-                    Path = new System.Windows.PropertyPath("X"),
-                    Converter = new LeftToCenterConverter(),
-                    ConverterParameter = -Human.Config.RadiusSoc 
-                };
-                SocDistCircle.SetBinding(Canvas.LeftProperty, bind);
-            }
+            SocDistCircle.SetBinding(Canvas.LeftProperty, bind);
+            
             //===== Привязка координаты Y
             bind = new Binding
             {
                 Source = human,
                 Path = new System.Windows.PropertyPath("Y"),
                 Converter = new LeftToCenterConverter(),
-                ConverterParameter = -Human.Config.RadiusMan 
+                ConverterParameter = -Human.Config.RadiusHuman
             };
             CondCircle.SetBinding(Canvas.TopProperty, bind);
 
-            if (MaskCircle != null)
-            {
-                bind = new Binding
+            bind = new Binding
                 {
                     Source = human,
                     Path = new System.Windows.PropertyPath("Y"),
                     Converter = new LeftToCenterConverter(),
-                    ConverterParameter = -Human.Config.RadiusMan / 2
+                    ConverterParameter = -Human.Config.RadiusHuman / 2
                 };
-                MaskCircle.SetBinding(Canvas.TopProperty, bind);
-            }
-            if (SocDistCircle != null)
-            {
-                bind = new Binding
+            MaskCircle.SetBinding(Canvas.TopProperty, bind);
+            
+            bind = new Binding
                 {
                     Source = human,
                     Path = new System.Windows.PropertyPath("Y"),
                     Converter = new LeftToCenterConverter(),
-                    ConverterParameter = -Human.Config.RadiusSoc 
+                    ConverterParameter = -Human.Config.RadiusSocDist 
                 };
-                SocDistCircle.SetBinding(Canvas.TopProperty, bind);
-            }
-
+            SocDistCircle.SetBinding(Canvas.TopProperty, bind);
+            
             //===== Привязка состояния человека
             bind = new Binding
             {

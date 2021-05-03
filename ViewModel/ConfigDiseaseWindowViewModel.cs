@@ -114,22 +114,7 @@ namespace EpidSimulation.ViewModel
         }
 
 
-        private void IntPreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            e.Handled = !(Char.IsDigit(e.Text, 0));
-        }
 
-        public int DS_Count(string s)
-        {
-            string substr = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0].ToString();
-            int count = (s.Length - s.Replace(substr, "").Length) / substr.Length;
-            return count;
-        }
-
-        private void DoublePreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            e.Handled = !((Char.IsDigit(e.Text, 0) || ((e.Text == System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0].ToString()) && (DS_Count(((TextBox)sender).Text) < 1))));
-        }
 
         public ConfigDiseaseWindowViewModel()
         {

@@ -3,14 +3,14 @@ using System.Linq;
 
 namespace EpidSimulation.Backend
 {
-    class Rectangle
+    class NodeRegion
     {
         public readonly double X;
         public readonly double Y;
         public readonly double Width;
         public readonly double Height;
 
-        public Rectangle(double x, double y, double width, double height)
+        public NodeRegion(double x, double y, double width, double height)
         {
             X = x;
             Y = y;
@@ -38,7 +38,8 @@ namespace EpidSimulation.Backend
         private LinkedList<Human> _people;      // Список объектов
         public LinkedList<Human> People { get => _people; }
         private int _count;                     // Количество объектов находящихся в данной области
-        private Rectangle _region;              // Область
+        private NodeRegion _region;              // Область
+        public (double, double, double, double) ParRegion { get => (_region.X, _region.Y, _region.Width, _region.Height); }
         public (double, double) LVPoint { get => (_region.X, _region.Y); }
 
 
@@ -51,7 +52,7 @@ namespace EpidSimulation.Backend
         public static int AmountNodes { get => _amountNodes; }
 
         //==========
-        public QuadTree(Rectangle region, QuadTree parent)
+        public QuadTree(NodeRegion region, QuadTree parent)
         {
             _region = region;
             _people = new LinkedList<Human>();
@@ -86,10 +87,10 @@ namespace EpidSimulation.Backend
             double x = _region.X;
             double y = _region.Y;
 
-            _childs[0] = new QuadTree(new Rectangle(x + subWidth, y, subWidth, subHeight), this);
-            _childs[1] = new QuadTree(new Rectangle(x, y, subWidth, subHeight), this);
-            _childs[2] = new QuadTree(new Rectangle(x, y + subHeight, subWidth, subHeight), this);
-            _childs[3] = new QuadTree(new Rectangle(x + subWidth, y + subHeight, subWidth, subHeight), this);
+            _childs[0] = new QuadTree(new NodeRegion(x + subWidth, y, subWidth, subHeight), this);
+            _childs[1] = new QuadTree(new NodeRegion(x, y, subWidth, subHeight), this);
+            _childs[2] = new QuadTree(new NodeRegion(x, y + subHeight, subWidth, subHeight), this);
+            _childs[3] = new QuadTree(new NodeRegion(x + subWidth, y + subHeight, subWidth, subHeight), this);
         }
 
         // Получение индекса области, в которой находится объект

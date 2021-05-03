@@ -117,26 +117,15 @@ namespace EpidSimulation
 
         public MainWindow()
         {
-            Config = new ConfigDisease(
-                400, 500,                    // Latent
-                100, 200,                   // Incub
-                900, 1000,                  // Recovery
-                0.1,                        // Die
-                1.0, 2.0, 1.5, 1.0,         // Radiuses: Human, SocDist, Meet, Handshake
-                0.5, 0.8, 0.9, 0.1,         // Probabilities: InfHand, InfMeet, MaskFor, MaskFrom
-                100, 120,                   // Times: Meet
-                140, 160,                   // HandToFaceContact
-                130, 200,                   // Wash
-                50, 200,                    // Handshake
-                50, 100);                   // InfHand
+            Config = new ConfigDisease();
             
 
             Sim = new Simulation(
                 150, 150,               // Размеры карты
-                200, 0, 0, 0,           // Здоровые
-                50, 0, 0, 0,            // Латентные
-                0, 0, 0, 0,             // Инкубационные
-                0, 0, 0, 0,             // Клинические
+                1, 0, 0, 0,           // Здоровые
+                1, 0, 0, 0,            // Инкубационные
+                1, 0, 0, 0,             // Продормальные
+                1, 0, 0, 0,             // Клинические
                 0, 0, 0, 0,             // Выздоровевшие
                 Config);                // Параметры 
             curNode = Sim.Root;
@@ -212,12 +201,13 @@ namespace EpidSimulation
                 MakeVisibleNodeHumans();
 
             ClearDeads();
-
+            
             curIter.Content = "Текущая итерация: " + Sim.Iter;
             stat.Content = "Здоровых: " + Sim.AmountZd + "\n" +
-                           "Инфицированных в латентном периоде: " + Sim.AmountLat + "\n" +
-                           "Инфицированных в инкубационном периоде: " + Sim.AmountInc + "\n" +
+                           "Инфицированных в инкубационном периоде: " + Sim.AmountLat + "\n" +
+                           "Инфицированных в продормальном периоде: " + Sim.AmountInc + "\n" +
                            "Инфицированных в клиническом периоде: " + Sim.AmountClin + "\n" +
+                           "Бессимптомных: " + Sim.AmountAsympt + "\n" +
                            "С иммунитетом: " + Sim.AmountVzd + "\n" +
                            "Умерших: " + Sim.AmountDied;
 
@@ -225,7 +215,11 @@ namespace EpidSimulation
                            "Всего контактов: " + Sim.StContacts + "\n" +
                            "Инфицированных контактов: " + Sim.StContactsInf + "\n" +
                            "Всего рукопожатий: " + Sim.StHandShakes + "\n" +
-                           "Заражений с рук: " + Sim.StHandshakesInf + "\n";
+                           "Заражений с рук: " + Sim.StHandshakesInf + "\n" +
+                           "Incub: " + Config.TimeIncub_A + " " + Config.TimeIncub_B + "\n" +
+                           "Prodorm: " + Config.TimeProdorm_A + " " + Config.TimeProdorm_B + "\n" +
+                           "Recovery: " + Config.TimeRecovery_A + " " + Config.TimeRecovery_B + "\n";
+            
         }
 
         // Включить/Выключить симуляцию
@@ -252,7 +246,7 @@ namespace EpidSimulation
             {
                 foreach (FigureHuman figure in Figures)
                 {
-                    if (figure.SocDistCircle != null && figure.CondCircle.Visibility == 0)
+                    if (figure.human.SocDist && figure.CondCircle.Visibility == 0)
                         figure.SocDistCircle.Visibility = Visibility.Visible;
                 }
                 miDebugOnOff.Header = "Выключить дебаг";

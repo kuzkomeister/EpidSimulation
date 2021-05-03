@@ -23,6 +23,8 @@ namespace EpidSimulation.Backend
          *              1. ЛЮДЕЙ КОНТАКТИРОВАВШИХ С БОЛЬНЫМ, НО НЕ ЗАРАЗИВШИМСЯ
          *              2. Средняя по параметрам
          *              
+         *             ПОсле инкубационного чел начинает действовать, это типо результат информирования людей об важности выполнения противоэпид действий
+         *              
          */
 
         private int _stContacts = 0;        
@@ -156,6 +158,16 @@ namespace EpidSimulation.Backend
             get => _amountDied; 
         }
 
+        private int _amountAsympt = 0;      // Бессимптомные
+        public int AmountAsympt
+        {
+            set
+            {
+                _amountAsympt = value;
+            }
+            get => _amountAsympt;
+        }
+
         public Simulation(
             // Размер области
             double sizeX, double sizeY,
@@ -179,9 +191,9 @@ namespace EpidSimulation.Backend
         {
             Human.Config = config;  
             QuadTree.RADIUS = Math.Max(
-                Math.Max(config.RadiusMan, config.RadiusSoc),
-                Math.Max(config.RadiusHandshake, config.RadiusMeet));        
-            _root = new QuadTree(new Rectangle(0, 0, sizeX, sizeY), null);
+                Math.Max(config.RadiusHuman, config.RadiusSocDist),
+                Math.Max(config.RadiusContact, config.RadiusAirborne));        
+            _root = new QuadTree(new NodeRegion(0, 0, sizeX, sizeY), null);
             //===== Параметры карты
             SizeX = sizeX;
             SizeY = sizeY;
@@ -255,7 +267,7 @@ namespace EpidSimulation.Backend
                                 double distance = GetNearDistance(human);
                                 if (distance != -1)
                                 {
-                                    f = distance < 3 * Human.Config.RadiusMan;
+                                    f = distance < 3 * Human.Config.RadiusHuman;
                                 }
                                 else
                                 {
@@ -340,11 +352,11 @@ namespace EpidSimulation.Backend
             LinkedList<Human> tempList = GetRegionPeople(human);    
             foreach (Human tempHuman in tempList)
             {
-                if (Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y, 2) < Human.Config.RadiusMeetOptim)
+                if (Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y, 2) < Human.Config.RadiusAirborneOptim)
                 {
-                    StContacts++;
                     if ((human.Condition == 2 || human.Condition == 3) && tempHuman.Condition == 0)
                     {
+                        StContacts++;
                         if (Human.Config.GetPermissionInfect(human.Mask, tempHuman.Mask))
                         {
                             tempHuman.Condition = 1;
@@ -354,6 +366,7 @@ namespace EpidSimulation.Backend
                     }
                     else if ((tempHuman.Condition == 2 || tempHuman.Condition == 3) && human.Condition == 0)
                     {
+                        StContacts++;
                         if (Human.Config.GetPermissionInfect(tempHuman.Mask, human.Mask))
                         {
                             human.Condition = 1;
@@ -370,7 +383,7 @@ namespace EpidSimulation.Backend
             LinkedList<Human> tempList = GetRegionPeople(human);
             foreach (Human tempHuman in tempList)
             {
-                if (Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y,2) < Human.Config.RadiusHandshakeOptim)
+                if (Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y,2) < Human.Config.RadiusContactOptim)
                 {
                     StHandShakes++;
                     if (human.InfectHand)
@@ -405,8 +418,8 @@ namespace EpidSimulation.Backend
 
         public bool CheckBarrier(double x, double y)
         {
-            return ((0 <= x - Human.Config.RadiusMan) && (x + Human.Config.RadiusMan <= SizeX) && 
-                    (0 <= y - Human.Config.RadiusMan) && (y + Human.Config.RadiusMan <= SizeY));
+            return ((0 <= x - Human.Config.RadiusHuman) && (x + Human.Config.RadiusHuman <= SizeX) && 
+                    (0 <= y - Human.Config.RadiusHuman) && (y + Human.Config.RadiusHuman <= SizeY));
         }
 
         private LinkedList<Human> GetRegionPeople(Human human)
@@ -461,6 +474,9 @@ namespace EpidSimulation.Backend
                     case 5:
                         AmountDied--;
                         break;
+                    case 6:
+                        AmountAsympt--;
+                        break;
                 }
                 switch (newCond)
                 {
@@ -481,6 +497,9 @@ namespace EpidSimulation.Backend
                         break;
                     case 5:
                         AmountDied++;
+                        break;
+                    case 6:
+                        AmountAsympt++;
                         break;
                 }
             }

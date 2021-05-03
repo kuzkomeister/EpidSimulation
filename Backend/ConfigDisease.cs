@@ -8,115 +8,310 @@ namespace EpidSimulation.Backend
 {
     public class ConfigDisease
     {
-        private Random random;
+        private Random random = new Random(322);
 
         //===== Основные характеристики болезни
-        private int _timeLatent_a, _timeLatent_b;       // Латентный период
-        private int _timeIncub_a, _timeIncub_b;         // Инкубационный период
-        private int _timeRecovery_a, _timeRecovery_b;   // Клинический период
-        private double _probabilityDie;                // Летальность болезни
+
+        // Инкубационный период
+        private int _timeIncub_a, _timeIncub_b;       
+        public int TimeIncub_A {
+            set => _timeIncub_a = value <= TimeIncub_B ? value: _timeIncub_a;
+            get => _timeIncub_a; 
+        }
+        public int TimeIncub_B
+        {
+            set => _timeIncub_b = value >= TimeIncub_A ? value : _timeIncub_b;
+            get => _timeIncub_b;
+        }
+
+        // Продормальный период
+        private int _timeProdorm_a, _timeProdorm_b;   
+        public int TimeProdorm_A
+        {
+            set => _timeProdorm_a = value <= TimeProdorm_B ? value : _timeProdorm_a;
+            get => _timeProdorm_a;
+        }
+        public int TimeProdorm_B
+        {
+            set => _timeProdorm_b = value >= TimeProdorm_A ? value : _timeProdorm_b;
+            get => _timeProdorm_b;
+        }
+
+        // Клинический период
+        private int _timeRecovery_a, _timeRecovery_b; 
+        public int TimeRecovery_A
+        {
+            set => _timeRecovery_a = value <= TimeRecovery_B ? value : _timeRecovery_a;
+            get => _timeRecovery_a;
+        }
+        public int TimeRecovery_B
+        {
+            set => _timeRecovery_b = value >= TimeRecovery_A ? value : _timeRecovery_b;
+            get => _timeRecovery_b;
+        }
+
+        // Летальность болезни
+        private double _probabilityDie;               
+        public double ProbabilityDie
+        {
+            set => _probabilityDie = 0 <= value && value <= 1 ? value : _probabilityDie; 
+            get => _probabilityDie;
+        }
+
+        // Процент бессимптомности болезни
+        private double _probabilityAsymptomatic;
+        public double ProbabilityAsymptomatic
+        {
+            set => _probabilityAsymptomatic = 0 <= value && value <= 1 ? value : _probabilityAsymptomatic;
+            get => _probabilityAsymptomatic;
+        }
 
         //===== Уровень взаимодействия
-        public readonly double RadiusMeet;          // Радиус Заражения
-        public readonly double RadiusMeetOptim;     // Радиус Заражения (в квадрате)
-        public readonly double RadiusMan;           // Радиус размера человека
-        public readonly double RadiusManOptim;      // Радиус размера человека (в квадрате)
-        public readonly double RadiusSoc;           // Радиус социальной дистанции
-        public readonly double RadiusSocOptim;      // Радиус социальной дистанции (в квадрате)
-        public readonly double RadiusHandshake;     // Радиус возможного рукопожатия
-        public readonly double RadiusHandshakeOptim;// Радиус возможного рукопожатия (в квадрате)
-        private double _probabilitySelfIsolation;   // Вероятность, что человек уйдет на самоизоляцию
+
+        //=== Радиус размера человека
+        private double _radiusHuman;           
+        public double RadiusHuman
+        {
+            set
+            {
+                if (value > 0)
+                {
+                    _radiusHuman = value;
+                    _radiusHumanOptim = (double)(4.1 * Math.Pow(RadiusHuman, 2));
+                }
+            }
+            get => _radiusHuman;
+        }
+        // Радиус размера человека (в квадрате)
+        private double _radiusHumanOptim;      
+        public double RadiusHumanOptim { get => _radiusHumanOptim; }
+
+        //=== Радиус воздушно-капельного механизма передачи
+        private double _radiusAirborne;
+        public double RadiusAirborne
+        {
+            set
+            {
+                if (value >= 0)
+                {
+                    _radiusAirborne = value + RadiusHuman;
+                    _radiusAirborneOptim = (double)(4.1 * Math.Pow(RadiusAirborne, 2));
+                }
+            }
+
+            get => _radiusAirborne;     
+        }
+        // Радиус воздушно-капельного механизма передачи (в квадрате)
+        private double _radiusAirborneOptim;
+        public double RadiusAirborneOptim { get => _radiusAirborneOptim; }
+
+        //=== Радиус контактного механизма передачи
+        private double _radiusContact;
+        public double RadiusContact
+        {
+            set
+            {
+                if (value >= 0)
+                {
+                    _radiusContact = value + RadiusHuman;
+                    _radiusContactOptim = (double)(4.1 * Math.Pow(RadiusContact, 2));
+                }
+            }
+            get => _radiusContact;
+        }
+        // Радиус контактного механизма передачи (в квадрате)
+        private double _radiusContactOptim;
+        public double RadiusContactOptim { get => _radiusContactOptim; }
+
+        //=== Радиус социальной дистанции
+        private double _radiusSocDist;
+        public double RadiusSocDist
+        {
+            set
+            {
+                if (value >= 0)
+                {
+                    _radiusSocDist = value + RadiusHuman;
+                    _radiusSocDistOptim = (double)(4.1 * Math.Pow(RadiusSocDist, 2));
+                }
+            }
+            get => _radiusSocDist;
+        }
+        // Радиус социальной дистанции (в квадрате)
+        private double _radiusSocDistOptim;      
+        public double RadiusSocDistOptim { get => _radiusSocDistOptim; }
+
+
 
         //===== Уровень распространения
-        private double _probabilityInfHand;  // Заразиться от контакта рук с лицом
-        private double _probabilityInfMeet;  // Заразиться на встрече
+
+        // Шанс заразиться от контактного механизма передачи 
+        private double _probabilityInfContact;  
+        public double ProbabilityInfContact
+        {
+            set => _probabilityInfContact = 0 <= value && value <= 1 ? value : _probabilityInfContact;
+            get => _probabilityInfContact;
+        }
+
+        // Шанс заразиться от воздушно-капельного механизма передачи
+        private double _probabilityInfAirborne;  
+        public double ProbabilityInfAirborne
+        {
+            set => _probabilityInfAirborne = 0 <= value && value <= 1 ? value : _probabilityInfAirborne;
+            get => _probabilityInfAirborne;
+        }
         //private double _maskProtectionFor;   // Эффективность защиты маски в сторону заразить кого-то
         //private double _maskProtectionFrom;  // Эффективность защиты маски в сторону заразиться от кого-то
+        
+        // Шанс заразить восприимчивый организм от источника инфекции (зависит от степени защиты индивидуальной защиты)
         private double _probabilityInfFor;
+        public double ProbabilityInfFor
+        {
+            set => _probabilityInfFor = 0 <= value && value <= 1 ? value : _probabilityInfFor;
+            get => _probabilityInfFor;
+        }
+        
+        // Шанс заразиться восприимчивому организму от источника инфекции (зависит от степени защиты индивидуальной защиты)
         private double _probabilityInfFrom;
+        public double ProbabilityInfFrom
+        {
+            set => _probabilityInfFrom = 0 <= value && value <= 1 ? value : _probabilityInfFrom;
+            get => _probabilityInfFrom;
+        }
 
         //===== Уровень заболеваемости
-        private int _timeMeet_a, _timeMeet_b;                           // Время между встречами 
-        private int _timeHandToFaceContact_a, _timeHandToFaceContact_b; // Время между контактом рук с лицом
-        private int _timeWash_a, _timeWash_b;                           // Время между мытьем рук
-        private int _timeHandshake_a, _timeHandshake_b;                 // Время между рукопожатиями
-        private int _timeInfHand_a, _timeInfHand_b;                     // Время между загрязнением рук
+
+        // Время между контактами воздушно-капельного механизма передачи
+        private int _timeAirborne_a, _timeAirborne_b;                           
+        public int TimeAirborne_A
+        { 
+            set => _timeAirborne_a = value <= TimeAirborne_B ? value : _timeAirborne_a;
+            get => _timeAirborne_a;
+        }
+        public int TimeAirborne_B
+        {
+            set => _timeAirborne_b = value >= TimeAirborne_A ? value : _timeAirborne_b;
+            get => _timeAirborne_b;
+        }
+        
+        // Время между контактом рук с лицом
+        private int _timeHandToFaceContact_a, _timeHandToFaceContact_b; 
+        public int TimeHandToFaceContact_A
+        {  
+            set => _timeHandToFaceContact_a = value <= TimeHandToFaceContact_B? value : _timeHandToFaceContact_a;
+            get => _timeHandToFaceContact_a;
+        }
+        public int TimeHandToFaceContact_B
+        {
+            set => _timeHandToFaceContact_b = value >= TimeHandToFaceContact_A ? value : _timeHandToFaceContact_b;
+            get => _timeHandToFaceContact_b;
+        }
+    
+        // Время между мытьем рук
+        private int _timeWash_a, _timeWash_b;                           
+        public int TimeWash_A
+        {
+            set => _timeWash_a = value <= TimeWash_B ? value : _timeWash_a;
+            get => _timeWash_a;
+        }
+        public int TimeWash_B
+        {
+            set => _timeWash_b = value >= TimeWash_A ? value : _timeWash_b;
+            get => _timeWash_b;
+        }
+        
+        // Время между контактами контактного механизма передачи
+        private int _timeContact_a, _timeContact_b;                 
+        public int TimeContact_A
+        {
+            set => _timeContact_a = value <= TimeContact_B ? value : _timeContact_a;
+            get => _timeContact_a;
+        }
+        public int TimeContact_B
+        {
+            set => _timeContact_b = value >= TimeContact_A ? value : _timeContact_b;
+            get => _timeContact_b;
+        }
+
+        // Время между загрязнением рук
+        private int _timeInfHand_a, _timeInfHand_b;                     
+        public int TimeInfHand_A
+        {   
+            set => _timeInfHand_a = value <= TimeInfHand_B ? value : _timeInfHand_a;
+            get => _timeInfHand_a;
+        }
+        public int TimeInfHand_B
+        {
+            set => _timeInfHand_b = value >= TimeInfHand_A ? value : _timeInfHand_b;
+            get => _timeInfHand_b;
+        }
 
 
-        // Для передвижения
-        private int _timeChangeDirect_a, _timeChangeDirect_b;           // Время смены направления движения
-        public readonly double MaxDist; // Максимальная дистанция шага человека
-        public readonly int MaxTryes;   // Максимальное количество попыток перемещения в итерацию
+        //====== Для передвижения
+
+        // Время смены направления движения
+        private int _timeChangeDirect_a, _timeChangeDirect_b;           
+        public int TimeChangeDirect_A
+        {   
+            set => _timeChangeDirect_a = value <= TimeChangeDirect_B ? value : _timeChangeDirect_a;
+            get => _timeChangeDirect_a;
+        }
+        public int TimeChangeDirect_B
+        {
+            set => _timeChangeDirect_b = value >= TimeChangeDirect_A ? value : _timeChangeDirect_b;
+            get => _timeChangeDirect_b;
+        }
+
+        // Максимальная дистанция шага человека
+        private double _maxDist; 
+        public double MaxDist
+        {
+            set => _maxDist = value > 0 ? value : _maxDist;
+            get => _maxDist;
+        }
+
+        // Максимальное количество попыток перемещения в итерацию
+        private int _maxTryes;   
+        public int MaxTryes
+        {
+            set => _maxTryes = value > 1 ? value : _maxTryes;
+            get => _maxTryes;
+        }
 
         //====================================
 
-        public ConfigDisease(
-            // Основные характеристики болезни
-            int timeLatent_a, int timeLatent_b,
-            int timeIncub_a, int timeIncub_b,
-            int timeRecovery_a, int timeRecovery_b,
-            double probabilityDied,
-            // Уровень взаимодействия
-            double radiusMan, 
-            double radiusSoc, 
-            double radiusMeet, 
-            double radiusHandshake,
-            // Уровень распространения
-            double probabilityInfHand,
-            double probabilityInfMeet,
-            double maskProtectionFor, 
-            double maskProtectionFrom,
-            // Уровень заболеваемости
-            int timeMeet_a, int timeMeet_b,
-            int timeHandToFaceContact_a, int timeHandToFaceContact_b,
-            int timeWash_a, int timeWash_b,
-            int timeHandshake_a, int timeHandshake_b,
-            int timeInfHand_a, int timeInfHand_b
-            )
+        public ConfigDisease()
         {
-            // Настройки времени
-            _timeMeet_a = timeMeet_a; _timeMeet_b = timeMeet_b;
-            _timeHandToFaceContact_a = timeHandToFaceContact_a; _timeHandToFaceContact_b = timeHandToFaceContact_b;
-            _timeWash_a = timeWash_a; _timeWash_b = timeWash_b;
-            _timeLatent_a = timeLatent_a; _timeLatent_b = timeLatent_b;
-            _timeIncub_a = timeIncub_a; _timeIncub_b = timeIncub_b;
-            _timeRecovery_a = timeRecovery_a; _timeRecovery_b = timeRecovery_b;
-            _timeHandshake_a = timeHandshake_a; _timeHandshake_b = timeHandshake_b;
-            _timeInfHand_a = timeInfHand_a; _timeInfHand_b = timeInfHand_b;
-            // Вероятности
-            this._probabilityDie = probabilityDied;
-            this._probabilityInfMeet = probabilityInfMeet;
-            this._probabilityInfHand = probabilityInfHand;
-            //this._maskProtectionFor = maskProtectionFor;
-            this._probabilityInfFor = 1 - maskProtectionFor;
-            //this._maskProtectionFrom = maskProtectionFrom;
-            this._probabilityInfFrom = 1 - maskProtectionFrom;
-            // Радиусы
-            this.RadiusMan = radiusMan;
-            RadiusManOptim = (double)(4.2 * Math.Pow(this.RadiusMan, 2));
-            this.RadiusSoc = radiusSoc + radiusMan;
-            RadiusSocOptim = (double)(4.1 * Math.Pow(this.RadiusSoc, 2));
-            this.RadiusMeet = radiusMeet + radiusMan;
-            RadiusMeetOptim = (double)Math.Pow(this.RadiusMeet, 2);
-            this.RadiusHandshake = radiusHandshake + radiusMan;
-            RadiusHandshakeOptim = (double)Math.Pow(this.RadiusHandshake, 2);
+            TimeIncub_B = 500; TimeIncub_A = 400;
+            TimeProdorm_B = 200; TimeProdorm_A = 100;
+            TimeRecovery_B = 900; TimeRecovery_A = 800;
+            ProbabilityDie = 0.1; ProbabilityAsymptomatic = 0.2;
 
-            this.MaxDist = 0.3;
-            this.MaxTryes = 3;
-            _timeChangeDirect_a = 50; _timeChangeDirect_b = 100;
+            RadiusHuman = 1.0; RadiusSocDist = 2.0;
+            RadiusAirborne = 1.5; RadiusContact = 1.0;
 
-            random = new Random(333);
+            ProbabilityInfContact = 0.5; ProbabilityInfAirborne = 0.8;
+            ProbabilityInfFor = 0.1; ProbabilityInfFrom = 0.9;
+
+            TimeAirborne_B = 120; TimeAirborne_A = 100;
+            TimeContact_B = 100; TimeContact_A = 50;
+            TimeHandToFaceContact_B = 160; TimeHandToFaceContact_A = 140;
+            TimeWash_B = 300; TimeWash_A = 200;
+            TimeInfHand_B = 100; TimeInfHand_A = 50;
+
+            MaxDist = 0.3;  MaxTryes = 3;
+            TimeChangeDirect_B = 100; TimeChangeDirect_A = 50;
         }
 
         //===== Вероятность
-        public bool GetPermissionInfHand()
+        public bool GetPermissionInfContact()
         {
-            return random.NextDouble() <= _probabilityInfHand;
+            return random.NextDouble() <= ProbabilityInfContact;
         }
 
         public bool GetPermissionDie()
         {
-            return random.NextDouble() <= _probabilityDie;
+            return random.NextDouble() <= ProbabilityDie;
         }
 
         public bool GetPermissionInfect(bool maskFrom, bool maskFor)
@@ -124,65 +319,72 @@ namespace EpidSimulation.Backend
             if (maskFor)
             {
                 if (maskFrom)
-                    return random.NextDouble() < _probabilityInfMeet * _probabilityInfFor * _probabilityInfFrom;
+                    return random.NextDouble() < ProbabilityInfAirborne * ProbabilityInfFor * ProbabilityInfFrom;
                 else
-                    return random.NextDouble() < _probabilityInfMeet * _probabilityInfFrom;
+                    return random.NextDouble() < ProbabilityInfAirborne * ProbabilityInfFrom;
                 
             }
             else
             {
                 if (maskFrom)
-                    return random.NextDouble() < _probabilityInfMeet * _probabilityInfFor;
+                    return random.NextDouble() < ProbabilityInfAirborne * _probabilityInfFor;
                 else
-                    return random.NextDouble() < _probabilityInfMeet;                
+                    return random.NextDouble() < ProbabilityInfAirborne;                
             }
+        }
+
+        public bool GetPermissionAsymptomatic()
+        {
+            return random.NextDouble() <= ProbabilityAsymptomatic;
         }
 
         //===== Получить случайное время для таймера
         public int GetTimeMeet()
         {
-            return random.Next(_timeMeet_a, _timeMeet_b);
+            return random.Next(TimeAirborne_A, TimeAirborne_B);
         }
 
         public int GetTimeHandToFaceContact()
         {
-            return random.Next(_timeHandToFaceContact_a, _timeHandToFaceContact_b);
+            return random.Next(TimeHandToFaceContact_A, TimeHandToFaceContact_B);
         }
 
         public int GetTimeWash()
         {
-            return random.Next(_timeWash_a, _timeWash_b);
+            return random.Next(TimeWash_A, TimeWash_B);
         }
 
         public int GetTimeChangeDirect()
         {
-            return random.Next(_timeChangeDirect_a, _timeChangeDirect_b);
+            return random.Next(TimeChangeDirect_A, TimeChangeDirect_B);
         }
 
-        public int GetTimeHandshake()
+        public int GetTimeContact()
         {
-            return random.Next(_timeHandshake_a, _timeHandshake_b);
+            return random.Next(TimeContact_A, TimeContact_B);
         }
 
         public int GetTimeInfHand()
         {
-            return random.Next(_timeInfHand_a, _timeInfHand_b);
-        }
-
-        public int GetTimeLatent()
-        {
-            return random.Next(_timeLatent_a, _timeLatent_b);
+            return random.Next(TimeInfHand_A, TimeInfHand_B);
         }
 
         public int GetTimeIncub()
         {
-            return random.Next(_timeIncub_a, _timeIncub_b);
+            return random.Next(TimeIncub_A, TimeIncub_B);
+        }
+
+        public int GetTimeProdorm()
+        {
+            return random.Next(TimeProdorm_A, TimeProdorm_B);
         }
 
         public int GetTimeRecovery()
         {
-            return random.Next(_timeRecovery_a, _timeRecovery_b);
+            return random.Next(TimeRecovery_A, TimeRecovery_B);
         }
+
+        //==== Поменять направление движения
 
         public double GetDirection()
         {

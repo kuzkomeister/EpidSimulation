@@ -20,11 +20,12 @@ namespace EpidSimulation.Backend
         public int Condition { get => _condition; set { _condition = value; OnPropertyChanged("Condition"); } }
         /*
             0 - здоровый 
-            1 - инфицированный в инкубационном и латентном периоде
-            2 - инфицированный в инкубационном периоде
+            1 - инфицированный в инкубационном периоде
+            2 - инфицированный в продормальном периоде
             3 - инфицированный в клиническом периоде
             4 - выздоровевший
             5 - мертвый
+            6 - бессимптомный
          */
 
         //===== Параметры перемещения
@@ -47,8 +48,8 @@ namespace EpidSimulation.Backend
 
         //===== Параметры для действия таймеров
         private int _timeChangeDirect;       // Время до смены направления
-        private int _timeLatent;             // Время до окончания латентного периода
         private int _timeIncub;              // Время до окончания инкубационного периода
+        private int _timeProdorm;            // Время до окончания продормального периода
         private int _timeRecovery;           // Время до выздоровления
         private int _timeInfHand;            // Время до "загрязнения" своих рук
         private int _timeMeet;               // Время до инициирования встречи/беседы
@@ -66,7 +67,7 @@ namespace EpidSimulation.Backend
             Mask = mask; 
             SocDist = socDist;
             _infectHand = false;
-            Move = SocDist == true ? MoveWithSocDist : MoveWithoutSocDist;
+            Move = SocDist ? MoveWithSocDist : MoveWithoutCollision;
 
             // Направление движения
             _vectorDirection = new double[2];
@@ -74,14 +75,14 @@ namespace EpidSimulation.Backend
             _vectorDirection[1] = Config.GetDirection();
 
             // Устанавливаем таймеры
-            _timeLatent = Config.GetTimeLatent();
             _timeIncub = Config.GetTimeIncub();
+            _timeProdorm = Config.GetTimeProdorm();
             _timeRecovery = Config.GetTimeRecovery();
             _timeMeet = Config.GetTimeMeet();
             _timeHandToFaceContact = Config.GetTimeHandToFaceContact();
             _timeWash = Config.GetTimeWash();
             _timeChangeDirect = Config.GetTimeChangeDirect();
-            _timeHandshake = Config.GetTimeHandshake();
+            _timeHandshake = Config.GetTimeContact();
             _timeInfHand = Config.GetTimeInfHand();
         }
 
@@ -121,7 +122,7 @@ namespace EpidSimulation.Backend
 
                     double distance = simulation.GetNearDistance(this);
 
-                    if (distance < Config.RadiusSocOptim && distance < oldDistance)
+                    if (distance < Config.RadiusSocDistOptim && distance < oldDistance)
                     {
                         X = oldX;
                         Y = oldY;
@@ -158,12 +159,40 @@ namespace EpidSimulation.Backend
 
                     double distance = simulation.GetNearDistance(this);
 
-                    if (distance != -1 && distance < Config.RadiusManOptim)
+                    if (distance != -1 && distance < Config.RadiusHumanOptim)
                     {
                         X = oldX;
                         Y = oldY;
                         needChangeDir = true;
                     }
+                }
+                else
+                {
+                    needChangeDir = true;
+                }
+
+                if (needChangeDir)
+                {
+                    _vectorDirection[0] = Config.GetDirection();
+                    _vectorDirection[1] = Config.GetDirection();
+                    _timeChangeDirect = Config.GetTimeChangeDirect();
+                }
+            }
+        }
+
+        private void MoveWithoutCollision(Simulation simulation)
+        {
+            bool needChangeDir = true;
+            for (int i = 0; i < Config.MaxTryes && needChangeDir; ++i)
+            {
+                if (simulation.CheckBarrier(X + _vectorDirection[0], Y + _vectorDirection[1]))
+                {
+                    double oldX = X;
+                    double oldY = Y;
+
+                    X += _vectorDirection[0];
+                    Y += _vectorDirection[1];
+                    needChangeDir = false;
                 }
                 else
                 {
@@ -212,7 +241,7 @@ namespace EpidSimulation.Backend
             if (_timeHandshake == 0)
             {
                 simulation.MakeHandshake(this);
-                _timeHandshake = Config.GetTimeHandshake();
+                _timeHandshake = Config.GetTimeContact();
             }
             else
             {
@@ -226,7 +255,7 @@ namespace EpidSimulation.Backend
             {
                 if (_infectHand)
                 {
-                    if (Config.GetPermissionInfHand())
+                    if (Config.GetPermissionInfContact())
                     {
                         Condition = 1;
                         simulation.StHandshakesInf++;
@@ -268,31 +297,78 @@ namespace EpidSimulation.Backend
 
         private void CourseDisease()
         {
+            switch (Condition)
+            {
+                case 1:
+                    if (_timeIncub == 0)
+                    {
+                        if (Config.GetPermissionAsymptomatic())
+                            Condition = 6;
+                        else
+                            Condition = 2;
+                    }
+                    else
+                        _timeIncub--;
+                    break;
+
+                case 2:
+                    SetHandsDirty();
+                    if (_timeProdorm == 0)
+                        Condition = 3;
+                    else
+                        _timeProdorm--;
+                    break;
+
+                case 3:
+                case 6:
+                    SetHandsDirty();
+                    if (_timeRecovery == 0)
+                    {
+                        if (Config.GetPermissionDie())
+                            Condition = 5;
+                        else
+                            Condition = 4;
+                    }
+                    else
+                        _timeRecovery--;
+                    break;
+
+                case 4:
+
+                    break;
+            }
+            /*
             if (Condition == 1)
             {
-                if (_timeLatent == 0)
-                { 
-                    Condition = 2;   
-                }
-                else
-                {
-                    _timeLatent--;
-                }
-            }
-            else if (Condition == 2)
-            {
-                SetHandsDirty();
+                // Инкубационный период
                 if (_timeIncub == 0)
-                {
-                    Condition = 3;                    
+                { 
+                    if (Config.GetPermissionAsymptomatic())
+                        Condition = 6;
+                    else
+                        Condition = 2;      
                 }
                 else
                 {
                     _timeIncub--;
                 }
             }
-            else if (Condition == 3)
+            else if (Condition == 2)
             {
+                // Продормальный период
+                SetHandsDirty();
+                if (_timeProdorm == 0)
+                {
+                    Condition = 3;                    
+                }
+                else
+                {
+                    _timeProdorm--;
+                }
+            }
+            else if (Condition == 3 || Condition == 6)
+            {
+                // Клинический период (носительство)
                 SetHandsDirty();
                 if (_timeRecovery == 0)
                 {
@@ -311,6 +387,7 @@ namespace EpidSimulation.Backend
                     _timeRecovery--;
                 }
             }
+            */
         }
 
 
