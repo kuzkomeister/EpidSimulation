@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:c="clr-namespace:EpidSimulation.Frontend"
       xmlns:local="clr-namespace:EpidSimulation.Pages.ConfigDisease"
       xmlns:ViewModel="clr-namespace:EpidSimulation.ViewModel" x:Class="EpidSimulation.Pages.ConfigDisease.DiseaseParam"
       mc:Ignorable="d" 
@@ -10,9 +11,13 @@
       Title="DiseaseParam"
       Background="White">
 
+    <Page.Resources>
+        <c:ShanceToProcentConverter x:Key="myShanceToProcentConverter"/>
+    </Page.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.2*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -24,29 +29,34 @@
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Orientation="Vertical">
             <Label Content="Настройки болезни:"/>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                <Label Content="Инкубационный период:"/>
-                <TextBox Width="100" Margin="2,0,0,0" PreviewTextInput="IntPreviewTextInput"/>
-                <Label Content="±"/>
-                <TextBox Width="30" PreviewTextInput="IntPreviewTextInput"/>
+                <Label Content="Инкубационный период: от"/>
+                <TextBox Width="75" Margin="2,0,0,0" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeIncub_A}"/>
+                <Label Content="до"/>
+                <TextBox Width="75" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeIncub_B}"/>
                 <Label Content="итераций"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                <Label Content="Продормальный период:"/>
-                <TextBox Width="100" PreviewTextInput="IntPreviewTextInput"/>
-                <Label Content="±"/>
-                <TextBox Width="30" PreviewTextInput="IntPreviewTextInput"/>
+                <Label Content="Продормальный период: от"/>
+                <TextBox Width="75" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeProdorm_A}"/>
+                <Label Content="до"/>
+                <TextBox Width="75" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeProdorm_B}"/>
                 <Label Content="итераций"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                <Label Content="Клинический период:"/>
-                <TextBox Width="100" Margin="20,0,0,0" PreviewTextInput="IntPreviewTextInput"/>
-                <Label Content="±"/>
-                <TextBox Width="30" PreviewTextInput="IntPreviewTextInput"/>
+                <Label Content="Клинический период:       от"/>
+                <TextBox Width="75" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeRecovery_A}"/>
+                <Label Content="до"/>
+                <TextBox Width="75" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeRecovery_B}"/>
                 <Label Content="итераций"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="Летальность:"/>
-                <TextBox Width="100" Margin="68,0,0,0" PreviewTextInput="DoublePreviewTextInput"/>
+                <TextBox Width="100" Margin="84,0,0,0" PreviewTextInput="DoublePreviewTextInput" Text="{Binding ProbabilityDie, Converter={StaticResource myShanceToProcentConverter}}"/>
+                <Label Content="%"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <Label Content="Бессимптомных:"/>
+                <TextBox Width="100" Margin="64,0,0,0" PreviewTextInput="DoublePreviewTextInput" Text="{Binding ProbabilityAsymptomatic, Converter={StaticResource myShanceToProcentConverter}}"/>
                 <Label Content="%"/>
             </StackPanel>
         </StackPanel>

@@ -24,5 +24,10 @@ namespace EpidSimulation.Pages.ConfigDisease
         {
             InitializeComponent();
         }
+
+        private void IntPreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !(Char.IsDigit(e.Text, 0));
+        }
     }
 }

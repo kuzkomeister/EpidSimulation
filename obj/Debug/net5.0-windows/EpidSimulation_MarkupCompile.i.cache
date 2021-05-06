@@ -12,9 +12,9 @@ TRACE;DEBUG;NET;NET5_0;NETCOREAPP
 C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\App.xaml
 6-1157117279
 
-19525516001
+21666262931
 197-844408422
 ConfigDiseaseWindow.xaml;MainWindow.xaml;Pages\ConfigDisease\DiseaseParam.xaml;Pages\ConfigDisease\Incidence.xaml;Pages\ConfigDisease\InteractionLevel.xaml;Pages\ConfigDisease\Prevalence.xaml;
 
-True
+False
 

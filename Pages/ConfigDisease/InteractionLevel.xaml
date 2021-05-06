@@ -3,12 +3,19 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:c="clr-namespace:EpidSimulation.Frontend"
       xmlns:local="clr-namespace:EpidSimulation.Pages.ConfigDisease"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="InteractionLevel"
       Background="White">
 
+    <Page.Resources>
+        <c:StringToDoubleConverter x:Key="myStringToDoubleConverter"/>
+        <c:ShanceToProcentConverter x:Key="myShanceToProcentConverter"/>
+    </Page.Resources>
+    
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -24,26 +31,54 @@
             <Label Content="Радиусы:"/>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="Человека:"/>
-                <TextBox Width="100" Margin="77,0,0,0"/>
+                <TextBox Width="100" Margin="77,0,0,0" PreviewTextInput="DoublePreviewTextInput" Text="{Binding RadiusHuman, Converter={StaticResource myStringToDoubleConverter}}"/>
                 <Label Content="единиц"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="Социальной дистанции:"/>
-                <TextBox Width="100"/>
+                <TextBox Width="100" PreviewTextInput="DoublePreviewTextInput" Text="{Binding RadiusSocDist, Converter={StaticResource myStringToDoubleConverter}}"/>
                 <Label Content="единиц"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="Встреч:"/>
-                <TextBox Width="100" Margin="92,0,0,0"/>
+                <TextBox Width="100" Margin="92,0,0,0" PreviewTextInput="DoublePreviewTextInput" Text="{Binding RadiusAirborne, Converter={StaticResource myStringToDoubleConverter}}"/>
                 <Label Content="единиц"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="Рукопожатий:"/>
-                <TextBox Width="100" Margin="56,0,0,0"/>
+                <TextBox Width="100" Margin="56,0,0,0" PreviewTextInput="DoublePreviewTextInput" Text="{Binding RadiusContact, Converter={StaticResource myStringToDoubleConverter}}"/>
                 <Label Content="единиц"/>
             </StackPanel>
         </StackPanel>
-        
+
+        <Ellipse Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Fill="DeepSkyBlue" 
+                 Height="{Binding RadiusSocDist, Converter={StaticResource myShanceToProcentConverter}}" 
+                 Width="{Binding RadiusSocDist, Converter={StaticResource myShanceToProcentConverter}}"/>
+        <Ellipse Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Fill="Red" 
+                 Height="{Binding RadiusAirborne, Converter={StaticResource myShanceToProcentConverter}}" 
+                 Width="{Binding RadiusAirborne, Converter={StaticResource myShanceToProcentConverter}}"/>
+        <Ellipse Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Fill="Pink" 
+                 Height="{Binding RadiusContact, Converter={StaticResource myShanceToProcentConverter}}" 
+                 Width="{Binding RadiusContact, Converter={StaticResource myShanceToProcentConverter}}"/>
+        <Ellipse Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Fill="Gray" 
+                 Height="{Binding RadiusHuman, Converter={StaticResource myShanceToProcentConverter}}" 
+                 Width="{Binding RadiusHuman, Converter={StaticResource myShanceToProcentConverter}}" StrokeThickness="1" Stroke="Black"/>
+
+        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical">
+            <Label Content="*Все радиусы включают в себя радиус человека, т.е. если радиус человека = 0.5, то при вводе радиуса встречи = 1.5, он автоматически станет 2" FontSize="11.7"/>
+            <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
+                <Rectangle Fill="DeepSkyBlue" Height="10" Width="10" Stroke="Black" StrokeThickness="1"/>
+                <Label Content=" - Область социальной дистанции"/>
+                <Rectangle Fill="Red" Height="10" Width="10" Stroke="Black" StrokeThickness="1" Margin="100,0,0,0"/>
+                <Label Content=" - Область возможной воздушно-капельной передачи инфекции"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
+                <Rectangle Fill="Gray" Height="10" Width="10" Stroke="Black" StrokeThickness="1"/>
+                <Label Content=" - Область самого человека"/>
+                <Rectangle Fill="Pink" Height="10" Width="10" Stroke="Black" StrokeThickness="1" Margin="134,0,0,0"/>
+                <Label Content=" - Область возможной контактной передачи инфекции"/>
+            </StackPanel>
+        </StackPanel>
         
     </Grid>
 </Page>

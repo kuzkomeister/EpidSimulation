@@ -17,20 +17,16 @@ namespace EpidSimulation
 {
     public partial class ConfigDiseaseWindow : Window
     {
-        MainWindow _main;
-
-        public ConfigDiseaseWindow()
+        
+        public ConfigDiseaseWindow(MainWindow mainWindow)
         {
             InitializeComponent();
-            DataContext = new ViewModel.ConfigDiseaseWindowViewModel();
+            DataContext = new ViewModel.ConfigDiseaseWindowViewModel(mainWindow);
         }
 
-        public ConfigDiseaseWindow(MainWindow main)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            _main = main;
-            InitializeComponent();
-            DataContext = new ViewModel.ConfigDiseaseWindowViewModel();
+            this.Close();
         }
-
     }
 }

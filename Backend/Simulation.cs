@@ -385,12 +385,16 @@ namespace EpidSimulation.Backend
             {
                 if (Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y,2) < Human.Config.RadiusContactOptim)
                 {
-                    StHandShakes++;
+
                     if (human.InfectHand)
+                    {
                         tempHuman.InfectHand = true;
+                        StHandShakes++;
+                    }
                     if (tempHuman.InfectHand)
                     {
                         human.InfectHand = true;
+                        StHandShakes++;
                         break;
                     }
                 }

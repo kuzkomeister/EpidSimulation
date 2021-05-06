@@ -3,11 +3,15 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:c="clr-namespace:EpidSimulation.Frontend"
       xmlns:local="clr-namespace:EpidSimulation.Pages.ConfigDisease"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Prevalence"
       Background="White">
+    <Page.Resources>
+        <c:ShanceToProcentConverter x:Key="myShanceToProcentConverter"/>
+    </Page.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -23,22 +27,22 @@
             <Label Content="Вероятности:"/>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="Базовый шанс заразиться воздушно-капельным путем:"/>
-                <TextBox Width="50"/>
+                <TextBox Width="50" PreviewTextInput="DoublePreviewTextInput" Text="{Binding ProbabilityInfNN, Converter={StaticResource myShanceToProcentConverter}, Mode=TwoWay}"/>
                 <Label Content="%"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="Базовый шанс заразиться контактным путем:"/>
-                <TextBox Width="50" Margin="56,0,0,0"/>
+                <TextBox Width="50" Margin="56,0,0,0" PreviewTextInput="DoublePreviewTextInput" Text="{Binding ProbabilityInfContact, Converter={StaticResource myShanceToProcentConverter}, Mode=TwoWay}"/>
                 <Label Content="%"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="Эффективность защиты маски заразить кого-то:"/>
-                <TextBox Width="50" Margin="40,0,0,0"/>
+                <TextBox Width="50" Margin="40,0,0,0" PreviewTextInput="DoublePreviewTextInput" Text="{Binding MaskProtectionFrom, Converter={StaticResource myShanceToProcentConverter}, Mode=TwoWay}"/>
                 <Label Content="%"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="Эффективность защиты маски заразиться от кого-то:"/>
-                <TextBox Width="50" Margin="14,0,0,0" />
+                <TextBox Width="50" Margin="14,0,0,0" PreviewTextInput="DoublePreviewTextInput" Text="{Binding MaskProtectionFor, Converter={StaticResource myShanceToProcentConverter}, Mode=TwoWay}"/>
                 <Label Content="%"/>
             </StackPanel>
         </StackPanel>
@@ -47,22 +51,22 @@
             <Label Content="Вероятности заразиться, если общаются люди:"/>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="Без маски → без маски   ="/>
-                <Label Content="100"/>
+                <Label Content="{Binding ProbabilityInfNN, Converter={StaticResource myShanceToProcentConverter}}"/>
                 <Label Content="%"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="Без маски → в маске       ="/>
-                <Label Content="90"/>
+                <Label Content="{Binding ProbabilityInfNM, Converter={StaticResource myShanceToProcentConverter}}"/>
                 <Label Content="%"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="В маске → без маски       ="/>
-                <Label Content="20"/>
+                <Label Content="{Binding ProbabilityInfMN, Converter={StaticResource myShanceToProcentConverter}}"/>
                 <Label Content="%"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="В маске → в маске           ="/>
-                <Label Content="10"/>
+                <Label Content="{Binding ProbabilityInfMM, Converter={StaticResource myShanceToProcentConverter}}"/>
                 <Label Content="%"/>
             </StackPanel>
         </StackPanel>

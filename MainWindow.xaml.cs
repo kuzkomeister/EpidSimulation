@@ -15,7 +15,7 @@ namespace EpidSimulation
     public partial class MainWindow : Window
     {
         Simulation Sim;
-        ConfigDisease Config;
+        public ConfigDisease Config;
         LinkedList<FigureHuman> Figures;
 
         QuadTree curNode;
@@ -122,10 +122,10 @@ namespace EpidSimulation
 
             Sim = new Simulation(
                 150, 150,               // Размеры карты
-                1, 0, 0, 0,           // Здоровые
-                1, 0, 0, 0,            // Инкубационные
-                1, 0, 0, 0,             // Продормальные
-                1, 0, 0, 0,             // Клинические
+                250, 0, 0, 0,           // Здоровые
+                50, 0, 0, 0,            // Инкубационные
+                0, 0, 0, 0,             // Продормальные
+                0, 0, 0, 0,             // Клинические
                 0, 0, 0, 0,             // Выздоровевшие
                 Config);                // Параметры 
             curNode = Sim.Root;
@@ -190,7 +190,10 @@ namespace EpidSimulation
             timer.Interval = new TimeSpan(10000);            
         }
 
-
+        public void SetNewConfig()
+        {
+            Human.Config = Config;
+        }
         
         // Итерация основного таймера 
         private void TimerTick(object sender, EventArgs e)
@@ -216,9 +219,7 @@ namespace EpidSimulation
                            "Инфицированных контактов: " + Sim.StContactsInf + "\n" +
                            "Всего рукопожатий: " + Sim.StHandShakes + "\n" +
                            "Заражений с рук: " + Sim.StHandshakesInf + "\n" +
-                           "Incub: " + Config.TimeIncub_A + " " + Config.TimeIncub_B + "\n" +
-                           "Prodorm: " + Config.TimeProdorm_A + " " + Config.TimeProdorm_B + "\n" +
-                           "Recovery: " + Config.TimeRecovery_A + " " + Config.TimeRecovery_B + "\n";
+                           "DIE: " + Config.ProbabilityDie + "\n";
             
         }
 
@@ -298,10 +299,10 @@ namespace EpidSimulation
 
         private void miCreateConfigDisease_Click(object sender, RoutedEventArgs e)
         {
-            ConfigDiseaseWindow wConfigDisease = new ConfigDiseaseWindow();
+            ConfigDiseaseWindow wConfigDisease = new ConfigDiseaseWindow(this);
             if (wConfigDisease.ShowDialog() == true)
             {
-                // Создание ConfigDisease
+                
             }
         }
     }

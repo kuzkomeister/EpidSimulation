@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EpidSimulation.Backend
 {
-    public class ConfigDisease
+    public class ConfigDisease : ICloneable
     {
         private Random random = new Random(322);
 
@@ -160,23 +160,42 @@ namespace EpidSimulation.Backend
             set => _probabilityInfAirborne = 0 <= value && value <= 1 ? value : _probabilityInfAirborne;
             get => _probabilityInfAirborne;
         }
-        //private double _maskProtectionFor;   // Эффективность защиты маски в сторону заразить кого-то
-        //private double _maskProtectionFrom;  // Эффективность защиты маски в сторону заразиться от кого-то
+        
+        private double _maskProtectionFor;   // Эффективность защиты маски в сторону заразить кого-то
+        public double MaskProtectionFor
+        {
+            set
+            {
+                _maskProtectionFor = 0 <= value && value <= 1 ? value : _maskProtectionFor;
+                ProbabilityInfWithMaskFor = 1.0 - MaskProtectionFor;
+            }
+            get => _maskProtectionFor;
+        }
+        private double _maskProtectionFrom;  // Эффективность защиты маски в сторону заразиться от кого-то
+        public double MaskProtectionFrom
+        {
+            set
+            {
+                _maskProtectionFrom = 0 <= value && value <= 1 ? value : _maskProtectionFrom;
+                ProbabilityInfWithMaskFrom = 1.0 - MaskProtectionFrom;
+            }
+            get => _maskProtectionFrom;
+        }
         
         // Шанс заразить восприимчивый организм от источника инфекции (зависит от степени защиты индивидуальной защиты)
-        private double _probabilityInfFor;
-        public double ProbabilityInfFor
+        private double _probabilityInfWithMaskFor;
+        public double ProbabilityInfWithMaskFor
         {
-            set => _probabilityInfFor = 0 <= value && value <= 1 ? value : _probabilityInfFor;
-            get => _probabilityInfFor;
+            set => _probabilityInfWithMaskFor = 0 <= value && value <= 1 ? value : _probabilityInfWithMaskFor;
+            get => _probabilityInfWithMaskFor;
         }
         
         // Шанс заразиться восприимчивому организму от источника инфекции (зависит от степени защиты индивидуальной защиты)
-        private double _probabilityInfFrom;
-        public double ProbabilityInfFrom
+        private double _probabilityInfWithMaskFrom;
+        public double ProbabilityInfWithMaskFrom
         {
-            set => _probabilityInfFrom = 0 <= value && value <= 1 ? value : _probabilityInfFrom;
-            get => _probabilityInfFrom;
+            set => _probabilityInfWithMaskFrom = 0 <= value && value <= 1 ? value : _probabilityInfWithMaskFrom;
+            get => _probabilityInfWithMaskFrom;
         }
 
         //===== Уровень заболеваемости
@@ -287,20 +306,25 @@ namespace EpidSimulation.Backend
             TimeRecovery_B = 900; TimeRecovery_A = 800;
             ProbabilityDie = 0.1; ProbabilityAsymptomatic = 0.2;
 
-            RadiusHuman = 1.0; RadiusSocDist = 2.0;
+            RadiusHuman = 0.5; RadiusSocDist = 2.0;
             RadiusAirborne = 1.5; RadiusContact = 1.0;
 
             ProbabilityInfContact = 0.5; ProbabilityInfAirborne = 0.8;
-            ProbabilityInfFor = 0.1; ProbabilityInfFrom = 0.9;
+            MaskProtectionFor = 0.1; MaskProtectionFrom = 0.9;
 
             TimeAirborne_B = 120; TimeAirborne_A = 100;
-            TimeContact_B = 100; TimeContact_A = 50;
+            TimeContact_B = 120; TimeContact_A = 100;
             TimeHandToFaceContact_B = 160; TimeHandToFaceContact_A = 140;
             TimeWash_B = 300; TimeWash_A = 200;
             TimeInfHand_B = 100; TimeInfHand_A = 50;
 
             MaxDist = 0.3;  MaxTryes = 3;
             TimeChangeDirect_B = 100; TimeChangeDirect_A = 50;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
 
         //===== Вероятность
@@ -319,15 +343,15 @@ namespace EpidSimulation.Backend
             if (maskFor)
             {
                 if (maskFrom)
-                    return random.NextDouble() < ProbabilityInfAirborne * ProbabilityInfFor * ProbabilityInfFrom;
+                    return random.NextDouble() < ProbabilityInfAirborne * ProbabilityInfWithMaskFor * ProbabilityInfWithMaskFrom;
                 else
-                    return random.NextDouble() < ProbabilityInfAirborne * ProbabilityInfFrom;
+                    return random.NextDouble() < ProbabilityInfAirborne * ProbabilityInfWithMaskFrom;
                 
             }
             else
             {
                 if (maskFrom)
-                    return random.NextDouble() < ProbabilityInfAirborne * _probabilityInfFor;
+                    return random.NextDouble() < ProbabilityInfAirborne * ProbabilityInfWithMaskFor;
                 else
                     return random.NextDouble() < ProbabilityInfAirborne;                
             }

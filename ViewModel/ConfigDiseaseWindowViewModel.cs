@@ -9,15 +9,112 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using EpidSimulation.Backend;
+using System.ComponentModel;
 
 namespace EpidSimulation.ViewModel
 {
     class ConfigDiseaseWindowViewModel : ViewModelBase
-    {
+    {   
         private Page _diseaseParam;
         private Page _incidence;
         private Page _interactionLevel;
         private Page _prevalence;
+
+        public ConfigDisease Config;
+        MainWindow _mainWindow;
+
+        //===== Вероятности
+        private double _maskProtectionFor;
+        public double MaskProtectionFor
+        {
+            set
+            {
+                _maskProtectionFor = 0 <= value && value <= 1 ? value : _maskProtectionFor;
+                Config.MaskProtectionFor = MaskProtectionFor;
+
+                ProbabilityInfMM = ProbabilityInfNN * (1 - MaskProtectionFor) * (1 - MaskProtectionFrom);
+                ProbabilityInfMN = ProbabilityInfNN * (1 - MaskProtectionFrom);
+                ProbabilityInfNM = ProbabilityInfNN * (1 - MaskProtectionFor);
+            }
+            get => _maskProtectionFor;
+        }
+
+        private double _maskProtectionFrom;
+        public double MaskProtectionFrom
+        {
+            set
+            {
+                _maskProtectionFrom = 0 <= value && value <= 1 ? value : _maskProtectionFrom;
+                Config.MaskProtectionFrom = MaskProtectionFrom;
+
+                ProbabilityInfMM = ProbabilityInfNN * (1 - MaskProtectionFor) * (1 - MaskProtectionFrom);
+                ProbabilityInfMN = ProbabilityInfNN * (1 - MaskProtectionFrom);
+                ProbabilityInfNM = ProbabilityInfNN * (1 - MaskProtectionFor);
+            }
+            get => _maskProtectionFrom;
+        }
+
+        private double _probabilityInfMM;
+        public double ProbabilityInfMM
+        {
+            set
+            {
+                _probabilityInfMM = 0 <= value && value <= 1 ? value : _probabilityInfMM;
+                RaisePropertyChanged("ProbabilityInfMM");
+            }
+            get => _probabilityInfMM;
+        }
+
+        private double _probabilityInfNM;
+        public double ProbabilityInfNM
+        {
+            set
+            {
+                _probabilityInfNM = 0 <= value && value <= 1 ? value : _probabilityInfNM;
+                RaisePropertyChanged("ProbabilityInfNM");
+            }
+            get => _probabilityInfNM;
+        }
+
+        private double _probabilityInfMN;
+        public double ProbabilityInfMN
+        {
+            set 
+            { 
+                _probabilityInfMN = 0 <= value && value <= 1 ? value : _probabilityInfMN;
+                RaisePropertyChanged("ProbabilityInfMN");
+            }
+            get => _probabilityInfMN;
+        }
+
+        private double _probabilityInfNN;
+        public double ProbabilityInfNN
+        {
+            set
+            {
+                _probabilityInfNN = 0 <= value && value <= 1 ? value : _probabilityInfNN;
+                Config.ProbabilityInfAirborne = ProbabilityInfNN;
+
+                ProbabilityInfMM = ProbabilityInfNN * (1 - MaskProtectionFor) * (1 - MaskProtectionFrom);
+                ProbabilityInfMN = ProbabilityInfNN * (1 - MaskProtectionFrom);
+                ProbabilityInfNM = ProbabilityInfNN * (1 - MaskProtectionFor);
+                RaisePropertyChanged("ProbabilityInfNN");
+            }
+            get => _probabilityInfNN;
+        }
+
+        private double _probabilityInfContact;
+        public double ProbabilityInfContact
+        {
+            set
+            {
+                _probabilityInfContact = 0 <= value && value <= 1 ? value : _probabilityInfContact;
+                Config.ProbabilityInfContact = ProbabilityInfContact;
+            }
+            get => _probabilityInfContact;
+        }
+        //=======================================
 
         private Page _currentPage;
         public Page CurrentPage
@@ -31,6 +128,46 @@ namespace EpidSimulation.ViewModel
         }
         private int _numPage;
 
+        // Статусы для видимости кнопок
+        private Visibility _finalPageVisible;
+        public Visibility FinalPageVisible
+        {
+            set 
+            { 
+                _finalPageVisible = value;
+                RaisePropertyChanged("FinalPageVisible");
+                CompleteBtnVisible = value == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+            }
+            get => _finalPageVisible;
+        }
+
+        private Visibility _completeBtnVisible;
+        public Visibility CompleteBtnVisible 
+        {
+            set
+            {
+                _completeBtnVisible = value;
+                RaisePropertyChanged("CompleteBtnVisible");
+            }
+
+            get 
+            { 
+                return FinalPageVisible == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+            }
+        }
+
+        private Visibility _firstPageVisible;
+        public Visibility FirstPageVisible
+        {
+            set
+            {
+                _firstPageVisible = value;
+                RaisePropertyChanged("FirstPageVisible");
+            }
+            get => _firstPageVisible;
+        }
+
+        // Прозрачность страницы
         private double _frameOpacity;
         public double FrameOpacity
         {
@@ -49,12 +186,17 @@ namespace EpidSimulation.ViewModel
             {
                 case 2:
                     result = _diseaseParam;
+                    FirstPageVisible = Visibility.Hidden;
                     break;
                 case 3:
                     result = _interactionLevel;
                     break;
                 case 4:
                     result = _prevalence;
+                    FinalPageVisible = Visibility.Visible;
+                    break;
+                default:
+                    _numPage++;
                     break;
             }
             return result;
@@ -75,12 +217,17 @@ namespace EpidSimulation.ViewModel
             {
                 case 1:
                     result = _interactionLevel;
+                    FirstPageVisible = Visibility.Visible;
                     break;
                 case 2:
                     result = _prevalence;
                     break;
                 case 3:
                     result = _incidence;
+                    FinalPageVisible = Visibility.Hidden;
+                    break;
+                default:
+                    _numPage--;
                     break;
             }
             return result;
@@ -93,6 +240,15 @@ namespace EpidSimulation.ViewModel
                 return new RelayCommand(() => SlowOpacity(NextPage())); 
             }
         } 
+
+        public ICommand bComplete_Click
+        {
+            get
+            {
+                return new RelayCommand(() => { _mainWindow.Config = Config; _mainWindow.SetNewConfig(); });
+            }
+        }
+        
 
         private async void SlowOpacity(Page page)
         {
@@ -113,123 +269,33 @@ namespace EpidSimulation.ViewModel
             );
         }
 
-
-
-
-        public ConfigDiseaseWindowViewModel()
+        public ConfigDiseaseWindowViewModel(MainWindow mainWindow) 
         {
+            Config = (ConfigDisease)mainWindow.Config.Clone();
+            _mainWindow = mainWindow;
+            ProbabilityInfContact = Config.ProbabilityInfContact;
+            ProbabilityInfNN = Config.ProbabilityInfAirborne;
+            MaskProtectionFor = Config.MaskProtectionFor;
+            MaskProtectionFrom = Config.MaskProtectionFrom;
+
             _diseaseParam = new Pages.ConfigDisease.DiseaseParam();
+            _diseaseParam.DataContext = Config;
             _incidence = new Pages.ConfigDisease.Incidence();
+            _incidence.DataContext = Config;
             _interactionLevel = new Pages.ConfigDisease.InteractionLevel();
+            _interactionLevel.DataContext = Config;
             _prevalence = new Pages.ConfigDisease.Prevalence();
+            _prevalence.DataContext = this;
+
+            FinalPageVisible = Visibility.Visible;
+            FirstPageVisible = Visibility.Hidden;
 
             FrameOpacity = 1;
             CurrentPage = _diseaseParam;
             _numPage = 1;
         }
 
-        // STAGES
-        private int _timeInfInc_C = 0;
-        public int TimeInfInc_C
-        {
-            get => _timeInfInc_C;
-            set 
-            {
-                _timeInfInc_C = value;
-                RaisePropertyChanged("TimeInfInc_C");
-            }
-        }
-
-        private int _timeInfInc_AB = 0;
-        public int TimeInfInc_AB
-        {
-            get => _timeInfInc_AB;
-            set
-            {
-                _timeInfInc_AB = value;
-                RaisePropertyChanged("TimeInfInc_AB");
-            }
-        }
-
-        private int _timeRecovery_C = 0;
-        public int TimeRecovery_C
-        {
-            get => _timeRecovery_C;
-            set
-            {
-                _timeRecovery_C = value;
-                RaisePropertyChanged("TimeRecovery_C");
-            }
-        }
-
-        private int _timeRecovery_AB = 0;
-        public int TimeRecovery_AB
-        {
-            get => _timeRecovery_AB;
-            set
-            {
-                _timeRecovery_AB = value;
-                RaisePropertyChanged("TimeRecovery_AB");
-            }
-        }
-
-        private int _timeLatent_C = 0;
-        public int TimeLatent_C
-        {
-            get => _timeLatent_C;
-            set
-            {
-                _timeLatent_C = value;
-                RaisePropertyChanged("TimeLatent_C");
-            }
-        }
-
-        private int _timeLatent_AB = 0;
-        public int TimeLatent_AB
-        {
-            get => _timeLatent_AB;
-            set
-            {
-                _timeLatent_AB = value;
-                RaisePropertyChanged("TimeLatent_AB");
-            }
-        }
-
-        // PROBABILITIES
-        private double _probabilityDied = 0;
-        public double ProbabilityDied
-        {
-            get => _probabilityDied;
-            set
-            {
-                _probabilityDied = value;
-                RaisePropertyChanged("ProbabilityDied");
-            }
-        }
-
-        private double _probabilityInfHandContact = 0;
-        public double ProbabilityInfHandContact
-        {
-            get => _probabilityInfHandContact;
-            set
-            {
-                _probabilityInfHandContact = value;
-                RaisePropertyChanged("ProbabilityInfHandContact");
-            }
-        }
-
-        private double _probabilityInfMeetContact = 0;
-        public double ProbabilityInfMeetContact
-        {
-            get => _probabilityInfMeetContact;
-            set
-            {
-                _probabilityInfMeetContact = value;
-                RaisePropertyChanged("ProbabilityInfMeetContact");
-            }
-        }
-
-        // TIMERS
+       
         
     }
 }
