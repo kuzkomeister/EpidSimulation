@@ -14,15 +14,15 @@ using System.ComponentModel;
 
 namespace EpidSimulation.ViewModel
 {
-    class ConfigDiseaseWindowViewModel : ViewModelBase
+    public class ConfigDiseaseWindowViewModel : ViewModelBase
     {   
         private Page _diseaseParam;
         private Page _incidence;
         private Page _interactionLevel;
         private Page _prevalence;
 
-        public ConfigDisease Config;
-        MainWindow _mainWindow;
+        private ConfigDisease _config;
+        private MainWindowViewModel _mwvm;
 
         //===== Вероятности
         private double _maskProtectionFor;
@@ -31,7 +31,7 @@ namespace EpidSimulation.ViewModel
             set
             {
                 _maskProtectionFor = 0 <= value && value <= 1 ? value : _maskProtectionFor;
-                Config.MaskProtectionFor = MaskProtectionFor;
+                _config.MaskProtectionFor = MaskProtectionFor;
 
                 ProbabilityInfMM = ProbabilityInfNN * (1 - MaskProtectionFor) * (1 - MaskProtectionFrom);
                 ProbabilityInfMN = ProbabilityInfNN * (1 - MaskProtectionFrom);
@@ -46,7 +46,7 @@ namespace EpidSimulation.ViewModel
             set
             {
                 _maskProtectionFrom = 0 <= value && value <= 1 ? value : _maskProtectionFrom;
-                Config.MaskProtectionFrom = MaskProtectionFrom;
+                _config.MaskProtectionFrom = MaskProtectionFrom;
 
                 ProbabilityInfMM = ProbabilityInfNN * (1 - MaskProtectionFor) * (1 - MaskProtectionFrom);
                 ProbabilityInfMN = ProbabilityInfNN * (1 - MaskProtectionFrom);
@@ -94,7 +94,7 @@ namespace EpidSimulation.ViewModel
             set
             {
                 _probabilityInfNN = 0 <= value && value <= 1 ? value : _probabilityInfNN;
-                Config.ProbabilityInfAirborne = ProbabilityInfNN;
+                _config.ProbabilityInfAirborne = ProbabilityInfNN;
 
                 ProbabilityInfMM = ProbabilityInfNN * (1 - MaskProtectionFor) * (1 - MaskProtectionFrom);
                 ProbabilityInfMN = ProbabilityInfNN * (1 - MaskProtectionFrom);
@@ -110,7 +110,7 @@ namespace EpidSimulation.ViewModel
             set
             {
                 _probabilityInfContact = 0 <= value && value <= 1 ? value : _probabilityInfContact;
-                Config.ProbabilityInfContact = ProbabilityInfContact;
+                _config.ProbabilityInfContact = ProbabilityInfContact;
             }
             get => _probabilityInfContact;
         }
@@ -245,7 +245,7 @@ namespace EpidSimulation.ViewModel
         {
             get
             {
-                return new RelayCommand(() => { _mainWindow.Config = Config; _mainWindow.SetNewConfig(); });
+                return new RelayCommand(() => _mwvm.Config = _config);
             }
         }
         
@@ -269,21 +269,21 @@ namespace EpidSimulation.ViewModel
             );
         }
 
-        public ConfigDiseaseWindowViewModel(MainWindow mainWindow) 
+        public ConfigDiseaseWindowViewModel(MainWindowViewModel mwvm)
         {
-            Config = (ConfigDisease)mainWindow.Config.Clone();
-            _mainWindow = mainWindow;
-            ProbabilityInfContact = Config.ProbabilityInfContact;
-            ProbabilityInfNN = Config.ProbabilityInfAirborne;
-            MaskProtectionFor = Config.MaskProtectionFor;
-            MaskProtectionFrom = Config.MaskProtectionFrom;
-
+            _config = (ConfigDisease)mwvm.Config.Clone();
+            _mwvm = mwvm;
+            ProbabilityInfContact = _config.ProbabilityInfContact;
+            ProbabilityInfNN = _config.ProbabilityInfAirborne;
+            MaskProtectionFor = _config.MaskProtectionFor;
+            MaskProtectionFrom = _config.MaskProtectionFrom;
+            
             _diseaseParam = new Pages.ConfigDisease.DiseaseParam();
-            _diseaseParam.DataContext = Config;
+            _diseaseParam.DataContext = _config;
             _incidence = new Pages.ConfigDisease.Incidence();
-            _incidence.DataContext = Config;
+            _incidence.DataContext = _config;
             _interactionLevel = new Pages.ConfigDisease.InteractionLevel();
-            _interactionLevel.DataContext = Config;
+            _interactionLevel.DataContext = _config;
             _prevalence = new Pages.ConfigDisease.Prevalence();
             _prevalence.DataContext = this;
 
@@ -295,7 +295,7 @@ namespace EpidSimulation.ViewModel
             _numPage = 1;
         }
 
-       
         
+
     }
 }

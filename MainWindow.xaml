@@ -3,29 +3,97 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:EpidSimulation"
+        xmlns:local="clr-namespace:EpidSimulation.ViewModel"
         mc:Ignorable="d"
-        Title="COVID-19" Height="528" Width="1178" ResizeMode="CanResize" WindowStartupLocation="CenterScreen" WindowState="Maximized">
-    <Canvas Margin="0,0,421,0">
-        <Menu Height="434" Width="379">
+        Title="COVID-19" Height="780" Width="1320" ResizeMode="CanResize" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+    <Window.Resources>
+        <local:MainWindowViewModel x:Key="MainViewModel"/>
+    </Window.Resources>
+
+    <Grid DataContext="{StaticResource MainViewModel}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TabControl DataContext="{Binding CurSimulation}" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
+            <TabItem Header="Статистика">
+                <TabItem.Content>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel.Resources>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Margin" Value="0,10,0,0"/>
+                                <Setter Property="Orientation" Value="Horizontal"/>
+                            </Style>
+                        </StackPanel.Resources>
+                        <Label Content="Текущее количество людей:" Margin="10" FontWeight="Bold"/>
+                        <StackPanel>
+                            <Label Content="Здоровых:"/>
+                            <Label Content="{Binding AmountZd}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="Выздоровевших:"/>
+                            <Label Content="{Binding AmountVzd}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="Умерших:"/>
+                            <Label Content="{Binding AmountDied}"/>
+                        </StackPanel>
+                        <Label Content="--- Инфицированных ---" Margin="10"/>
+                        <StackPanel>
+                            <Label Content="В инкубационном периоде:"/>
+                            <Label Content="{Binding AmountInc}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="В продормальном периоде:"/>
+                            <Label Content="{Binding AmountProdorm}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="В клиническом периоде:"/>
+                            <Label Content="{Binding AmountClin}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="Носителей (бессимптомных):"/>
+                            <Label Content="{Binding AmountAsympt}"/>
+                        </StackPanel>
+                        <Label Content="Статистика контактов и заражений" Margin="10" FontWeight="Bold"/>
+                        <Label Content="Количество воздушно-капельных контактов"/>
+                        <StackPanel Margin="0,-10,0,0">
+                            <Label Content="с инфицированными: "/>
+                            <Label Content="{Binding StContacts}"/>
+                            <Label Content=" из-за них заразилось: "/>
+                            <Label Content="{Binding StContactsInf}"/>
+                        </StackPanel>
+                        <Label Content="Количество контактной передачи " Margin="0,10,0,0"/>
+                        <StackPanel Margin="0,-10,0,0">
+                            <Label Content="инфекции:"/>
+                            <Label Content="{Binding StHandShakes}"/>
+                            <Label Content=" из-за них заразилось"/>
+                            <Label Content="{Binding StHandshakesInf}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </TabItem.Content>
+            </TabItem>
+            <TabItem Header="Параметры">
+                
+            </TabItem>
+        </TabControl>
+
+        <Menu Grid.Column="0" Grid.Row="0">
             <MenuItem Header="Симуляция">
-                <MenuItem x:Name="miSimOnOff" Header="Запустить" Click="miSimOnOff_Click"/>
-                <MenuItem x:Name="miDebugOnOff" Header="Включить дебаг" Click="miDebugOnOff_Click"/>
-                <MenuItem x:Name="miCreateConfigDisease" Header="Создать болезнь" Click="miCreateConfigDisease_Click"/>
-            </MenuItem>
-            <MenuItem Header="Узел">
-                <MenuItem x:Name="miNodeParent" Header="Родительский" Click="miNodeParent_Click"/>
-                <MenuItem Header="Дочерний">
-                    <MenuItem x:Name="miNodeChild0" Header="Правая верхняя клетка" Click="miNodeChild_Click" Tag="0"/>
-                    <MenuItem x:Name="miNodeChild1" Header="Левая верхняя клетка" Click="miNodeChild_Click" Tag="1"/>
-                    <MenuItem x:Name="miNodeChild2" Header="Левая нижняя клетка" Click="miNodeChild_Click" Tag="2"/>
-                    <MenuItem x:Name="miNodeChild3" Header="Правая нижняя клетка" Click="miNodeChild_Click" Tag="3"/>
-                </MenuItem>
+                <MenuItem Header="Запустить" Command="{Binding bStartStopSimulation_Click}"/>
+                <MenuItem Header="Включить дебаг" Command="{Binding bOnOffDebug_Click}"/>
+                <MenuItem Header="Создать болезнь" Command="{Binding bCreateConfig_Click}"/>
             </MenuItem>
         </Menu>
-        <Canvas x:Name="CanvasMap" Height="411" Width="379" Canvas.Top="23"/>
-        <Label x:Name="curIter" Content="Iter: 0" Canvas.Left="631" Canvas.Top="80"/>
-        <Label x:Name="stat" Content="Stats:" Canvas.Left="631" Canvas.Top="106"/>
-        <Label x:Name="debug" Content="Debug:" Canvas.Left="631" Canvas.Top="282"/>
-    </Canvas>
+
+        <Canvas Grid.Column="0" Grid.Row="1">
+            <ContentPresenter Content="{Binding CanvasMap}"/>
+        </Canvas>
+        
+    </Grid>
 </Window>

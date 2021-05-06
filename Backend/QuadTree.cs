@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace EpidSimulation.Backend
 {
-    class NodeRegion
+    public class NodeRegion
     {
         public readonly double X;
         public readonly double Y;
@@ -19,7 +19,7 @@ namespace EpidSimulation.Backend
         }
     }
 
-    class QuadTree
+    public class QuadTree
     {
         // Родительский узел
         private QuadTree _parent;               

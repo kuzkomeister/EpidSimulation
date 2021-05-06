@@ -12,16 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using EpidSimulation.Backend;
+using EpidSimulation.ViewModel;
 
 namespace EpidSimulation
 {
     public partial class ConfigDiseaseWindow : Window
     {
         
-        public ConfigDiseaseWindow(MainWindow mainWindow)
+        public ConfigDiseaseWindow(MainWindowViewModel mwvm)
         {
             InitializeComponent();
-            DataContext = new ViewModel.ConfigDiseaseWindowViewModel(mainWindow);
+            DataContext = new ConfigDiseaseWindowViewModel(mwvm);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

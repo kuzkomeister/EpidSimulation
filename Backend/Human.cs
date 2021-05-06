@@ -8,13 +8,13 @@ using System.Windows.Media;
 
 namespace EpidSimulation.Backend
 {
-    class Human : INotifyPropertyChanged
+    public class Human : INotifyPropertyChanged
     {
-
-        static public ConfigDisease Config;
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        static public ConfigDisease Config;
 
         private int _condition;  // Состояние человека
         public int Condition { get => _condition; set { _condition = value; OnPropertyChanged("Condition"); } }

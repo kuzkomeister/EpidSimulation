@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,8 +8,12 @@ using System.Windows;
 
 namespace EpidSimulation.Backend
 {
-    class Simulation
+    public class Simulation : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string propertyName)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
         private QuadTree _root;
         public QuadTree Root { get => _root; }
 
@@ -33,6 +38,7 @@ namespace EpidSimulation.Backend
             set
             {
                 _stContacts = value;
+                OnPropertyChanged("StContacts");
             }
             get => _stContacts; 
         }
@@ -43,6 +49,7 @@ namespace EpidSimulation.Backend
             set
             {
                 _stContactsInf = value;
+                OnPropertyChanged("StContactsInf");
             } 
             get => _stContactsInf; 
         }
@@ -53,6 +60,7 @@ namespace EpidSimulation.Backend
             set
             {
                 _stHandshakes = value;
+                OnPropertyChanged("StHandshakes");
             }
             get => _stHandshakes; 
         }
@@ -63,6 +71,7 @@ namespace EpidSimulation.Backend
             set
             {
                 _stHandshakesInf = value;
+                OnPropertyChanged("StHandshakesInf");
             } 
             get => _stHandshakesInf; 
         }
@@ -73,6 +82,7 @@ namespace EpidSimulation.Backend
             set
             {
                 _stChecks = value;
+                OnPropertyChanged("StChecks");
             }
             get => _stChecks;
         }
@@ -83,6 +93,7 @@ namespace EpidSimulation.Backend
             set
             {
                 _iter = value;
+                OnPropertyChanged("Iter");
             }
             get => _iter; 
         }
@@ -93,6 +104,7 @@ namespace EpidSimulation.Backend
             set
             {
                 _iterFinal = value;
+                OnPropertyChanged("IterFinal");
             }
             get => _iterFinal; 
         }
@@ -104,28 +116,31 @@ namespace EpidSimulation.Backend
             set
             {
                 _amountZd = value;
+                OnPropertyChanged("AmountZd");
             } 
             get => _amountZd; 
         }
 
-        private int _amountLat = 0;   // Инфицированных в инкубационном и латентном периоде
-        public int AmountLat
-        {
-            set
-            {
-                _amountLat = value;
-            }
-            get => _amountLat;
-        }
-
-        private int _amountInc = 0;       // Инфицированных в инкубационном периоде
-        public int AmountInc 
+        private int _amountInc = 0;   // Инфицированных в инкубационном и латентном периоде
+        public int AmountInc
         {
             set
             {
                 _amountInc = value;
+                OnPropertyChanged("AmountInc");
             }
-            get => _amountInc; 
+            get => _amountInc;
+        }
+
+        private int _amountProdorm = 0;       // Инфицированных в инкубационном периоде
+        public int AmountProdorm 
+        {
+            set
+            {
+                _amountProdorm = value;
+                OnPropertyChanged("AmountProdorm");
+            }
+            get => _amountProdorm; 
         }
 
         private int _amountClin = 0;     // Инфицированных в клиническом периоде
@@ -134,6 +149,7 @@ namespace EpidSimulation.Backend
             set
             {
                 _amountClin = value;
+                OnPropertyChanged("AmountClin");
             }
             get => _amountClin; 
         }
@@ -144,6 +160,7 @@ namespace EpidSimulation.Backend
             set
             {
                 _amountVzd = value;
+                OnPropertyChanged("AmountVzd");
             }
             get => _amountVzd; 
         }
@@ -154,6 +171,7 @@ namespace EpidSimulation.Backend
             set
             {
                 _amountDied = value;
+                OnPropertyChanged("AmountDied");
             }
             get => _amountDied; 
         }
@@ -164,6 +182,7 @@ namespace EpidSimulation.Backend
             set
             {
                 _amountAsympt = value;
+                OnPropertyChanged("AmountAsympt");
             }
             get => _amountAsympt;
         }
@@ -200,8 +219,8 @@ namespace EpidSimulation.Backend
 
             //===== Количество людей в состояниях
             AmountZd = amountZd + amountMaskZd + amountSocDistZd + amountGoodHumanZd;
-            AmountLat = amountLat + amountMaskLat + amountSocDistLat + amountGoodHumanLat;
-            AmountInc = amountInc + amountMaskInc + amountSocDistInc + amountGoodHumanInc;
+            AmountInc = amountLat + amountMaskLat + amountSocDistLat + amountGoodHumanLat;
+            AmountProdorm = amountInc + amountMaskInc + amountSocDistInc + amountGoodHumanInc;
             AmountClin = amountClin + amountMaskClin + amountSocDistClin + amountGoodHumanClin;
             AmountVzd = amountVzd + amountMaskVzd + amountSocDistVzd + amountGoodHumanVzd;
 
@@ -288,10 +307,10 @@ namespace EpidSimulation.Backend
                                         _amountZd--;
                                         break;
                                     case 1:
-                                        _amountLat--;
+                                        _amountInc--;
                                         break;
                                     case 2:
-                                        _amountInc--;
+                                        _amountProdorm--;
                                         break;
                                     case 3:
                                         _amountClin--;
@@ -340,7 +359,7 @@ namespace EpidSimulation.Backend
             _root.Join();   // Объединение неполных узлов
 
             // Вычисление итерации на которой закончились инфицированные
-            if (_amountClin == 0 && _amountInc == 0 && _amountLat == 0)
+            if (_amountClin == 0 && _amountProdorm == 0 && _amountInc == 0)
                 IterFinal = Iter;
 
             Iter++;
@@ -464,10 +483,10 @@ namespace EpidSimulation.Backend
                         AmountZd--;
                         break;
                     case 1:
-                        AmountLat--;
+                        AmountInc--;
                         break;
                     case 2:
-                        AmountInc--;
+                        AmountProdorm--;
                         break;
                     case 3:
                         AmountClin--;
@@ -488,10 +507,10 @@ namespace EpidSimulation.Backend
                         AmountZd++;
                         break;
                     case 1:
-                        AmountLat++;
+                        AmountInc++;
                         break;
                     case 2:
-                        AmountInc++;
+                        AmountProdorm++;
                         break;
                     case 3:
                         AmountClin++;
