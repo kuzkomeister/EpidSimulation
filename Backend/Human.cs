@@ -24,8 +24,8 @@ namespace EpidSimulation.Backend
             2 - инфицированный в продормальном периоде
             3 - инфицированный в клиническом периоде
             4 - выздоровевший
-            5 - мертвый
-            6 - бессимптомный
+            5 - бессимптомный
+            6 - мертвый
          */
 
         //===== Параметры перемещения
@@ -88,7 +88,7 @@ namespace EpidSimulation.Backend
 
         public void DoDela(Simulation simulation)
         {
-            if (Condition != 5)
+            if (Condition != 6)
             {
                 int oldCond = Condition;
                 CourseDisease();
@@ -226,7 +226,6 @@ namespace EpidSimulation.Backend
         {
             if (_timeMeet == 0)
             {
-                int oldcond = Condition;
                 simulation.MakeMeet(this);
                 _timeMeet = Config.GetTimeMeet();
             }
@@ -303,7 +302,7 @@ namespace EpidSimulation.Backend
                     if (_timeIncub == 0)
                     {
                         if (Config.GetPermissionAsymptomatic())
-                            Condition = 6;
+                            Condition = 5;
                         else
                             Condition = 2;
                     }
@@ -320,7 +319,7 @@ namespace EpidSimulation.Backend
                     break;
 
                 case 3:
-                case 6:
+                case 5:
                     SetHandsDirty();
                     if (_timeRecovery == 0)
                     {
@@ -331,10 +330,6 @@ namespace EpidSimulation.Backend
                     }
                     else
                         _timeRecovery--;
-                    break;
-
-                case 4:
-
                     break;
             }
             /*

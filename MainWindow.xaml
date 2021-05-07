@@ -12,16 +12,16 @@
 
     <Grid DataContext="{StaticResource MainViewModel}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
             <ColumnDefinition/>
+            <ColumnDefinition Width="0.5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <TabControl DataContext="{Binding CurSimulation}" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
-            <TabItem Header="Статистика">
+        <TabControl Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
+            <TabItem Header="Статистика" DataContext="{Binding CurSimulation}">
                 <TabItem.Content>
                     <StackPanel Orientation="Vertical">
                         <StackPanel.Resources>
@@ -30,7 +30,7 @@
                                 <Setter Property="Orientation" Value="Horizontal"/>
                             </Style>
                         </StackPanel.Resources>
-                        <Label Content="Текущее количество людей:" Margin="10" FontWeight="Bold"/>
+                        <Label Content="Текущее количество людей в состояниях:" Margin="10" FontWeight="Bold"/>
                         <StackPanel>
                             <Label Content="Здоровых:"/>
                             <Label Content="{Binding AmountZd}"/>
@@ -78,8 +78,123 @@
                     </StackPanel>
                 </TabItem.Content>
             </TabItem>
-            <TabItem Header="Параметры">
+            <TabItem Header="Изменить параметры">
                 
+            </TabItem>
+
+            <TabItem Header="Новая симуляция">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel.Resources>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Orientation" Value="Horizontal"/>
+                            
+                        </Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Width" Value="80"/>
+                            <Setter Property="Height" Value="35"/>
+                        </Style>
+                    </StackPanel.Resources>
+
+                    <TextBlock Text="Размер карты:" Margin="20,10,0,0" FontWeight="Bold"/>
+                    <StackPanel Margin="20">
+                        <TextBlock Text="Ширина: "/>
+                        <TextBox Text="{Binding SizeWidth, Mode=TwoWay}" Height="20" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBlock Text="Высота: "/>
+                        <TextBox Text="{Binding SizeHeight, Mode=TwoWay}" Height="20" PreviewTextInput="IntPreviewTextInput"/>
+                    </StackPanel>
+
+                    <TextBlock Text="Население:" Margin="20,0,0,0" FontWeight="Bold"/>
+                    <StackPanel Height="35" Margin="0,10,0,0">
+                        <Border BorderThickness="1" BorderBrush="Gray">
+                        <StackPanel Orientation="Vertical" Width="100">
+                            <Canvas>
+                                <Line X1="0" Y1="10" X2="101" Y2="30" Stroke="Gray"/>
+                                <TextBlock Text="     Соблюдающие"/>
+                                <TextBlock Text="В состоянии" Margin="0,18,0,0"/>
+                            </Canvas>
+                        </StackPanel>
+                        </Border>
+                        <Border BorderThickness="1" BorderBrush="Gray">
+                            <TextBlock Text="Ничего" TextAlignment="Center" Width="78"/>
+                        </Border>
+                        <Border BorderThickness="1" BorderBrush="Gray">
+                            <TextBlock Text="Масочный режим" TextAlignment="Center" TextWrapping="Wrap" Width="78"/>
+                        </Border>
+                        <Border BorderThickness="1" BorderBrush="Gray">
+                            <TextBlock Text="Социальную дистанцию" TextAlignment="Center" TextWrapping="Wrap" Width="78"/>
+                        </Border>
+                        <Border BorderThickness="1" BorderBrush="Gray">
+                            <TextBlock Text="Все" TextAlignment="Center" Width="78"/>
+                        </Border>
+                    </StackPanel>
+                    
+                    
+                    <StackPanel>
+                        <Border BorderThickness="1" BorderBrush="Gray">
+                            <TextBlock Text="Здоровые" Width="100" TextAlignment="Center"/>
+                        </Border>
+                        <TextBox Text="{Binding AmountZdNothing}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountZdMask}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountZdSocDist}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountZdAll}" PreviewTextInput="IntPreviewTextInput"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <Border BorderThickness="1" BorderBrush="Gray">
+                            <TextBlock Text="Инкубационного периода" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
+                        </Border>
+                        <TextBox Text="{Binding AmountIncNothing}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountIncMask}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountIncSocDist}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountIncAll}" PreviewTextInput="IntPreviewTextInput"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <Border BorderThickness="1" BorderBrush="Gray">
+                            <TextBlock Text="продормального периода" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
+                        </Border>
+                        <TextBox Text="{Binding AmountProdNothing}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountProdMask}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountProdSocDist}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountProdAll}" PreviewTextInput="IntPreviewTextInput"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <Border BorderThickness="1" BorderBrush="Gray">
+                            <TextBlock Text="Клинического периода" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
+                        </Border>
+                        <TextBox Text="{Binding AmountClinNothing}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountClinMask}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountClinSocDist}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountClinAll}" PreviewTextInput="IntPreviewTextInput"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <Border BorderThickness="1" BorderBrush="Gray">
+                            <TextBlock Text="Бессимптомные" Width="100" TextAlignment="Center"/>
+                        </Border>
+                        <TextBox Text="{Binding AmountAsymptNothing}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountAsymptMask}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountAsymptSocDist}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountAsymptAll}" PreviewTextInput="IntPreviewTextInput"/>
+                    </StackPanel>
+                    
+                    <StackPanel>
+                        <Border BorderThickness="1" BorderBrush="Gray">
+                            <TextBlock Text="Выздоровевшие" Width="100" TextAlignment="Center"/>
+                        </Border>
+                        <TextBox Text="{Binding AmountVzdNothing}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountVzdMask}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountVzdSocDist}" PreviewTextInput="IntPreviewTextInput"/>
+                        <TextBox Text="{Binding AmountVzdAll}" PreviewTextInput="IntPreviewTextInput"/>
+                    </StackPanel>
+
+                    <StackPanel HorizontalAlignment="Center">
+                        <Button Command="{Binding bClearFields_Click}" Content="Обнулить все" Width="100" Height="25" Margin="25"/>
+                        <Button Command="{Binding bCreateSimulation_Click}" Content="Создать" Width="100" Height="25" Margin="20"/>
+                    </StackPanel>
+                    
+                </StackPanel>
             </TabItem>
         </TabControl>
 

@@ -45,96 +45,66 @@ namespace EpidSimulation.ViewModel
         private LinkedList<FigureHuman> _figures;
         private QuadTree _curNode;
         
-       
-        private Rectangle _backgroundMap;
-
         private DispatcherTimer _timer;
         private bool _statusTimer;
 
         private bool _statusDebug;
 
         
-        Rectangle regionBackground;
-        Line lineVMP;
-        Line lineHMP;
+        private Rectangle _regionBackground;
+        private Line _lineVMP;
+        private Line _lineHMP;
 
-        ScaleTransform scaleNode;
-        TranslateTransform transNode;
+        private ScaleTransform _scaleNode;
         
+        public double WindowWidth { set; get; }
+        public double WindowHeight { set; get; }
+
 
         public MainWindowViewModel()
         {
             Config = new ConfigDisease();
-
-
-            _simulation = new Simulation(
-                150, 150,               // Размеры карты
-                250, 0, 0, 0,           // Здоровые
-                50, 0, 0, 0,            // Инкубационные
-                0, 0, 0, 0,             // Продормальные
-                0, 0, 0, 0,             // Клинические
-                0, 0, 0, 0,             // Выздоровевшие
-                Config);                // Параметры 
+            _simulation = new Simulation();                
             _curNode = _simulation.Root;
             
-            
-            
-            regionBackground = new System.Windows.Shapes.Rectangle
+            _regionBackground = new Rectangle
             {
-                Width = _simulation.SizeX,
-                Height = _simulation.SizeY,
+                Width = _simulation.SizeWidth,
+                Height = _simulation.SizeHeight,
                 Fill = Brushes.LightGray,
                 Stroke = Brushes.Black,
                 StrokeThickness = 0.1
             };
-            Canvas.SetLeft(regionBackground, 0);
-            Canvas.SetTop(regionBackground, 0);
-            CanvasMap.Children.Add(regionBackground);
+            Canvas.SetLeft(_regionBackground, 0);
+            Canvas.SetTop(_regionBackground, 0);
+            CanvasMap.Children.Add(_regionBackground);
 
-            lineVMP = new Line
+            _lineVMP = new Line
             {
-                X1 = _simulation.SizeX / 2,
+                X1 = _simulation.SizeWidth / 2,
                 Y1 = 0,
-                X2 = _simulation.SizeX / 2,
-                Y2 = _simulation.SizeY,
+                X2 = _simulation.SizeWidth / 2,
+                Y2 = _simulation.SizeHeight,
                 Stroke = Brushes.Black,
                 StrokeThickness = 0.1
             };
-            CanvasMap.Children.Add(lineVMP);
+            CanvasMap.Children.Add(_lineVMP);
 
-            lineHMP = new Line
+            _lineHMP = new Line
             {
                 X1 = 0,
-                Y1 = _simulation.SizeY / 2,
-                X2 = _simulation.SizeX,
-                Y2 = _simulation.SizeY / 2,
+                Y1 = _simulation.SizeHeight / 2,
+                X2 = _simulation.SizeWidth,
+                Y2 = _simulation.SizeHeight / 2,
                 Stroke = Brushes.Black,
                 StrokeThickness = 0.1
             };
-            CanvasMap.Children.Add(lineHMP);
-            
-            CreateFigures(_simulation.People);
-            AddFigures();
-            
-            TransformGroup tfGroupNode = new TransformGroup();
-            //tfGroupNode.Children.Add(scaleNode);
-            //tfGroupNode.Children.Add(transNode);
+            CanvasMap.Children.Add(_lineHMP);
 
-            scaleNode = new ScaleTransform();
-            CanvasMap.RenderTransform = scaleNode;
-            scaleNode.ScaleX = 4;
-            scaleNode.ScaleY = 4;
-
-            transNode = new TranslateTransform();
-            //CanvasMap.RenderTransform = transNode;
-            transNode.X = 0;
-            transNode.Y = 0;
-
-            //CanvasMap.RenderTransform = tfGroupNode;
-            
-            _timer = new DispatcherTimer();
-            _timer.Tick += new EventHandler(TimerTick);
-            _timer.Interval = new TimeSpan(10000);
+            _scaleNode = new ScaleTransform();
+            CanvasMap.RenderTransform = _scaleNode;
+            _scaleNode.ScaleX = 4;
+            _scaleNode.ScaleY = 4;            
         }
 
         private void CreateFigures(LinkedList<Human> people)
@@ -190,6 +160,27 @@ namespace EpidSimulation.ViewModel
             }
         }
 
+        private void ClearMap()
+        {
+            if (_figures != null)
+            {
+                foreach (FigureHuman figure in _figures)
+                {
+                    _canvasMap.Children.Remove(figure.CondCircle);
+                    if (figure.MaskCircle != null)
+                    {
+                        _canvasMap.Children.Remove(figure.MaskCircle);
+                    }
+                    if (figure.SocDistCircle != null)
+                    {
+                        _canvasMap.Children.Remove(figure.SocDistCircle);
+                    }
+                }
+
+                _figures = null;
+            }
+        }
+
         private void MakeVisibleNodeHumans()
         {
             LinkedList<LinkedList<Human>> tempList = new LinkedList<LinkedList<Human>>();
@@ -218,6 +209,55 @@ namespace EpidSimulation.ViewModel
                 }
             }
         }
+
+        //==========
+        private int _sizeWidth = 10;
+        public int SizeWidth 
+        { 
+            set => _sizeWidth = value > 10 ? value : 10; 
+            get => _sizeWidth; 
+        }
+        private int _sizeHeight = 10;
+        public int SizeHeight 
+        { 
+            set => _sizeHeight = value > 10 ? value : 10; 
+            get => _sizeHeight; 
+        }
+
+        public int AmountZdNothing { set; get; }
+        public int AmountZdMask { set; get; }
+        public int AmountZdSocDist { set; get; }
+        public int AmountZdAll { set; get; }
+
+
+        public int AmountIncNothing { set; get; }
+        public int AmountIncMask { set; get; }
+        public int AmountIncSocDist { set; get; }
+        public int AmountIncAll { set; get; }
+
+
+        public int AmountProdNothing { set; get; }
+        public int AmountProdMask { set; get; }
+        public int AmountProdSocDist { set; get; }
+        public int AmountProdAll { set; get; }
+
+
+        public int AmountClinNothing { set; get; }
+        public int AmountClinMask { set; get; }
+        public int AmountClinSocDist { set; get; }
+        public int AmountClinAll { set; get; }
+
+
+        public int AmountVzdNothing { set; get; }
+        public int AmountVzdMask { set; get; }
+        public int AmountVzdSocDist { set; get; }
+        public int AmountVzdAll { set; get; }
+
+
+        public int AmountAsymptNothing { set; get; }
+        public int AmountAsymptMask { set; get; }
+        public int AmountAsymptSocDist { set; get; }
+        public int AmountAsymptAll { set; get; }
 
         // Итерация основного таймера 
         private void TimerTick(object sender, EventArgs e)
@@ -312,8 +352,79 @@ namespace EpidSimulation.ViewModel
             }
         }
 
+        public ICommand bCreateSimulation_Click
+        {
+            get
+            {
+                return new RelayCommand(() =>
+                {
+                    CurSimulation.SetNewSession(
+                        SizeWidth, SizeHeight,
+                        AmountZdNothing, AmountZdMask, AmountZdSocDist, AmountZdAll,
+                        AmountIncNothing, AmountIncMask, AmountIncSocDist, AmountIncAll,
+                        AmountProdNothing, AmountProdMask, AmountProdSocDist, AmountProdAll,
+                        AmountClinNothing, AmountClinMask, AmountClinSocDist, AmountClinAll,
+                        AmountVzdNothing, AmountVzdMask, AmountVzdSocDist, AmountVzdAll,
+                        AmountAsymptNothing, AmountAsymptMask, AmountAsymptSocDist, AmountAsymptAll);
+                    _curNode = CurSimulation.Root;
+                    ClearMap();
+                    CreateFigures(CurSimulation.People);
+                    AddFigures();
 
+                    _regionBackground.Width = CurSimulation.SizeWidth;
+                    _regionBackground.Height = CurSimulation.SizeHeight;
+                    _lineVMP.Y1 = CurSimulation.SizeHeight / 2;
+                    _lineVMP.X2 = CurSimulation.SizeWidth;
+                    _lineVMP.Y2 = CurSimulation.SizeHeight / 2;
 
+                    _lineHMP.X1 = CurSimulation.SizeWidth / 2;
+                    _lineHMP.X2 = CurSimulation.SizeWidth / 2;
+                    _lineHMP.Y2 = CurSimulation.SizeHeight;
+
+                    WindowHeight = 750;
+                    WindowWidth = 1920 / 2 + 60;
+
+                    _scaleNode.ScaleX = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
+                    _scaleNode.ScaleY = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
+
+                    _timer = new DispatcherTimer();
+                    _timer.Tick += new EventHandler(TimerTick);
+                    _timer.Interval = new TimeSpan(10000);
+                    _timer.Stop();
+                    _statusTimer = false;
+                });
+            }
+        }
+
+        public ICommand bClearFields_Click
+        {
+            get
+            {
+                return new RelayCommand(() =>
+                {
+                    SizeWidth = 10; SizeHeight = 10;
+                    AmountZdNothing = 0; AmountZdMask = 0; AmountZdSocDist = 0; AmountZdAll = 0;
+                    AmountIncNothing = 0; AmountIncMask = 0; AmountIncSocDist = 0; AmountIncAll = 0;
+                    AmountProdNothing = 0; AmountProdMask = 0; AmountProdSocDist = 0; AmountProdAll = 0;
+                    AmountClinNothing = 0; AmountClinMask = 0; AmountClinSocDist = 0; AmountClinAll = 0;
+                    AmountVzdNothing = 0; AmountVzdMask = 0; AmountVzdSocDist = 0; AmountVzdAll = 0;
+                    AmountAsymptNothing = 0; AmountAsymptMask = 0; AmountAsymptSocDist = 0; AmountAsymptAll = 0;
+                    RaisePropertyChanged("SizeWidth"); RaisePropertyChanged("SizeHeight");
+                    RaisePropertyChanged("AmountZdNothing"); RaisePropertyChanged("AmountZdMask"); 
+                    RaisePropertyChanged("AmountZdSocDist"); RaisePropertyChanged("AmountZdAll");
+                    RaisePropertyChanged("AmountIncNothing"); RaisePropertyChanged("AmountIncMask"); 
+                    RaisePropertyChanged("AmountIncSocDist"); RaisePropertyChanged("AmountIncAll");
+                    RaisePropertyChanged("AmountProdNothing"); RaisePropertyChanged("AmountProdMask"); 
+                    RaisePropertyChanged("AmountProdSocDist"); RaisePropertyChanged("AmountProdAll");
+                    RaisePropertyChanged("AmountClinNothing"); RaisePropertyChanged("AmountClinMask"); 
+                    RaisePropertyChanged("AmountClinSocDist"); RaisePropertyChanged("AmountClinAll");
+                    RaisePropertyChanged("AmountVzdNothing"); RaisePropertyChanged("AmountVzdMask"); 
+                    RaisePropertyChanged("AmountVzdSocDist"); RaisePropertyChanged("AmountVzdAll");
+                    RaisePropertyChanged("AmountAsymptNothing"); RaisePropertyChanged("AmountAsymptMask"); 
+                    RaisePropertyChanged("AmountAsymptSocDist"); RaisePropertyChanged("AmountAsymptAll");
+                });
+            }
+        }
 
 
         //===== Переключение между клетками ПЕРЕДЕЛАТЬ НА КОМАНДЫ

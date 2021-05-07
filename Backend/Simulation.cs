@@ -18,15 +18,25 @@ namespace EpidSimulation.Backend
         public QuadTree Root { get => _root; }
 
         //===== Параметры карты
-        public readonly double SizeX;
-        public readonly double SizeY;
+        private double _sizeWidth;
+        public double SizeWidth
+        {
+            set => _sizeWidth = value > 10 ? value : 10;
+            get => _sizeWidth;
+        }
+
+        private double _sizeHeight;
+        public double SizeHeight 
+        { 
+            set => _sizeHeight = value > 10 ? value : 10; 
+            get => _sizeHeight; 
+        }
 
         //===== Статистика
 
         /*
          *            СДЕЛАТЬ СТАТИСТИКУ: 
-         *              1. ЛЮДЕЙ КОНТАКТИРОВАВШИХ С БОЛЬНЫМ, НО НЕ ЗАРАЗИВШИМСЯ
-         *              2. Средняя по параметрам
+         *              1. Средняя R0
          *              
          *             ПОсле инкубационного чел начинает действовать, это типо результат информирования людей об важности выполнения противоэпид действий
          *              
@@ -187,64 +197,75 @@ namespace EpidSimulation.Backend
             get => _amountAsympt;
         }
 
-        public Simulation(
+        public Simulation()
+        {
+            
+        }
+
+        
+        public void SetNewSession(
             // Размер области
             double sizeX, double sizeY,
             // Настройки здоровых:
             // кол-во (здоровых, носящих маски, соблюдающих соц дистанцию, носящих и соблюдающих)
             int amountZd, int amountMaskZd, int amountSocDistZd, int amountGoodHumanZd,
-            // Настройки инфицированных в латентном периоде:
-            // кол-во (здоровых, носящих маски, соблюдающих соц дистанцию, носящих и соблюдающих)
-            int amountLat, int amountMaskLat, int amountSocDistLat, int amountGoodHumanLat,
             // Настройки инфицированных в инкубационном периоде:
             // кол-во (здоровых, носящих маски, соблюдающих соц дистанцию, носящих и соблюдающих)
             int amountInc, int amountMaskInc, int amountSocDistInc, int amountGoodHumanInc,
+            // Настройки инфицированных в продормальном периоде:
+            // кол-во (здоровых, носящих маски, соблюдающих соц дистанцию, носящих и соблюдающих)
+            int amountProd, int amountMaskProd, int amountSocDistProd, int amountGoodHumanProd,
             // Настройки инфицированных в клиническом периоде:
             // кол-во (здоровых, носящих маски, соблюдающих соц дистанцию, носящих и соблюдающих)
             int amountClin, int amountMaskClin, int amountSocDistClin, int amountGoodHumanClin,
             // Настройки выздоровевших:
             // кол-во (здоровых, носящих маски, соблюдающих соц дистанцию, носящих и соблюдающих)
             int amountVzd, int amountMaskVzd, int amountSocDistVzd, int amountGoodHumanVzd,
-            // Настройки 
-            ConfigDisease config)
+            // Настройки бессимптомных:
+            // кол-во (здоровых, носящих маски, соблюдающих соц дистанцию, носящих и соблюдающих)
+            int amountAsympt, int amountMaskAsympt, int amountSocDistAsympt, int amountGoodHumanAsympt)
         {
-            Human.Config = config;  
             QuadTree.RADIUS = Math.Max(
-                Math.Max(config.RadiusHuman, config.RadiusSocDist),
-                Math.Max(config.RadiusContact, config.RadiusAirborne));        
+                Math.Max(Human.Config.RadiusHuman, Human.Config.RadiusSocDist),
+                Math.Max(Human.Config.RadiusContact, Human.Config.RadiusAirborne));
             _root = new QuadTree(new NodeRegion(0, 0, sizeX, sizeY), null);
             //===== Параметры карты
-            SizeX = sizeX;
-            SizeY = sizeY;
+            SizeWidth = sizeX;
+            SizeHeight = sizeY;
 
             //===== Количество людей в состояниях
             AmountZd = amountZd + amountMaskZd + amountSocDistZd + amountGoodHumanZd;
-            AmountInc = amountLat + amountMaskLat + amountSocDistLat + amountGoodHumanLat;
-            AmountProdorm = amountInc + amountMaskInc + amountSocDistInc + amountGoodHumanInc;
+            AmountInc = amountInc + amountMaskInc + amountSocDistInc + amountGoodHumanInc;
+            AmountProdorm = amountProd + amountMaskProd + amountSocDistProd + amountGoodHumanProd;
             AmountClin = amountClin + amountMaskClin + amountSocDistClin + amountGoodHumanClin;
             AmountVzd = amountVzd + amountMaskVzd + amountSocDistVzd + amountGoodHumanVzd;
+            AmountAsympt = amountAsympt + amountMaskAsympt + amountSocDistAsympt + amountGoodHumanAsympt;
 
-            int[,] amounts = new int[5,4];
+            int[,] amounts = new int[6, 4];
             // Здоровые
             amounts[0, 0] = amountZd; amounts[0, 1] = amountMaskZd; amounts[0, 2] = amountSocDistZd;
             amounts[0, 3] = amountGoodHumanZd;
             // Инфицированные в инкубационном и латентном периоде
-            amounts[1, 0] = amountLat; amounts[1, 1] = amountMaskLat; amounts[1, 2] = amountSocDistLat;
-            amounts[1, 3] = amountGoodHumanLat;
+            amounts[1, 0] = amountInc; amounts[1, 1] = amountMaskInc; amounts[1, 2] = amountSocDistInc;
+            amounts[1, 3] = amountGoodHumanInc;
             // Инфицированные в инкубационном периоде
-            amounts[2, 0] = amountInc; amounts[2, 1] = amountMaskInc; amounts[2, 2] = amountSocDistInc;
-            amounts[2, 3] = amountGoodHumanInc;
+            amounts[2, 0] = amountProd; amounts[2, 1] = amountMaskProd; amounts[2, 2] = amountSocDistProd;
+            amounts[2, 3] = amountGoodHumanProd;
             // Инфицированные в клиническом периоде
             amounts[3, 0] = amountClin; amounts[3, 1] = amountMaskClin; amounts[3, 2] = amountSocDistClin;
             amounts[3, 3] = amountGoodHumanClin;
             // Выздоровевшие
             amounts[4, 0] = amountVzd; amounts[4, 1] = amountMaskVzd; amounts[4, 2] = amountSocDistVzd;
             amounts[4, 3] = amountGoodHumanVzd;
-            
+            // Бессимптомные
+            amounts[5, 0] = amountAsympt; amounts[5, 1] = amountMaskAsympt; amounts[5, 2] = amountSocDistAsympt;
+            amounts[5, 0] = amountGoodHumanAsympt;
+
+
             Random random = new Random(322);
             int maxTryes = 10;
 
-            for (int cond = 0; cond < 5; ++cond)
+            for (int cond = 0; cond < 6; ++cond)
             {
                 for (int attr = 0; attr < 4; ++attr)
                 {
@@ -275,8 +296,8 @@ namespace EpidSimulation.Backend
 
                         do
                         {
-                            rx = random.NextDouble() * (SizeX - 1) + 1;
-                            ry = random.NextDouble() * (SizeY - 1) + 1;
+                            rx = random.NextDouble() * (SizeWidth - 1) + 1;
+                            ry = random.NextDouble() * (SizeHeight - 1) + 1;
                             numTry++;
 
                             if (CheckBarrier(rx, ry))
@@ -331,10 +352,12 @@ namespace EpidSimulation.Backend
                     }
                 }
             }
-            _stChecks = 0;
+
+            StContacts = 0; StContactsInf = 0;
+            StHandShakes = 0; StHandshakesInf = 0;
+            StChecks = 0;
         }
 
-        
         // Выполнение итерации симуляции
         public void Iterate()
         {
@@ -373,7 +396,7 @@ namespace EpidSimulation.Backend
             {
                 if (Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y, 2) < Human.Config.RadiusAirborneOptim)
                 {
-                    if ((human.Condition == 2 || human.Condition == 3) && tempHuman.Condition == 0)
+                    if ((human.Condition == 2 || human.Condition == 3 || human.Condition == 5) && tempHuman.Condition == 0)
                     {
                         StContacts++;
                         if (Human.Config.GetPermissionInfect(human.Mask, tempHuman.Mask))
@@ -383,7 +406,7 @@ namespace EpidSimulation.Backend
                             StContactsInf++;
                         }
                     }
-                    else if ((tempHuman.Condition == 2 || tempHuman.Condition == 3) && human.Condition == 0)
+                    else if ((tempHuman.Condition == 2 || tempHuman.Condition == 3 || human.Condition == 5) && human.Condition == 0)
                     {
                         StContacts++;
                         if (Human.Config.GetPermissionInfect(tempHuman.Mask, human.Mask))
@@ -441,8 +464,8 @@ namespace EpidSimulation.Backend
 
         public bool CheckBarrier(double x, double y)
         {
-            return ((0 <= x - Human.Config.RadiusHuman) && (x + Human.Config.RadiusHuman <= SizeX) && 
-                    (0 <= y - Human.Config.RadiusHuman) && (y + Human.Config.RadiusHuman <= SizeY));
+            return ((0 <= x - Human.Config.RadiusHuman) && (x + Human.Config.RadiusHuman <= SizeWidth) && 
+                    (0 <= y - Human.Config.RadiusHuman) && (y + Human.Config.RadiusHuman <= SizeHeight));
         }
 
         private LinkedList<Human> GetRegionPeople(Human human)
@@ -495,10 +518,10 @@ namespace EpidSimulation.Backend
                         AmountVzd--;
                         break;
                     case 5:
-                        AmountDied--;
+                        AmountAsympt--;
                         break;
                     case 6:
-                        AmountAsympt--;
+                        AmountDied--;
                         break;
                 }
                 switch (newCond)
@@ -519,10 +542,10 @@ namespace EpidSimulation.Backend
                         AmountVzd++;
                         break;
                     case 5:
-                        AmountDied++;
+                        AmountAsympt++;
                         break;
                     case 6:
-                        AmountAsympt++;
+                        AmountDied++;
                         break;
                 }
             }
