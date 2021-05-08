@@ -82,11 +82,8 @@
                     </StackPanel>
                 </TabItem.Content>
             </TabItem>
-            <TabItem Header="Изменить параметры">
-                
-            </TabItem>
 
-            <TabItem Header="Новая симуляция">
+            <TabItem Header="Параметры окружения">
                 <StackPanel Orientation="Vertical">
                     <StackPanel.Resources>
                         <Style TargetType="StackPanel">
@@ -211,8 +208,8 @@
             <Button Content="Отображение области социальной дистанции" Command="{Binding bOnOffDebug_Click}"/>
             <Separator Background="Black"/>
             <Image Source="/Resource/virus.png"/>
-            <Button Content="Параметры болезни" Command="{Binding bCreateConfig_Click}"/>
-            <Separator/>
+            <Button Content="Параметры модели" Command="{Binding bCreateConfig_Click}"/>
+            <Separator Background="Black"/>
             <Button Content="EXCEL"/>
         </ToolBar>
 

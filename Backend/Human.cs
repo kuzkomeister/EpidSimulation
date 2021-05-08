@@ -362,7 +362,7 @@ namespace EpidSimulation.Backend
                     if (_timeRecovery == 0)
                     {
                         if (Config.GetPermissionDie())
-                            Condition = 5;
+                            Condition = 6;
                         else
                             Condition = 4;
                     }

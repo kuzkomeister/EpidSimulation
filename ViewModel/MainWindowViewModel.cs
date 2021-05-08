@@ -113,8 +113,17 @@ namespace EpidSimulation.ViewModel
             BIStartStopSim = _biStart;
 
             Config = new ConfigDisease();
-            _simulation = new Simulation();                
-            _curNode = _simulation.Root;
+            CurSimulation = new Simulation();  
+            CurSimulation.SetNewSession(
+                100, 100,
+                0,0,0,0,
+                0,0,0,0,
+                0,0,0,0,
+                0,0,0,0,
+                0,0,0,0,
+                0,0,0,0);
+            _curNode = CurSimulation.Root;
+            CreateAndAddFigures(CurSimulation.People);
 
             _timer = new DispatcherTimer();
             _timer.Tick += new EventHandler(TimerTick);
@@ -123,8 +132,8 @@ namespace EpidSimulation.ViewModel
 
             _regionBackground = new Rectangle
             {
-                Width = _simulation.SizeWidth,
-                Height = _simulation.SizeHeight,
+                Width = CurSimulation.SizeWidth,
+                Height = CurSimulation.SizeHeight,
                 Fill = Brushes.LightGray,
                 Stroke = Brushes.Black,
                 StrokeThickness = 0.1
@@ -135,10 +144,10 @@ namespace EpidSimulation.ViewModel
 
             _lineVMP = new Line
             {
-                X1 = _simulation.SizeWidth / 2,
+                X1 = CurSimulation.SizeWidth / 2,
                 Y1 = 0,
-                X2 = _simulation.SizeWidth / 2,
-                Y2 = _simulation.SizeHeight,
+                X2 = CurSimulation.SizeWidth / 2,
+                Y2 = CurSimulation.SizeHeight,
                 Stroke = Brushes.Black,
                 StrokeThickness = 0.1
             };
@@ -147,9 +156,9 @@ namespace EpidSimulation.ViewModel
             _lineHMP = new Line
             {
                 X1 = 0,
-                Y1 = _simulation.SizeHeight / 2,
-                X2 = _simulation.SizeWidth,
-                Y2 = _simulation.SizeHeight / 2,
+                Y1 = CurSimulation.SizeHeight / 2,
+                X2 = CurSimulation.SizeWidth,
+                Y2 = CurSimulation.SizeHeight / 2,
                 Stroke = Brushes.Black,
                 StrokeThickness = 0.1
             };
@@ -157,11 +166,12 @@ namespace EpidSimulation.ViewModel
 
             _scaleNode = new ScaleTransform();
             CanvasMap.RenderTransform = _scaleNode;
-            _scaleNode.ScaleX = 4;
-            _scaleNode.ScaleY = 4;            
+
+            _scaleNode.ScaleX = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
+            _scaleNode.ScaleY = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
         }
 
-        private void CreateFigures(LinkedList<Human> people)
+        private void CreateAndAddFigures(LinkedList<Human> people)
         {
             _figures = new LinkedList<FigureHuman>();
             foreach (Human human in people)
@@ -169,10 +179,7 @@ namespace EpidSimulation.ViewModel
                 FigureHuman figure = new FigureHuman(human);
                 _figures.AddFirst(figure);
             }
-        }
 
-        private void AddFigures()
-        {
             foreach (FigureHuman figure in _figures)
             {
                 if (figure.SocDistCircle != null)
@@ -267,13 +274,13 @@ namespace EpidSimulation.ViewModel
         
         #region SimulationParams
 
-        private int _sizeWidth = 10;
+        private int _sizeWidth = 100;
         public int SizeWidth 
         { 
             set => _sizeWidth = value > 10 ? value : 10; 
             get => _sizeWidth; 
         }
-        private int _sizeHeight = 10;
+        private int _sizeHeight = 100;
         public int SizeHeight 
         { 
             set => _sizeHeight = value > 10 ? value : 10; 
@@ -322,9 +329,6 @@ namespace EpidSimulation.ViewModel
         {
             CurSimulation.Iterate();
 
-            if (_curNode != CurSimulation.Root)
-                MakeVisibleNodeHumans();
-
             ClearDeads();
         }
 
@@ -350,7 +354,6 @@ namespace EpidSimulation.ViewModel
                         BIStartStopSim = _biStop;
                     }
                 });
-                
             }
         }
 
@@ -413,18 +416,17 @@ namespace EpidSimulation.ViewModel
                         AmountAsymptNothing, AmountAsymptMask, AmountAsymptSocDist, AmountAsymptAll);
                     _curNode = CurSimulation.Root;
                     ClearMap();
-                    CreateFigures(CurSimulation.People);
-                    AddFigures();
+                    CreateAndAddFigures(CurSimulation.People);
 
                     _regionBackground.Width = CurSimulation.SizeWidth;
                     _regionBackground.Height = CurSimulation.SizeHeight;
-                    _lineVMP.Y1 = CurSimulation.SizeHeight / 2;
-                    _lineVMP.X2 = CurSimulation.SizeWidth;
-                    _lineVMP.Y2 = CurSimulation.SizeHeight / 2;
+                    _lineHMP.Y1 = CurSimulation.SizeHeight / 2;
+                    _lineHMP.X2 = CurSimulation.SizeWidth;
+                    _lineHMP.Y2 = CurSimulation.SizeHeight / 2;
 
-                    _lineHMP.X1 = CurSimulation.SizeWidth / 2;
-                    _lineHMP.X2 = CurSimulation.SizeWidth / 2;
-                    _lineHMP.Y2 = CurSimulation.SizeHeight;
+                    _lineVMP.X1 = CurSimulation.SizeWidth / 2;
+                    _lineVMP.X2 = CurSimulation.SizeWidth / 2;
+                    _lineVMP.Y2 = CurSimulation.SizeHeight;
 
                     WindowHeight = 750;
                     WindowWidth = 1920 / 2;

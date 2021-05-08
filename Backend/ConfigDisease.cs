@@ -11,6 +11,7 @@ namespace EpidSimulation.Backend
         private Random random = new Random(322);
 
         //===== Основные характеристики болезни
+        #region Fields
 
         // Инкубационный период
         private int _timeIncub_a, _timeIncub_b;       
@@ -297,6 +298,7 @@ namespace EpidSimulation.Backend
             get => _maxTryes;
         }
 
+        #endregion
         //====================================
 
         public ConfigDisease()
