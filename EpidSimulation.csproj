@@ -8,7 +8,11 @@
 
   <ItemGroup>
     <None Remove="Resource\Mask.png" />
+    <None Remove="Resource\pause.png" />
+    <None Remove="Resource\play.png" />
     <None Remove="Resource\Sneeze.png" />
+    <None Remove="Resource\SocDistHidden.jpg" />
+    <None Remove="Resource\SocDistVisible.jpg" />
     <None Remove="Resource\virus.png" />
   </ItemGroup>
 
@@ -35,7 +39,19 @@
     <Resource Include="Resource\Mask.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resource\pause.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\play.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resource\Sneeze.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\SocDistHidden.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\SocDistVisible.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\virus.png">

@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using EpidSimulation.Backend;
@@ -60,13 +61,66 @@ namespace EpidSimulation.ViewModel
         public double WindowWidth { set; get; }
         public double WindowHeight { set; get; }
 
+        private BitmapImage _biSocDistHidden = new BitmapImage();
+        private BitmapImage _biSocDistVisible = new BitmapImage();
+
+        private BitmapImage _biSocDist;
+        public BitmapImage BISocDist 
+        {
+            set
+            {
+                _biSocDist = value;
+                RaisePropertyChanged("BISocDist");
+            } 
+            get => _biSocDist; 
+        }
+
+        private BitmapImage _biStart = new BitmapImage();
+        private BitmapImage _biStop = new BitmapImage();
+
+        private BitmapImage _biStartStopSim;
+        public BitmapImage BIStartStopSim
+        {
+            set
+            {
+                _biStartStopSim = value;
+                RaisePropertyChanged("BIStartStopSim");
+            }
+            get => _biStartStopSim;
+        }
 
         public MainWindowViewModel()
         {
+            #region InitBitMapImages
+            _biSocDistVisible.BeginInit();
+            _biSocDistVisible.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/SocDistVisible.jpg");
+            _biSocDistVisible.EndInit();
+
+            _biSocDistHidden.BeginInit();
+            _biSocDistHidden.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/SocDistHidden.jpg");
+            _biSocDistHidden.EndInit();
+
+            _biStart.BeginInit();
+            _biStart.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/play.png");
+            _biStart.EndInit();
+
+            _biStop.BeginInit();
+            _biStop.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/pause.png");
+            _biStop.EndInit();
+            #endregion
+
+            BISocDist = _biSocDistVisible;
+            BIStartStopSim = _biStart;
+
             Config = new ConfigDisease();
             _simulation = new Simulation();                
             _curNode = _simulation.Root;
-            
+
+            _timer = new DispatcherTimer();
+            _timer.Tick += new EventHandler(TimerTick);
+            _timer.Interval = new TimeSpan(10000);
+            _statusTimer = false;
+
             _regionBackground = new Rectangle
             {
                 Width = _simulation.SizeWidth,
@@ -210,7 +264,9 @@ namespace EpidSimulation.ViewModel
             }
         }
 
-        //==========
+        
+        #region SimulationParams
+
         private int _sizeWidth = 10;
         public int SizeWidth 
         { 
@@ -259,31 +315,20 @@ namespace EpidSimulation.ViewModel
         public int AmountAsymptSocDist { set; get; }
         public int AmountAsymptAll { set; get; }
 
+        #endregion
+
         // Итерация основного таймера 
         private void TimerTick(object sender, EventArgs e)
         {
-            _simulation.Iterate();
+            CurSimulation.Iterate();
 
-            if (_curNode != _simulation.Root)
+            if (_curNode != CurSimulation.Root)
                 MakeVisibleNodeHumans();
 
             ClearDeads();
-            /*
-            curIter.Content = "Текущая итерация: " + Sim.Iter;
-            stat.Content = "Здоровых: " + Sim.AmountZd + "\n" +
-                           "Инфицированных в латентном периоде: " + Sim.AmountLat + "\n" +
-                           "Инфицированных в инкубационном периоде: " + Sim.AmountInc + "\n" +
-                           "Инфицированных в клиническом периоде: " + Sim.AmountClin + "\n" +
-                           "С иммунитетом: " + Sim.AmountVzd + "\n" +
-                           "Умерших: " + Sim.AmountDied;
-
-            debug.Content = "Статистика:\n" +
-                           "Всего контактов: " + Sim.StContacts + "\n" +
-                           "Инфицированных контактов: " + Sim.StContactsInf + "\n" +
-                           "Всего рукопожатий: " + Sim.StHandShakes + "\n" +
-                           "Заражений с рук: " + Sim.StHandshakesInf + "\n";
-            */
         }
+
+        
 
         // Включить/Выключить симуляцию
         public ICommand bStartStopSimulation_Click
@@ -296,13 +341,13 @@ namespace EpidSimulation.ViewModel
                     {
                         _timer.Stop();
                         _statusTimer = false;
-                        // Header = "включить"
+                        BIStartStopSim = _biStart;
                     }
                     else
                     {
                         _timer.Start();
                         _statusTimer = true;
-                        // Header = "выключить"
+                        BIStartStopSim = _biStop;
                     }
                 });
                 
@@ -323,7 +368,7 @@ namespace EpidSimulation.ViewModel
                             if (figure.human.SocDist && figure.CondCircle.Visibility == 0)
                                 figure.SocDistCircle.Visibility = Visibility.Visible;
                         }
-                        //miDebugOnOff.Header = "Выключить дебаг";
+                        BISocDist = _biSocDistHidden;
                         _statusDebug = true;
                     }
                     else
@@ -333,7 +378,7 @@ namespace EpidSimulation.ViewModel
                             if (figure.SocDistCircle != null)
                                 figure.SocDistCircle.Visibility = Visibility.Hidden;
                         }
-                        //miDebugOnOff.Header = "Включить дебаг";
+                        BISocDist = _biSocDistVisible;
                         _statusDebug = false;
                     }
                 });
@@ -382,14 +427,11 @@ namespace EpidSimulation.ViewModel
                     _lineHMP.Y2 = CurSimulation.SizeHeight;
 
                     WindowHeight = 750;
-                    WindowWidth = 1920 / 2 + 60;
+                    WindowWidth = 1920 / 2;
 
                     _scaleNode.ScaleX = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
                     _scaleNode.ScaleY = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
 
-                    _timer = new DispatcherTimer();
-                    _timer.Tick += new EventHandler(TimerTick);
-                    _timer.Interval = new TimeSpan(10000);
                     _timer.Stop();
                     _statusTimer = false;
                 });
@@ -426,6 +468,7 @@ namespace EpidSimulation.ViewModel
             }
         }
 
+        
 
         //===== Переключение между клетками ПЕРЕДЕЛАТЬ НА КОМАНДЫ
         private void miNodeChild_Click(object sender, RoutedEventArgs e)

@@ -37,10 +37,10 @@ namespace EpidSimulation.Frontend
                             resColor = Brushes.Blue;
                             break;
                         case 5:
-                            resColor = Brushes.DarkGray;
+                            resColor = Brushes.Yellow;
                             break;
                         case 6:
-                            resColor = Brushes.Yellow;
+                            resColor = Brushes.DarkGray;
                             break;
                     }
                     break;

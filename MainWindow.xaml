@@ -16,10 +16,14 @@
             <ColumnDefinition Width="0.5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
+        <Canvas Grid.Column="0" Grid.Row="1">
+            <ContentPresenter Content="{Binding CanvasMap}"/>
+        </Canvas>
+        
         <TabControl Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
             <TabItem Header="Статистика" DataContext="{Binding CurSimulation}">
                 <TabItem.Content>
@@ -151,7 +155,7 @@
 
                     <StackPanel>
                         <Border BorderThickness="1" BorderBrush="Gray">
-                            <TextBlock Text="продормального периода" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
+                            <TextBlock Text="Продормального периода" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
                         </Border>
                         <TextBox Text="{Binding AmountProdNothing}" PreviewTextInput="IntPreviewTextInput"/>
                         <TextBox Text="{Binding AmountProdMask}" PreviewTextInput="IntPreviewTextInput"/>
@@ -198,17 +202,21 @@
             </TabItem>
         </TabControl>
 
-        <Menu Grid.Column="0" Grid.Row="0">
-            <MenuItem Header="Симуляция">
-                <MenuItem Header="Запустить" Command="{Binding bStartStopSimulation_Click}"/>
-                <MenuItem Header="Включить дебаг" Command="{Binding bOnOffDebug_Click}"/>
-                <MenuItem Header="Создать болезнь" Command="{Binding bCreateConfig_Click}"/>
-            </MenuItem>
-        </Menu>
+        <ToolBar Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Background="White">
+            <Button Command="{Binding bStartStopSimulation_Click}">
+                <Image Source="{Binding BIStartStopSim}"/>
+            </Button>
+            <Separator Background="Black"/>
+            <Image Source="{Binding BISocDist}"/>
+            <Button Content="Отображение области социальной дистанции" Command="{Binding bOnOffDebug_Click}"/>
+            <Separator Background="Black"/>
+            <Image Source="/Resource/virus.png"/>
+            <Button Content="Параметры болезни" Command="{Binding bCreateConfig_Click}"/>
+            <Separator/>
+            <Button Content="EXCEL"/>
+        </ToolBar>
 
-        <Canvas Grid.Column="0" Grid.Row="1">
-            <ContentPresenter Content="{Binding CanvasMap}"/>
-        </Canvas>
+        
         
     </Grid>
 </Window>

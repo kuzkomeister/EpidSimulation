@@ -208,8 +208,12 @@ namespace EpidSimulation.Backend
         public void Update(Human human)
         {
             _people.Remove(human);
-            if (human.Condition != 5)
+            _count--;
+            if (human.Condition != 6)
+            {
+                _count++;
                 Relocate(human);
+            }
         }
 
         // Перемещение объекта по дереву вверх

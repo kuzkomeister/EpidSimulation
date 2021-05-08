@@ -10,10 +10,11 @@ namespace EpidSimulation.Backend
 {
     public class Human : INotifyPropertyChanged
     {
+        #region fields
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
+        
         static public ConfigDisease Config;
 
         private int _condition;  // Состояние человека
@@ -37,7 +38,7 @@ namespace EpidSimulation.Backend
         private double[] _vectorDirection;   // Вектор направления и скорости человека
 
         private delegate void MethodMove(Simulation simulation);
-        private MethodMove Move;            // Метод перемещения 
+        private MethodMove Move;            // Метод перемещения
 
         //===== Параметры влияющие на эпид ситуацию в случае конкретного человека
         public readonly bool Mask;      // Наличие маски на лице
@@ -57,16 +58,26 @@ namespace EpidSimulation.Backend
         private int _timeHandToFaceContact;  // Время до контакта рук с лицом
         private int _timeWash;               // Время до мытья/дезинфицирования рук
 
+        //===== Статистика
+        private int _amountInfects = 0;     // Количество заражений 
+        public int AmountInfects 
+        {
+            set => _amountInfects = value;
+            get => _amountInfects;
+        }
 
+        #endregion
+
+        #region constructor
         public Human(int condition, bool mask, bool socDist, double x, double y)
         {
             Condition = condition;
-            _x = x; 
-            _y = y;
+            X = x; 
+            Y = y;
             
             Mask = mask; 
             SocDist = socDist;
-            _infectHand = false;
+            InfectHand = false;
             Move = SocDist ? MoveWithSocDist : MoveWithoutCollision;
 
             // Направление движения
@@ -85,6 +96,7 @@ namespace EpidSimulation.Backend
             _timeHandshake = Config.GetTimeContact();
             _timeInfHand = Config.GetTimeInfHand();
         }
+        #endregion
 
         public void DoDela(Simulation simulation)
         {
@@ -92,17 +104,16 @@ namespace EpidSimulation.Backend
             {
                 int oldCond = Condition;
                 CourseDisease();
-                WashHands();
-                Handshake(simulation);
                 Meet(simulation);
-                if (Condition == 0)
-                    TouchTheFace(simulation);
+                ContactTM(simulation);
                 Rotate();
                 Move?.Invoke(simulation);
 
                 simulation.SetAmountCond(oldCond, Condition);
             }
         }
+
+        #region MoveMethods
 
         private void MoveWithSocDist(Simulation simulation)
         {
@@ -222,6 +233,11 @@ namespace EpidSimulation.Backend
             }
         }
 
+        #endregion
+
+        // TM - transmission mechanism (механизм передачи)
+
+        // Произвести воздушно-капельный механизм передачи с ближайшими людьми
         private void Meet(Simulation simulation)
         {
             if (_timeMeet == 0)
@@ -235,6 +251,25 @@ namespace EpidSimulation.Backend
             }
         }
 
+        
+        private void ContactTM(Simulation simulation)
+        {
+            WashHands();
+            Handshake(simulation);
+            if (Condition == 0)
+            {
+                int oldCond = Condition;
+                TouchTheFace();
+                if (oldCond != Condition)
+                    simulation.StHandshakesInf++;
+                if (Condition == 2 || Condition == 3 || Condition == 5)
+                    SetHandsDirty();
+            }
+        }
+
+        #region ForContactTM
+
+        // Произвести контактный механизм мередачи с ближайшими людьми
         private void Handshake(Simulation simulation)
         {
             if (_timeHandshake == 0)
@@ -248,7 +283,8 @@ namespace EpidSimulation.Backend
             }
         }
 
-        private void TouchTheFace(Simulation simulation)
+        // Потрогать свое лицо руками
+        private void TouchTheFace()
         {
             if (_timeHandToFaceContact == 0)
             {
@@ -257,7 +293,6 @@ namespace EpidSimulation.Backend
                     if (Config.GetPermissionInfContact())
                     {
                         Condition = 1;
-                        simulation.StHandshakesInf++;
                     }
                 }
                 _timeHandToFaceContact = Config.GetTimeHandToFaceContact();
@@ -268,6 +303,7 @@ namespace EpidSimulation.Backend
             }
         }
 
+        // Испачкать руки инфекцией
         private void SetHandsDirty()
         {
             if (_timeInfHand == 0)
@@ -281,6 +317,7 @@ namespace EpidSimulation.Backend
             }
         }
 
+        // Помыть руки
         private void WashHands()
         {
             if (_timeWash == 0)
@@ -294,6 +331,9 @@ namespace EpidSimulation.Backend
             }
         }
 
+        #endregion
+
+        // Течение болезни у человека
         private void CourseDisease()
         {
             switch (Condition)
@@ -311,7 +351,6 @@ namespace EpidSimulation.Backend
                     break;
 
                 case 2:
-                    SetHandsDirty();
                     if (_timeProdorm == 0)
                         Condition = 3;
                     else
@@ -320,7 +359,6 @@ namespace EpidSimulation.Backend
 
                 case 3:
                 case 5:
-                    SetHandsDirty();
                     if (_timeRecovery == 0)
                     {
                         if (Config.GetPermissionDie())
@@ -332,57 +370,6 @@ namespace EpidSimulation.Backend
                         _timeRecovery--;
                     break;
             }
-            /*
-            if (Condition == 1)
-            {
-                // Инкубационный период
-                if (_timeIncub == 0)
-                { 
-                    if (Config.GetPermissionAsymptomatic())
-                        Condition = 6;
-                    else
-                        Condition = 2;      
-                }
-                else
-                {
-                    _timeIncub--;
-                }
-            }
-            else if (Condition == 2)
-            {
-                // Продормальный период
-                SetHandsDirty();
-                if (_timeProdorm == 0)
-                {
-                    Condition = 3;                    
-                }
-                else
-                {
-                    _timeProdorm--;
-                }
-            }
-            else if (Condition == 3 || Condition == 6)
-            {
-                // Клинический период (носительство)
-                SetHandsDirty();
-                if (_timeRecovery == 0)
-                {
-                    if (Config.GetPermissionDie())
-                    {
-                        Condition = 5;
-                        _infectHand = false;
-                    }
-                    else
-                    {
-                        Condition = 4;
-                    }
-                }
-                else
-                {
-                    _timeRecovery--;
-                }
-            }
-            */
         }
 
 

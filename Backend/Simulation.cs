@@ -42,6 +42,31 @@ namespace EpidSimulation.Backend
          *              
          */
 
+        #region Statistics
+
+        private int _stR0 = 0;
+        public int StR0
+        {
+            set
+            {
+                _stR0 = value;
+                OnPropertyChanged("StR0");
+            }
+            get => _stR0;
+        }
+
+        public void CalculateR0()
+        {
+            int amountPeople = 0;
+            int amountInfects = 0;
+            foreach(Human human in People)
+            {
+                if (human.AmountInfects != 0)
+                    amountPeople++;
+
+            }
+        }
+
         private int _stContacts = 0;        
         public int StContacts 
         { 
@@ -131,7 +156,7 @@ namespace EpidSimulation.Backend
             get => _amountZd; 
         }
 
-        private int _amountInc = 0;   // Инфицированных в инкубационном и латентном периоде
+        private int _amountInc = 0;         // Инфицированных в инкубационном периоде
         public int AmountInc
         {
             set
@@ -142,7 +167,7 @@ namespace EpidSimulation.Backend
             get => _amountInc;
         }
 
-        private int _amountProdorm = 0;       // Инфицированных в инкубационном периоде
+        private int _amountProdorm = 0;     // Инфицированных в продормальном периоде
         public int AmountProdorm 
         {
             set
@@ -153,7 +178,7 @@ namespace EpidSimulation.Backend
             get => _amountProdorm; 
         }
 
-        private int _amountClin = 0;     // Инфицированных в клиническом периоде
+        private int _amountClin = 0;        // Инфицированных в клиническом периоде
         public int AmountClin 
         {
             set
@@ -196,6 +221,8 @@ namespace EpidSimulation.Backend
             }
             get => _amountAsympt;
         }
+
+        #endregion
 
         public Simulation()
         {
@@ -259,17 +286,17 @@ namespace EpidSimulation.Backend
             amounts[4, 3] = amountGoodHumanVzd;
             // Бессимптомные
             amounts[5, 0] = amountAsympt; amounts[5, 1] = amountMaskAsympt; amounts[5, 2] = amountSocDistAsympt;
-            amounts[5, 0] = amountGoodHumanAsympt;
+            amounts[5, 3] = amountGoodHumanAsympt;
 
 
             Random random = new Random(322);
             int maxTryes = 10;
 
-            for (int cond = 0; cond < 6; ++cond)
+            for (int cond = 0; cond < 6; cond++)
             {
-                for (int attr = 0; attr < 4; ++attr)
+                for (int attr = 0; attr < 4; attr++)
                 {
-                    for (int i = 0; i < amounts[cond, attr]; ++i)
+                    for (int i = 0; i < amounts[cond, attr]; i++)
                     {
                         bool mask = false;
                         bool socDist = false;
@@ -296,18 +323,18 @@ namespace EpidSimulation.Backend
 
                         do
                         {
-                            rx = random.NextDouble() * (SizeWidth - 1) + 1;
-                            ry = random.NextDouble() * (SizeHeight - 1) + 1;
+                            rx = random.NextDouble() * (SizeWidth - Human.Config.RadiusHuman - 1) + Human.Config.RadiusHuman + 1;
+                            ry = random.NextDouble() * (SizeHeight - Human.Config.RadiusHuman - 1) + Human.Config.RadiusHuman + 1;
                             numTry++;
 
                             if (CheckBarrier(rx, ry))
                             {
                                 human.X = rx;
                                 human.Y = ry;
-                                double distance = GetNearDistance(human);
+                                double distance = -1;//GetNearDistance(human);
                                 if (distance != -1)
                                 {
-                                    f = distance < 3 * Human.Config.RadiusHuman;
+                                    f = distance < Human.Config.RadiusHumanOptim;
                                 }
                                 else
                                 {
@@ -319,25 +346,28 @@ namespace EpidSimulation.Backend
                                 f = true;
                             }
 
-                            if (numTry == maxTryes)
+                            if (numTry > maxTryes)
                             {
                                 f = false;
                                 switch (cond)
                                 {
                                     case 0:
-                                        _amountZd--;
+                                        AmountZd--;
                                         break;
                                     case 1:
-                                        _amountInc--;
+                                        AmountInc--;
                                         break;
                                     case 2:
-                                        _amountProdorm--;
+                                        AmountProdorm--;
                                         break;
                                     case 3:
-                                        _amountClin--;
+                                        AmountClin--;
                                         break;
                                     case 4:
-                                        _amountVzd--;
+                                        AmountVzd--;
+                                        break;
+                                    case 5:
+                                        AmountAsympt--;
                                         break;
                                 }
                             }
@@ -345,9 +375,9 @@ namespace EpidSimulation.Backend
                         } while (f);
 
 
-                        if (numTry < maxTryes)
+                        if (numTry <= maxTryes)
                         {
-                            _root.Insert(human);
+                            Root.Insert(human);
                         }
                     }
                 }
@@ -401,6 +431,7 @@ namespace EpidSimulation.Backend
                         StContacts++;
                         if (Human.Config.GetPermissionInfect(human.Mask, tempHuman.Mask))
                         {
+                            human.AmountInfects++;
                             tempHuman.Condition = 1;
                             SetAmountCond(0, 1);
                             StContactsInf++;
@@ -411,6 +442,7 @@ namespace EpidSimulation.Backend
                         StContacts++;
                         if (Human.Config.GetPermissionInfect(tempHuman.Mask, human.Mask))
                         {
+                            tempHuman.AmountInfects++;
                             human.Condition = 1;
                             StContactsInf++;
                             break;

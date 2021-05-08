@@ -46,7 +46,6 @@ namespace EpidSimulation.Frontend
                 ConverterParameter = -Human.Config.RadiusHuman
             };
             CondCircle.SetBinding(Canvas.LeftProperty, bind);
-
             
             bind = new Binding
             {
