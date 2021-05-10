@@ -113,6 +113,15 @@ namespace EpidSimulation.Backend
             }
         }
 
+        public void OnOffCollision(bool status)
+        {
+            if (status)
+                Move = SocDist ? MoveWithSocDist : MoveWithoutSocDist;
+            else
+                Move = SocDist ? MoveWithSocDist : MoveWithoutCollision;
+            
+        }
+
         #region MoveMethods
 
         private void MoveWithSocDist(Simulation simulation)
@@ -257,14 +266,9 @@ namespace EpidSimulation.Backend
             WashHands();
             Handshake(simulation);
             if (Condition == 0)
-            {
-                int oldCond = Condition;
-                TouchTheFace();
-                if (oldCond != Condition)
-                    simulation.StHandshakesInf++;
-                if (Condition == 2 || Condition == 3 || Condition == 5)
-                    SetHandsDirty();
-            }
+                TouchTheFace(simulation);
+            if (Condition == 2 || Condition == 3 || Condition == 5)
+                SetHandsDirty();
         }
 
         #region ForContactTM
@@ -284,16 +288,18 @@ namespace EpidSimulation.Backend
         }
 
         // Потрогать свое лицо руками
-        private void TouchTheFace()
+        private void TouchTheFace(Simulation simulation)
         {
             if (_timeHandToFaceContact == 0)
             {
                 if (_infectHand)
                 {
+                    simulation.StTouchesTheFaceWithInfect++;
                     if (Config.GetPermissionInfContact())
                     {
                         Condition = 1;
-                    }
+                        simulation.StHandshakesInf++;
+                    }   
                 }
                 _timeHandToFaceContact = Config.GetTimeHandToFaceContact();
             }

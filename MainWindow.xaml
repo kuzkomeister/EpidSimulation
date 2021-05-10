@@ -76,8 +76,16 @@
                         <StackPanel Margin="0,-10,0,0">
                             <Label Content="инфекции:"/>
                             <Label Content="{Binding StHandShakes}"/>
-                            <Label Content=" из-за них заразилось"/>
+                            <Label Content=" из них был шанс занести инфекцию: "/>
+                            <Label Content="{Binding StTouchesTheFaceWithInfect}"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,-10,0,0">
+                            <Label Content="заразилось: "/>
                             <Label Content="{Binding StHandshakesInf}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="Базовое репродуктивное число: "/>
+                            <Label Content="{Binding StR0}"/>
                         </StackPanel>
                     </StackPanel>
                 </TabItem.Content>
@@ -132,7 +140,7 @@
                     
                     <StackPanel>
                         <Border BorderThickness="1" BorderBrush="Gray">
-                            <TextBlock Text="Здоровые" Width="100" TextAlignment="Center"/>
+                            <TextBlock Text="Восприимчивые" Width="100" TextAlignment="Center"/>
                         </Border>
                         <TextBox Text="{Binding AmountZdNothing}" PreviewTextInput="IntPreviewTextInput"/>
                         <TextBox Text="{Binding AmountZdMask}" PreviewTextInput="IntPreviewTextInput"/>
@@ -190,11 +198,15 @@
                         <TextBox Text="{Binding AmountVzdAll}" PreviewTextInput="IntPreviewTextInput"/>
                     </StackPanel>
 
+                    <CheckBox Content="Коллизия" IsChecked="{Binding StatusCollision}" Margin="20,10,0,0"/>
+                    
                     <StackPanel HorizontalAlignment="Center">
                         <Button Command="{Binding bClearFields_Click}" Content="Обнулить все" Width="100" Height="25" Margin="25"/>
                         <Button Command="{Binding bCreateSimulation_Click}" Content="Создать" Width="100" Height="25" Margin="20"/>
                     </StackPanel>
+
                     
+
                 </StackPanel>
             </TabItem>
         </TabControl>

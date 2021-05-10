@@ -8,7 +8,7 @@ namespace EpidSimulation.Backend
 {
     public class ConfigDisease : ICloneable
     {
-        private Random random = new Random(322);
+        private Random random = new Random(DateTime.Now.Second * DateTime.Now.Minute + DateTime.Now.Hour + DateTime.Now.Day);
 
         //===== Основные характеристики болезни
         #region Fields

@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resource\Gigiena.jpg" />
     <None Remove="Resource\Mask.png" />
+    <None Remove="Resource\meeting.jpg" />
     <None Remove="Resource\pause.png" />
     <None Remove="Resource\play.png" />
     <None Remove="Resource\Sneeze.png" />
@@ -36,7 +38,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resource\Gigiena.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resource\Mask.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\meeting.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\pause.png">

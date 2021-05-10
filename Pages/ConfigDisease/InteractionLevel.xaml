@@ -13,9 +13,10 @@
     <Page.Resources>
         <c:StringToDoubleConverter x:Key="myStringToDoubleConverter"/>
         <c:ShanceToProcentConverter x:Key="myShanceToProcentConverter"/>
+        <c:LeftToCenterConverter x:Key="myLeftToCenterConverter"/>
     </Page.Resources>
-    
-    
+
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -51,18 +52,30 @@
             </StackPanel>
         </StackPanel>
 
-        <Ellipse Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Fill="DeepSkyBlue" 
-                 Height="{Binding RadiusSocDist, Converter={StaticResource myShanceToProcentConverter}}" 
-                 Width="{Binding RadiusSocDist, Converter={StaticResource myShanceToProcentConverter}}"/>
-        <Ellipse Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Fill="Red" 
-                 Height="{Binding RadiusAirborne, Converter={StaticResource myShanceToProcentConverter}}" 
-                 Width="{Binding RadiusAirborne, Converter={StaticResource myShanceToProcentConverter}}"/>
-        <Ellipse Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Fill="Pink" 
-                 Height="{Binding RadiusContact, Converter={StaticResource myShanceToProcentConverter}}" 
-                 Width="{Binding RadiusContact, Converter={StaticResource myShanceToProcentConverter}}"/>
-        <Ellipse Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Fill="Gray" 
-                 Height="{Binding RadiusHuman, Converter={StaticResource myShanceToProcentConverter}}" 
-                 Width="{Binding RadiusHuman, Converter={StaticResource myShanceToProcentConverter}}" StrokeThickness="1" Stroke="Black"/>
+        <Canvas Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" RenderTransformOrigin="0.5,0.5" >
+            <Canvas.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="10" ScaleY="10"/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Canvas.RenderTransform>
+
+            <Ellipse Fill="DeepSkyBlue" 
+                     Height="{Binding RadiusSocDist, Converter={StaticResource myShanceToProcentConverter}}" 
+                     Width="{Binding RadiusSocDist, Converter={StaticResource myShanceToProcentConverter}}"/>
+            <Ellipse Fill="Red" 
+                     Height="{Binding RadiusAirborne, Converter={StaticResource myShanceToProcentConverter}}" 
+                     Width="{Binding RadiusAirborne, Converter={StaticResource myShanceToProcentConverter}}"/>
+            <Ellipse Fill="Pink" 
+                     Height="{Binding RadiusContact, Converter={StaticResource myShanceToProcentConverter}}" 
+                     Width="{Binding RadiusContact, Converter={StaticResource myShanceToProcentConverter}}"/>
+            <Ellipse Fill="Gray" 
+                     Height="{Binding RadiusHuman, Converter={StaticResource myShanceToProcentConverter}}" 
+                     Width="{Binding RadiusHuman, Converter={StaticResource myShanceToProcentConverter}}" StrokeThickness="1" Stroke="Black"/>
+
+        </Canvas>
 
         <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical">
             <Label Content="*Все радиусы включают в себя радиус человека, т.е. если радиус человека = 0.5, то при вводе радиуса встречи = 1.5, он автоматически станет 2" FontSize="11.7"/>
@@ -79,6 +92,6 @@
                 <Label Content=" - Область возможной контактной передачи инфекции"/>
             </StackPanel>
         </StackPanel>
-        
+
     </Grid>
 </Page>

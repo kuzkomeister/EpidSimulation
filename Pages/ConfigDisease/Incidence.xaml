@@ -11,26 +11,28 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="1.1*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="1.1*"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+        
 
-        <StackPanel Orientation="Vertical" Margin="0,50,0,0">
+        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0">
+            <StackPanel.Resources>
+                <Style TargetType="StackPanel">
+                    <Setter Property="Orientation" Value="Horizontal"/>
+                    <Setter Property="Margin" Value="0,10,0,0"/>
+                </Style>
+            </StackPanel.Resources>
+            
             <Label Content="Время между:"/>
-            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                <Label Content="Встречами: от"/>
-                <TextBox Width="100" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeAirborne_A}"/>
-                <Label Content="до"/>
-                <TextBox Width="50" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeAirborne_B}"/>
-                <Label Content="итераций"/>
-            </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+            <StackPanel>
                 <Label Content="Рукопожатиями: от"/>
-                <TextBox Width="100" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeContact_A}"/>
+                <TextBox Width="100" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeContact_A}" Margin="51,0,0,0"/>
                 <Label Content="до"/>
                 <TextBox Width="50" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeContact_B}"/>
                 <Label Content="итераций"/>
@@ -38,28 +40,38 @@
 
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="Контактом рук с лицом: от"/>
-                <TextBox Width="100" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeHandToFaceContact_A}"/>
+                <TextBox Width="100" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeHandToFaceContact_A}" Margin="11,0,0,0"/>
                 <Label Content="до"/>
                 <TextBox Width="50" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeHandToFaceContact_B}"/>
                 <Label Content="итераций"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+            <StackPanel>
                 <Label Content="Мытьем рук: от"/>
-                <TextBox Width="100" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeWash_A}"/>
+                <TextBox Width="100" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeWash_A}" Margin="72,0,0,0"/>
                 <Label Content="до"/>
                 <TextBox Width="50" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeWash_B}"/>
                 <Label Content="итераций"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+            <StackPanel>
                 <Label Content="Инфицированием рук: от"/>
-                <TextBox Width="100" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeInfHand_A}"/>
+                <TextBox Width="100" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeInfHand_A}" Margin="16,0,0,0"/>
                 <Label Content="до"/>
                 <TextBox Width="50" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeInfHand_B}"/>
                 <Label Content="итераций"/>
             </StackPanel>
+            <StackPanel>
+                <Label Content="Встречами: от"/>
+                <TextBox Width="100" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeAirborne_A}" Margin="80,0,0,0"/>
+                <Label Content="до"/>
+                <TextBox Width="50" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeAirborne_B}"/>
+                <Label Content="итераций"/>
+            </StackPanel>
         </StackPanel>
-        
+
+        <Image Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Source="/Resource/Gigiena.jpg"/>
+        <Image Grid.Row="1" Grid.Column="0" Source="/Resource/meeting.jpg"/>
+
     </Grid>
 </Page>

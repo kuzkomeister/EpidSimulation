@@ -16,5 +16,5 @@ C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\App.xaml
 198-450203371
 ConfigDiseaseWindow.xaml;MainWindow.xaml;Pages\ConfigDisease\DiseaseParam.xaml;Pages\ConfigDisease\Incidence.xaml;Pages\ConfigDisease\InteractionLevel.xaml;Pages\ConfigDisease\Prevalence.xaml;
 
-False
+True
 

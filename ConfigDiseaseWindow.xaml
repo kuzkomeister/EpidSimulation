@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EpidSimulation"
         mc:Ignorable="d"
-        Title="Параметры модели" Height="550" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="Параметры модели" Height="550" Width="810" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
 
     
     

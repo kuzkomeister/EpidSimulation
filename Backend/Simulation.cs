@@ -33,19 +33,10 @@ namespace EpidSimulation.Backend
         }
 
         //===== Статистика
-
-        /*
-         *            СДЕЛАТЬ СТАТИСТИКУ: 
-         *              1. Средняя R0
-         *              
-         *             ПОсле инкубационного чел начинает действовать, это типо результат информирования людей об важности выполнения противоэпид действий
-         *              
-         */
-
         #region Statistics
 
-        private int _stR0 = 0;
-        public int StR0
+        private double _stR0 = 0;
+        public double StR0
         {
             set
             {
@@ -58,13 +49,16 @@ namespace EpidSimulation.Backend
         public void CalculateR0()
         {
             int amountPeople = 0;
-            int amountInfects = 0;
+            int SumInfects = 0;
             foreach(Human human in People)
             {
-                if (human.AmountInfects != 0)
+                if (human.Condition == 2 || human.Condition == 3 || human.Condition == 5)
+                {
+                    SumInfects += human.AmountInfects;
                     amountPeople++;
-
+                }
             }
+            StR0 = (double) SumInfects / amountPeople;
         }
 
         private int _stContacts = 0;        
@@ -98,6 +92,17 @@ namespace EpidSimulation.Backend
                 OnPropertyChanged("StHandshakes");
             }
             get => _stHandshakes; 
+        }
+
+        private int _stTouchesTheFaceWithInfect = 0;
+        public int StTouchesTheFaceWithInfect
+        {
+            set
+            {
+                _stTouchesTheFaceWithInfect = value;
+                OnPropertyChanged("StTouchesTheFaceWithInfect");
+            }
+            get => _stTouchesTheFaceWithInfect;
         }
 
         private int _stHandshakesInf = 0;
@@ -250,7 +255,9 @@ namespace EpidSimulation.Backend
             int amountVzd, int amountMaskVzd, int amountSocDistVzd, int amountGoodHumanVzd,
             // Настройки бессимптомных:
             // кол-во (здоровых, носящих маски, соблюдающих соц дистанцию, носящих и соблюдающих)
-            int amountAsympt, int amountMaskAsympt, int amountSocDistAsympt, int amountGoodHumanAsympt)
+            int amountAsympt, int amountMaskAsympt, int amountSocDistAsympt, int amountGoodHumanAsympt,
+            
+            bool statusCollision)
         {
             QuadTree.RADIUS = Math.Max(
                 Math.Max(Human.Config.RadiusHuman, Human.Config.RadiusSocDist),
@@ -289,7 +296,7 @@ namespace EpidSimulation.Backend
             amounts[5, 3] = amountGoodHumanAsympt;
 
 
-            Random random = new Random(322);
+            Random random = new Random(DateTime.Now.Second * DateTime.Now.Minute + DateTime.Now.Hour + DateTime.Now.Day);
             int maxTryes = 10;
 
             for (int cond = 0; cond < 6; cond++)
@@ -331,7 +338,7 @@ namespace EpidSimulation.Backend
                             {
                                 human.X = rx;
                                 human.Y = ry;
-                                double distance = -1;//GetNearDistance(human);
+                                double distance = statusCollision ? GetNearDistance(human) : -1;
                                 if (distance != -1)
                                 {
                                     f = distance < Human.Config.RadiusHumanOptim;
@@ -385,7 +392,8 @@ namespace EpidSimulation.Backend
 
             StContacts = 0; StContactsInf = 0;
             StHandShakes = 0; StHandshakesInf = 0;
-            StChecks = 0;
+            StTouchesTheFaceWithInfect = 0;
+            StChecks = 0; StR0 = 0;
         }
 
         // Выполнение итерации симуляции
@@ -416,6 +424,15 @@ namespace EpidSimulation.Backend
                 IterFinal = Iter;
 
             Iter++;
+            CalculateR0();
+        }
+
+        public void OnOffCollision(bool status)
+        {
+            foreach(Human human in People)
+            {
+                human.OnOffCollision(status);
+            }
         }
 
         // Произвести общение/контакт/беседу/встречу

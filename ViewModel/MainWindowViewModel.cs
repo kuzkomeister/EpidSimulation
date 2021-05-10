@@ -17,6 +17,13 @@ using GalaSoft.MvvmLight.Command;
 
 namespace EpidSimulation.ViewModel
 {
+    /*
+     * СДЕЛАТЬ:
+     *  
+     *  
+     */
+
+
     public partial class MainWindowViewModel : ViewModelBase
     {
         private Simulation _simulation;
@@ -121,7 +128,8 @@ namespace EpidSimulation.ViewModel
                 0,0,0,0,
                 0,0,0,0,
                 0,0,0,0,
-                0,0,0,0);
+                0,0,0,0,
+                false);
             _curNode = CurSimulation.Root;
             CreateAndAddFigures(CurSimulation.People);
 
@@ -170,6 +178,8 @@ namespace EpidSimulation.ViewModel
             _scaleNode.ScaleX = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
             _scaleNode.ScaleY = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
         }
+
+        #region WorkWithFigureHuman
 
         private void CreateAndAddFigures(LinkedList<Human> people)
         {
@@ -271,7 +281,8 @@ namespace EpidSimulation.ViewModel
             }
         }
 
-        
+        #endregion
+
         #region SimulationParams
 
         private int _sizeWidth = 100;
@@ -332,7 +343,16 @@ namespace EpidSimulation.ViewModel
             ClearDeads();
         }
 
-        
+        private bool _statusCollision = false;
+        public bool StatusCollision
+        {
+            set
+            {
+                _statusCollision = value;
+                CurSimulation.OnOffCollision(value);
+            }
+            get => _statusCollision;
+        }
 
         // Включить/Выключить симуляцию
         public ICommand bStartStopSimulation_Click
@@ -413,7 +433,8 @@ namespace EpidSimulation.ViewModel
                         AmountProdNothing, AmountProdMask, AmountProdSocDist, AmountProdAll,
                         AmountClinNothing, AmountClinMask, AmountClinSocDist, AmountClinAll,
                         AmountVzdNothing, AmountVzdMask, AmountVzdSocDist, AmountVzdAll,
-                        AmountAsymptNothing, AmountAsymptMask, AmountAsymptSocDist, AmountAsymptAll);
+                        AmountAsymptNothing, AmountAsymptMask, AmountAsymptSocDist, AmountAsymptAll,
+                        StatusCollision);
                     _curNode = CurSimulation.Root;
                     ClearMap();
                     CreateAndAddFigures(CurSimulation.People);
@@ -436,6 +457,10 @@ namespace EpidSimulation.ViewModel
 
                     _timer.Stop();
                     _statusTimer = false;
+                    BIStartStopSim = _biStart;
+                    _statusDebug = false;
+                    BISocDist = _biSocDistVisible;
+                    CurSimulation.OnOffCollision(StatusCollision);
                 });
             }
         }
