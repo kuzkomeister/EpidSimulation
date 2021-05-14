@@ -36,6 +36,5 @@ C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\obj\Debug
 C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\obj\Debug\net5.0-windows\Pages\ConfigDisease\InteractionLevel.baml
 C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\obj\Debug\net5.0-windows\Pages\ConfigDisease\Prevalence.baml
 C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\obj\Debug\net5.0-windows\GeneratedInternalTypeHelper.g.cs
-C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\bin\Debug\net5.0-windows\Interop.Microsoft.Office.Interop.Excel.dll
 C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\obj\Debug\net5.0-windows\Interop.Microsoft.Office.Interop.Excel.dll
 C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\obj\Debug\net5.0-windows\EpidSimulation.csproj.ResolveComReference.cache

@@ -30,40 +30,57 @@
                     <StackPanel Orientation="Vertical">
                         <StackPanel.Resources>
                             <Style TargetType="StackPanel">
-                                <Setter Property="Margin" Value="0,10,0,0"/>
+                                <Setter Property="Margin" Value="10,10,0,0"/>
                                 <Setter Property="Orientation" Value="Horizontal"/>
                             </Style>
+                            <Style TargetType="Rectangle">
+                                <Setter Property="Width" Value="10"/>
+                                <Setter Property="Height" Value="10"/>
+                                <Setter Property="Stroke" Value="Black"/>
+                                <Setter Property="StrokeThickness" Value="1"/>
+                            </Style>
                         </StackPanel.Resources>
+                        <StackPanel>
+                            <Label Content="Плотность населения: "/>
+                            <Label Content="{Binding DensityPeople}"/>
+                        </StackPanel>
                         <Label Content="Текущее количество людей в состояниях:" Margin="10" FontWeight="Bold"/>
                         <StackPanel>
-                            <Label Content="Здоровых:"/>
+                            <Rectangle Fill="Green"/>
+                            <Label Content="Восприимчивые:"/>
                             <Label Content="{Binding AmountZd}"/>
                         </StackPanel>
                         <StackPanel>
-                            <Label Content="Выздоровевших:"/>
+                            <Rectangle Fill="Blue"/>
+                            <Label Content="Выздоровевшие:"/>
                             <Label Content="{Binding AmountVzd}"/>
                         </StackPanel>
                         <StackPanel>
-                            <Label Content="Умерших:"/>
+                            <Rectangle Fill="DarkGray"/>
+                            <Label Content="Летальные исходы:"/>
                             <Label Content="{Binding AmountDied}"/>
                         </StackPanel>
-                        <Label Content="--- Инфицированных ---" Margin="10"/>
                         <StackPanel>
-                            <Label Content="В инкубационном периоде:"/>
+                            <Rectangle Fill="LightPink"/>
+                            <Label Content="Больные в инкубационном периоде:"/>
                             <Label Content="{Binding AmountInc}"/>
                         </StackPanel>
                         <StackPanel>
-                            <Label Content="В продормальном периоде:"/>
+                            <Rectangle Fill="HotPink"/>
+                            <Label Content="Больные в продормальном периоде:"/>
                             <Label Content="{Binding AmountProdorm}"/>
                         </StackPanel>
                         <StackPanel>
-                            <Label Content="В клиническом периоде:"/>
+                            <Rectangle Fill="Red"/>
+                            <Label Content="Больные в клиническом периоде:"/>
                             <Label Content="{Binding AmountClin}"/>
                         </StackPanel>
                         <StackPanel>
-                            <Label Content="Носителей (бессимптомных):"/>
+                            <Rectangle Fill="Yellow"/>
+                            <Label Content="Больные без симптомов:"/>
                             <Label Content="{Binding AmountAsympt}"/>
                         </StackPanel>
+                        <Separator Background="Black"/>
                         <Label Content="Статистика контактов и заражений" Margin="10" FontWeight="Bold"/>
                         <Label Content="Количество воздушно-капельных контактов"/>
                         <StackPanel Margin="0,-10,0,0">
@@ -133,7 +150,7 @@
                             <TextBlock Text="Социальную дистанцию" TextAlignment="Center" TextWrapping="Wrap" Width="78"/>
                         </Border>
                         <Border BorderThickness="1" BorderBrush="Gray">
-                            <TextBlock Text="Все" TextAlignment="Center" Width="78"/>
+                            <TextBlock Text="Все меры" TextAlignment="Center" Width="78"/>
                         </Border>
                     </StackPanel>
                     
@@ -199,7 +216,8 @@
                     </StackPanel>
 
                     <CheckBox Content="Коллизия" IsChecked="{Binding StatusCollision}" Margin="20,10,0,0"/>
-                    
+                    <TextBlock Text="*Рекомендуется переключать режим коллизии только перед созданием нового моделирования" TextWrapping="Wrap"/>
+
                     <StackPanel HorizontalAlignment="Center">
                         <Button Command="{Binding bClearFields_Click}" Content="Обнулить все" Width="100" Height="25" Margin="25"/>
                         <Button Command="{Binding bCreateSimulation_Click}" Content="Создать" Width="100" Height="25" Margin="20"/>
@@ -222,7 +240,11 @@
             <Image Source="/Resource/virus.png"/>
             <Button Content="Параметры модели" Command="{Binding bCreateConfig_Click}"/>
             <Separator Background="Black"/>
-            <Button Content="EXCEL"/>
+            <Image Source="{Binding BIExcel}"/>
+            <Button Content="Вывод в Excel" Command="{Binding bCreateExcel_Click}"/>
+            <Separator Background="Black"/>
+            <Image Source="/Resource/Vopros.jpg"/>
+            <Button Content="Справка" Command=""/>
         </ToolBar>
 
         

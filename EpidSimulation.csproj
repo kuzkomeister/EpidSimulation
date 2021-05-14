@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resource\excelLogo.png" />
+    <None Remove="Resource\ExcelLogoOff.jpg" />
+    <None Remove="Resource\ExcelLogoOn.png" />
     <None Remove="Resource\Gigiena.jpg" />
     <None Remove="Resource\Mask.png" />
     <None Remove="Resource\meeting.jpg" />
@@ -16,6 +19,7 @@
     <None Remove="Resource\SocDistHidden.jpg" />
     <None Remove="Resource\SocDistVisible.jpg" />
     <None Remove="Resource\virus.png" />
+    <None Remove="Resource\Vopros.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,11 +30,9 @@
       <Guid>00020813-0000-0000-c000-000000000046</Guid>
       <Lcid>0</Lcid>
       <Isolated>false</Isolated>
+      <Private>true</Private>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\MainWindow\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +40,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resource\ExcelLogoOff.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\ExcelLogoOn.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resource\Gigiena.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -63,6 +71,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\virus.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Vopros.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

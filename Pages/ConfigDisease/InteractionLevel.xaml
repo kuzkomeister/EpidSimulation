@@ -23,12 +23,14 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="2.5*"/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="2.7*"/>
+            <RowDefinition Height="1.3*"/>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical">
+            <Label Content="Уровень взаимодействия" FontWeight="Bold"/>
+            <TextBlock Text="Уровень взаимодействия - это параметры, влияющие на количество людей, с которыми больной контактировал" TextWrapping="Wrap"/>
             <Label Content="Радиусы:"/>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="Человека:"/>
@@ -52,30 +54,23 @@
             </StackPanel>
         </StackPanel>
 
-        <Canvas Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" RenderTransformOrigin="0.5,0.5" >
-            <Canvas.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleX="10" ScaleY="10"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Canvas.RenderTransform>
 
-            <Ellipse Fill="DeepSkyBlue" 
+
+
+        <Ellipse Fill="DeepSkyBlue" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" 
                      Height="{Binding RadiusSocDist, Converter={StaticResource myShanceToProcentConverter}}" 
                      Width="{Binding RadiusSocDist, Converter={StaticResource myShanceToProcentConverter}}"/>
-            <Ellipse Fill="Red" 
+        <Ellipse Fill="Red" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
                      Height="{Binding RadiusAirborne, Converter={StaticResource myShanceToProcentConverter}}" 
                      Width="{Binding RadiusAirborne, Converter={StaticResource myShanceToProcentConverter}}"/>
-            <Ellipse Fill="Pink" 
+        <Ellipse Fill="Pink" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
                      Height="{Binding RadiusContact, Converter={StaticResource myShanceToProcentConverter}}" 
                      Width="{Binding RadiusContact, Converter={StaticResource myShanceToProcentConverter}}"/>
-            <Ellipse Fill="Gray" 
+        <Ellipse Fill="Gray" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
                      Height="{Binding RadiusHuman, Converter={StaticResource myShanceToProcentConverter}}" 
                      Width="{Binding RadiusHuman, Converter={StaticResource myShanceToProcentConverter}}" StrokeThickness="1" Stroke="Black"/>
 
-        </Canvas>
+        
 
         <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical">
             <Label Content="*Все радиусы включают в себя радиус человека, т.е. если радиус человека = 0.5, то при вводе радиуса встречи = 1.5, он автоматически станет 2" FontSize="11.7"/>

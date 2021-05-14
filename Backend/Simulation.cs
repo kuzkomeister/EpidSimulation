@@ -33,7 +33,15 @@ namespace EpidSimulation.Backend
         }
 
         //===== Статистика
+
+        public bool StatusChanges { set; get; }
+
         #region Statistics
+
+        public int AmountPeople
+        {
+            get => AmountZd + AmountInc + AmountProdorm + AmountClin + AmountAsympt + AmountVzd;
+        }
 
         private double _stR0 = 0;
         public double StR0
@@ -58,7 +66,7 @@ namespace EpidSimulation.Backend
                     amountPeople++;
                 }
             }
-            StR0 = (double) SumInfects / amountPeople;
+            StR0 = amountPeople != 0 ? (double) SumInfects / amountPeople : 0;
         }
 
         private int _stContacts = 0;        
@@ -227,6 +235,16 @@ namespace EpidSimulation.Backend
             get => _amountAsympt;
         }
 
+        private double _densityPeople = 0;
+        public double DensityPeople
+        {
+            set
+            {
+                _densityPeople = value;
+                OnPropertyChanged("DensityPeople");
+            }
+            get => _densityPeople;
+        }
         #endregion
 
         public Simulation()
@@ -274,7 +292,7 @@ namespace EpidSimulation.Backend
             AmountClin = amountClin + amountMaskClin + amountSocDistClin + amountGoodHumanClin;
             AmountVzd = amountVzd + amountMaskVzd + amountSocDistVzd + amountGoodHumanVzd;
             AmountAsympt = amountAsympt + amountMaskAsympt + amountSocDistAsympt + amountGoodHumanAsympt;
-
+            AmountDied = 0;
             int[,] amounts = new int[6, 4];
             // Здоровые
             amounts[0, 0] = amountZd; amounts[0, 1] = amountMaskZd; amounts[0, 2] = amountSocDistZd;
@@ -394,37 +412,43 @@ namespace EpidSimulation.Backend
             StHandShakes = 0; StHandshakesInf = 0;
             StTouchesTheFaceWithInfect = 0;
             StChecks = 0; StR0 = 0;
+            Iter = 1; IterFinal = 0;
         }
 
         // Выполнение итерации симуляции
         public void Iterate()
         {
-            // Получение списка узлов и их списка людей, с количеством людей на момент получения
-            LinkedList<(QuadTree, int, LinkedList<Human>)> nodes = new LinkedList<(QuadTree, int, LinkedList<Human>)>();
-            _root.GetNodeWithObjects(nodes);
-            
-            // Проход по списку узлов
-            foreach ((QuadTree node, int countNode, LinkedList<Human> list) pair in nodes) 
+            StatusChanges = false;
+            if (AmountPeople > 0)
             {
-                // Проход по списку людей для их обработки
-                LinkedListNode<Human> currentHuman = pair.list.First;   // Ссылка на текущий узел списка
-                for (int i = 0; i < pair.countNode; ++i)
+                // Получение списка узлов и их списка людей, с количеством людей на момент получения
+                LinkedList<(QuadTree, int, LinkedList<Human>)> nodes = new LinkedList<(QuadTree, int, LinkedList<Human>)>();
+                _root.GetNodeWithObjects(nodes);
+
+                // Проход по списку узлов
+                foreach ((QuadTree node, int countNode, LinkedList<Human> list) pair in nodes)
                 {
-                    currentHuman.Value.DoDela(this);                    // Обработка человека
-                    LinkedListNode<Human> updateHuman = currentHuman;   // Ссылка на предыдущий, для обновления
-                    currentHuman = currentHuman.Next;                   // Переход на следующий узел
-                    pair.node.Update(updateHuman.Value);                // Обновление человека в дереве
+                    // Проход по списку людей для их обработки
+                    LinkedListNode<Human> currentHuman = pair.list.First;   // Ссылка на текущий узел списка
+                    for (int i = 0; i < pair.countNode; ++i)
+                    {
+                        currentHuman.Value.DoDela(this);                    // Обработка человека
+                        LinkedListNode<Human> updateHuman = currentHuman;   // Ссылка на предыдущий, для обновления
+                        currentHuman = currentHuman.Next;                   // Переход на следующий узел
+                        pair.node.Update(updateHuman.Value);                // Обновление человека в дереве
+                    }
                 }
+
+                _root.Join();   // Объединение неполных узлов
+
+                // Вычисление итерации на которой закончились инфицированные
+                if (_amountClin == 0 && _amountProdorm == 0 && _amountInc == 0)
+                    IterFinal = Iter;
+
+                Iter++;
+                CalculateR0();
+                DensityPeople = AmountPeople / (SizeWidth * SizeHeight);
             }
-
-            _root.Join();   // Объединение неполных узлов
-
-            // Вычисление итерации на которой закончились инфицированные
-            if (_amountClin == 0 && _amountProdorm == 0 && _amountInc == 0)
-                IterFinal = Iter;
-
-            Iter++;
-            CalculateR0();
         }
 
         public void OnOffCollision(bool status)
@@ -597,6 +621,8 @@ namespace EpidSimulation.Backend
                         AmountDied++;
                         break;
                 }
+
+                StatusChanges = true;
             }
         }
 

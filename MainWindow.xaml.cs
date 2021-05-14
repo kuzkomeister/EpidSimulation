@@ -26,6 +26,7 @@ namespace EpidSimulation
         {
             e.Handled = !(Char.IsDigit(e.Text, 0));
         }
+
     }
 
 }

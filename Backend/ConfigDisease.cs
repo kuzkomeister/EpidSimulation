@@ -303,16 +303,16 @@ namespace EpidSimulation.Backend
 
         public ConfigDisease()
         {
-            TimeIncub_B = 500; TimeIncub_A = 400;
-            TimeProdorm_B = 200; TimeProdorm_A = 100;
+            TimeIncub_B = 0; TimeIncub_A = 0;
+            TimeProdorm_B = 0; TimeProdorm_A = 0;
             TimeRecovery_B = 900; TimeRecovery_A = 800;
-            ProbabilityDie = 0.1; ProbabilityAsymptomatic = 0.2;
+            ProbabilityDie = 0.1; ProbabilityAsymptomatic = 0;
 
             RadiusHuman = 0.5; RadiusSocDist = 2.0;
             RadiusAirborne = 1.5; RadiusContact = 1.0;
 
-            ProbabilityInfContact = 0.5; ProbabilityInfAirborne = 0.8;
-            MaskProtectionFor = 0.1; MaskProtectionFrom = 0.9;
+            ProbabilityInfContact = 0.5; ProbabilityInfAirborne = 0.75;
+            MaskProtectionFor = 0.1; MaskProtectionFrom = 0.8;
 
             TimeAirborne_B = 120; TimeAirborne_A = 100;
             TimeContact_B = 120; TimeContact_A = 100;

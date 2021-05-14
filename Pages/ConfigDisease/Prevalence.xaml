@@ -24,7 +24,8 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Margin="0,0,0,0" Orientation="Vertical">
-            <Label Content="Вероятности:"/>
+            <Label Content="Уровень распространения" FontWeight="Bold"/>
+            <TextBlock Text="Уровень распространения - это параметры, влияющие на количество людей, которых больной заразил из числа тех, с кем он контактировал" TextWrapping="Wrap"/>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="Базовый шанс заразиться воздушно-капельным путем:"/>
                 <TextBox Width="50" PreviewTextInput="DoublePreviewTextInput" Text="{Binding ProbabilityInfNN, Converter={StaticResource myShanceToProcentConverter}, Mode=TwoWay}"/>

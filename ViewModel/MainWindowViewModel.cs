@@ -14,6 +14,7 @@ using EpidSimulation.Backend;
 using EpidSimulation.Frontend;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Excel =  Microsoft.Office.Interop.Excel;
 
 namespace EpidSimulation.ViewModel
 {
@@ -54,10 +55,9 @@ namespace EpidSimulation.ViewModel
         private QuadTree _curNode;
         
         private DispatcherTimer _timer;
-        private bool _statusTimer;
+        private bool _statusTimer = false;
 
-        private bool _statusDebug;
-
+        private bool _statusDebug = false;
         
         private Rectangle _regionBackground;
         private Line _lineVMP;
@@ -67,6 +67,8 @@ namespace EpidSimulation.ViewModel
         
         public double WindowWidth { set; get; }
         public double WindowHeight { set; get; }
+
+        #region BitMapImages
 
         private BitmapImage _biSocDistHidden = new BitmapImage();
         private BitmapImage _biSocDistVisible = new BitmapImage();
@@ -96,9 +98,33 @@ namespace EpidSimulation.ViewModel
             get => _biStartStopSim;
         }
 
+        private BitmapImage _biExcelOn = new BitmapImage();
+        private BitmapImage _biExcelOff = new BitmapImage();
+
+        private BitmapImage _biExcel;
+        public BitmapImage BIExcel
+        {
+            set
+            {
+                _biExcel = value;
+                RaisePropertyChanged("BIExcel");
+            }
+            get => _biExcel;
+        }
+        #endregion
+
         public MainWindowViewModel()
         {
             #region InitBitMapImages
+
+            _biExcelOn.BeginInit();
+            _biExcelOn.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/ExcelLogoOn.png");
+            _biExcelOn.EndInit();
+
+            _biExcelOff.BeginInit();
+            _biExcelOff.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/ExcelLogoOff.jpg");
+            _biExcelOff.EndInit();
+
             _biSocDistVisible.BeginInit();
             _biSocDistVisible.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/SocDistVisible.jpg");
             _biSocDistVisible.EndInit();
@@ -118,6 +144,7 @@ namespace EpidSimulation.ViewModel
 
             BISocDist = _biSocDistVisible;
             BIStartStopSim = _biStart;
+            BIExcel = _biExcelOn;
 
             Config = new ConfigDisease();
             CurSimulation = new Simulation();  
@@ -339,7 +366,17 @@ namespace EpidSimulation.ViewModel
         private void TimerTick(object sender, EventArgs e)
         {
             CurSimulation.Iterate();
-
+            if (CurSimulation.StatusChanges)
+                WriteLineExcel();
+            if (_statusExcel && CurSimulation.IterFinal != 0)
+            {
+                _timer.Stop();
+                _statusTimer = false;
+                BIStartStopSim = _biStart;
+                _curLine--;
+                CreateDiagramm("B1", "I" + _curLine.ToString(), "Диаграмма эпид процесса", "График количества заболевших", 1);
+                //CreateDiagramm("B1", "I" + _curLine.ToString(), "Диаграмма эпид 2", "График количества заболевших", 2);
+            }
             ClearDeads();
         }
 
@@ -461,6 +498,14 @@ namespace EpidSimulation.ViewModel
                     _statusDebug = false;
                     BISocDist = _biSocDistVisible;
                     CurSimulation.OnOffCollision(StatusCollision);
+
+                    if (_statusExcel && _excelApp.Visible)
+                    {
+                        CreateWorkbook();
+                        _curLine = 2;
+                        WriteLineExcel();
+                        WriteConfigExcel();
+                    }
                 });
             }
         }
@@ -495,7 +540,173 @@ namespace EpidSimulation.ViewModel
             }
         }
 
-        
+
+        private bool _statusExcel = false;
+        private int _curLine = 2;
+        private Excel.Application _excelApp;
+
+        public ICommand bCreateExcel_Click
+        {
+            get
+            {
+                return new RelayCommand(() =>
+                {
+                    if (!_statusExcel)
+                    {
+                        try
+                        {
+                            _excelApp = new Excel.Application { Visible = true };
+                            CreateWorkbook();
+                            _statusExcel = true;
+                            WriteLineExcel();
+                            WriteConfigExcel();
+                            BIExcel = _biExcelOff;
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                    }
+                    else
+                    {
+                        _excelApp.Quit();
+                        _statusExcel = false;
+                        BIExcel = _biExcelOn;
+                    }
+                });
+            }
+        }
+
+        private void CreateWorkbook()
+        {
+            _excelApp.Workbooks.Close();
+            _excelApp.SheetsInNewWorkbook = 1;
+            Excel.Workbook workbook = _excelApp.Workbooks.Add(Type.Missing);
+            workbook.Saved = true;
+
+            Excel.Sheets excelSheets = _excelApp.Workbooks.get_Item(1).Sheets;
+            Excel.Worksheet workSheet = (Excel.Worksheet)excelSheets.get_Item(1);
+            workSheet.Name = "Население";
+            Excel.Range cells = (Excel.Range)workSheet.Cells[1, 2];
+            cells.Value2 = "Итерация";
+            cells = (Excel.Range)workSheet.Cells[1, 3];
+            cells.Value2 = "Восприимчивые";
+            cells = (Excel.Range)workSheet.Cells[1, 4];
+            cells.Value2 = "Больные в инкубационном периоде";
+            cells = (Excel.Range)workSheet.Cells[1, 5];
+            cells.Value2 = "Больные в продромальном периоде";
+            cells = (Excel.Range)workSheet.Cells[1, 6];
+            cells.Value2 = "Больные в клиническом периоде";
+            cells = (Excel.Range)workSheet.Cells[1, 7];
+            cells.Value2 = "Бессимптомные больные";
+            cells = (Excel.Range)workSheet.Cells[1, 8];
+            cells.Value2 = "Выздоровевшие";
+            cells = (Excel.Range)workSheet.Cells[1, 9];
+            cells.Value2 = "Летальные исходы";
+
+            cells = (Excel.Range)workSheet.get_Range("B1", "I1");
+            cells.HorizontalAlignment = Excel.Constants.xlCenter;
+            cells.VerticalAlignment = Excel.Constants.xlCenter;
+            cells.ColumnWidth = 20;
+            cells.RowHeight = 45;
+            cells.WrapText = true;
+            cells.Borders.ColorIndex = 1;
+            cells.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+            cells.Borders.Weight = Excel.XlBorderWeight.xlThin;
+
+            cells = (Excel.Range)workSheet.get_Range("B2", "I50");
+            cells.Borders.ColorIndex = 1;
+            cells.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+            cells.Borders.Weight = Excel.XlBorderWeight.xlThin;
+        }
+
+        private void WriteLineExcel()
+        {
+            if (_statusExcel && _excelApp.Visible)
+            {
+                Excel.Sheets excelSheets = _excelApp.Workbooks.get_Item(1).Sheets;
+                Excel.Worksheet workSheet = (Excel.Worksheet)excelSheets.get_Item(1);
+
+                Excel.Range cells = (Excel.Range)workSheet.Cells[_curLine, 2];
+                cells.Value2 = CurSimulation.Iter;
+                cells = (Excel.Range)workSheet.Cells[_curLine, 3];
+                cells.Value2 = CurSimulation.AmountZd;
+                cells = (Excel.Range)workSheet.Cells[_curLine, 4];
+                cells.Value2 = CurSimulation.AmountInc;
+                cells = (Excel.Range)workSheet.Cells[_curLine, 5];
+                cells.Value2 = CurSimulation.AmountProdorm;
+                cells = (Excel.Range)workSheet.Cells[_curLine, 6];
+                cells.Value2 = CurSimulation.AmountClin;
+                cells = (Excel.Range)workSheet.Cells[_curLine, 7];
+                cells.Value2 = CurSimulation.AmountAsympt;
+                cells = (Excel.Range)workSheet.Cells[_curLine, 8];
+                cells.Value2 = CurSimulation.AmountVzd;
+                cells = (Excel.Range)workSheet.Cells[_curLine, 9];
+                cells.Value2 = CurSimulation.AmountDied;
+
+                _curLine++;
+            }
+        }
+
+        private void WriteConfigExcel()
+        {
+            if (_statusExcel && _excelApp.Visible)
+            {
+                Excel.Sheets excelSheets = _excelApp.Workbooks.get_Item(1).Sheets;
+                Excel.Worksheet workSheet = (Excel.Worksheet)excelSheets.get_Item(1);
+
+                Excel.Range cells = (Excel.Range)workSheet.get_Range("K2","S32");
+                cells.Merge(Type.Missing);
+                cells.Borders.ColorIndex = 1;
+                cells.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                cells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                cells.HorizontalAlignment = Excel.Constants.xlCenter;
+                cells.VerticalAlignment = Excel.Constants.xlCenter;
+                cells.Value2 = "Параметры модели" +
+                    "\n\nХарактеристики заболевания" +
+                    "\nПродолжительность инкубационного периоде: от " + Config.TimeIncub_A + " до " + Config.TimeIncub_B + " итерации" +
+                    "\nПродолжительность продромального периода: от " + Config.TimeProdorm_A + " до " + Config.TimeProdorm_B + " итерации" +
+                    "\nПродолжительность клинического периода: от " + Config.TimeRecovery_A + " до " + Config.TimeRecovery_B + " итерации" +
+                    "\nЛетальность заболевания: " + Config.ProbabilityDie*100 + " %" +
+                    "\nЧастота бессимптомных: " + Config.ProbabilityAsymptomatic*100 + " %" +
+                    "\n\nУровень взаимодействия" +
+                    "\nРадиус человека: " + Config.RadiusHuman +
+                    "\nДальность возможных встреч: " + Config.RadiusAirborne +
+                    "\nДальность возможных рукопожатий: " +Config.RadiusContact +
+                    "\nРадиус социальной дистанции: " + Config.RadiusSocDist +
+                    "\n\nУровень распространения: " +
+                    "\nБазовый шанс заразиться воздушно-капельным путем: " + Config.ProbabilityInfAirborne*100 + " %" +
+                    "\nБазовый шанс заразиться контактным путем: " + Config.ProbabilityInfContact*100 + " %" +
+                    "\nЭффективность защиты маски заразить кого-то: " + Config.MaskProtectionFrom*100 + " %" +
+                    "\nЭффективность защиты маски заразиться от кого-то " + Config.MaskProtectionFor*100 + " %" +
+                    "\n\nУровень заболеваемости" +
+                    "\nВремя до следующей возможной встречи: от " + Config.TimeAirborne_A + " до " + Config.TimeAirborne_B + " итерации" +
+                    "\nВремя до следующего возможного рукопожатия: от " + Config.TimeContact_A + " до " + Config.TimeContact_B + " итерации" +
+                    "\nВремя до следующего мытья рук: от " + Config.TimeWash_A + " до " + Config.TimeWash_B + " итерации" +
+                    "\nВремя до следующего контакта рук с лицом: от " + Config.TimeHandToFaceContact_A + " до " + Config.TimeHandToFaceContact_B + " итерации" +
+                    "\nВремя до следующего загрязнения рук инфекцией: от " + Config.TimeInfHand_A + " до " + Config.TimeInfHand_B + " итерации";
+
+            }
+        }
+
+        private void CreateDiagramm(string coord1, string coord2, string listName, string diagrName, int numSheet)
+        {
+            if (_statusExcel && _excelApp.Visible)
+            {
+                Excel.Sheets excelSheets = _excelApp.Workbooks.get_Item(1).Sheets;
+                Excel.Worksheet workSheet = (Excel.Worksheet)excelSheets.get_Item(numSheet);
+                Excel.Range cells = (Excel.Range)workSheet.get_Range(coord1, coord2);
+                cells.Select();
+                Excel.Chart chart = (Excel.Chart)_excelApp.Charts.Add(Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                chart.Activate();
+                chart.Select(Type.Missing);
+                _excelApp.ActiveChart.ChartType = Excel.XlChartType.xlXYScatterLinesNoMarkers;
+                _excelApp.ActiveChart.HasTitle = true;
+                _excelApp.ActiveChart.ChartTitle.Text = diagrName;
+                chart.Name = listName;
+                chart.SetSourceData(cells, Type.Missing);
+            }
+        }
 
         //===== Переключение между клетками ПЕРЕДЕЛАТЬ НА КОМАНДЫ
         private void miNodeChild_Click(object sender, RoutedEventArgs e)
