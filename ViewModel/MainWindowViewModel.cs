@@ -18,13 +18,6 @@ using Excel =  Microsoft.Office.Interop.Excel;
 
 namespace EpidSimulation.ViewModel
 {
-    /*
-     * СДЕЛАТЬ:
-     *  
-     *  
-     */
-
-
     public partial class MainWindowViewModel : ViewModelBase
     {
         private Simulation _simulation;
@@ -58,7 +51,11 @@ namespace EpidSimulation.ViewModel
         private bool _statusTimer = false;
 
         private bool _statusDebug = false;
-        
+
+        private bool _statusExcel = false;
+        private int _curLine = 2;
+        private Excel.Application _excelApp;
+
         private Rectangle _regionBackground;
         private Line _lineVMP;
         private Line _lineHMP;
@@ -374,8 +371,7 @@ namespace EpidSimulation.ViewModel
                 _statusTimer = false;
                 BIStartStopSim = _biStart;
                 _curLine--;
-                CreateDiagramm("B1", "I" + _curLine.ToString(), "Диаграмма эпид процесса", "График количества заболевших", 1);
-                //CreateDiagramm("B1", "I" + _curLine.ToString(), "Диаграмма эпид 2", "График количества заболевших", 2);
+                CreateDiagramm("A1", "H" + _curLine.ToString(), "Диаграмма эпид процесса", "График количества заболевших", 1);
             }
             ClearDeads();
         }
@@ -453,6 +449,18 @@ namespace EpidSimulation.ViewModel
                 {
                     ConfigDiseaseWindow wConfig = new ConfigDiseaseWindow(this);
                     wConfig.ShowDialog();
+                });
+            }
+        }
+
+        public ICommand bCreateHelp_Click
+        {
+            get
+            {
+                return new RelayCommand(() =>
+                {
+                    HelpWindow wHelp = new HelpWindow();
+                    wHelp.ShowDialog();
                 });
             }
         }
@@ -540,11 +548,6 @@ namespace EpidSimulation.ViewModel
             }
         }
 
-
-        private bool _statusExcel = false;
-        private int _curLine = 2;
-        private Excel.Application _excelApp;
-
         public ICommand bCreateExcel_Click
         {
             get
@@ -558,6 +561,7 @@ namespace EpidSimulation.ViewModel
                             _excelApp = new Excel.Application { Visible = true };
                             CreateWorkbook();
                             _statusExcel = true;
+                            _curLine = 2;
                             WriteLineExcel();
                             WriteConfigExcel();
                             BIExcel = _biExcelOff;
@@ -580,31 +584,34 @@ namespace EpidSimulation.ViewModel
         private void CreateWorkbook()
         {
             _excelApp.Workbooks.Close();
-            _excelApp.SheetsInNewWorkbook = 1;
+            _excelApp.SheetsInNewWorkbook = 1; 
             Excel.Workbook workbook = _excelApp.Workbooks.Add(Type.Missing);
-            workbook.Saved = true;
+            workbook.Windows[1].Zoom = 77;
+            workbook.Saved = true; 
 
             Excel.Sheets excelSheets = _excelApp.Workbooks.get_Item(1).Sheets;
             Excel.Worksheet workSheet = (Excel.Worksheet)excelSheets.get_Item(1);
             workSheet.Name = "Население";
-            Excel.Range cells = (Excel.Range)workSheet.Cells[1, 2];
+            Excel.Range cells = (Excel.Range)workSheet.Cells[1, 1];
             cells.Value2 = "Итерация";
-            cells = (Excel.Range)workSheet.Cells[1, 3];
+            cells = (Excel.Range)workSheet.Cells[1, 2];
             cells.Value2 = "Восприимчивые";
-            cells = (Excel.Range)workSheet.Cells[1, 4];
+            cells = (Excel.Range)workSheet.Cells[1, 3];
             cells.Value2 = "Больные в инкубационном периоде";
-            cells = (Excel.Range)workSheet.Cells[1, 5];
+            cells = (Excel.Range)workSheet.Cells[1, 4];
             cells.Value2 = "Больные в продромальном периоде";
-            cells = (Excel.Range)workSheet.Cells[1, 6];
+            cells = (Excel.Range)workSheet.Cells[1, 5];
             cells.Value2 = "Больные в клиническом периоде";
-            cells = (Excel.Range)workSheet.Cells[1, 7];
+            cells = (Excel.Range)workSheet.Cells[1, 6];
             cells.Value2 = "Бессимптомные больные";
-            cells = (Excel.Range)workSheet.Cells[1, 8];
+            cells = (Excel.Range)workSheet.Cells[1, 7];
             cells.Value2 = "Выздоровевшие";
-            cells = (Excel.Range)workSheet.Cells[1, 9];
+            cells = (Excel.Range)workSheet.Cells[1, 8];
             cells.Value2 = "Летальные исходы";
+            cells = (Excel.Range)workSheet.Cells[1, 9];
+            cells.Value2 = "Среднее количество заражений";
 
-            cells = (Excel.Range)workSheet.get_Range("B1", "I1");
+            cells = (Excel.Range)workSheet.get_Range("A1", "I1");
             cells.HorizontalAlignment = Excel.Constants.xlCenter;
             cells.VerticalAlignment = Excel.Constants.xlCenter;
             cells.ColumnWidth = 20;
@@ -614,7 +621,7 @@ namespace EpidSimulation.ViewModel
             cells.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
             cells.Borders.Weight = Excel.XlBorderWeight.xlThin;
 
-            cells = (Excel.Range)workSheet.get_Range("B2", "I50");
+            cells = (Excel.Range)workSheet.get_Range("A2", "I50");
             cells.Borders.ColorIndex = 1;
             cells.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
             cells.Borders.Weight = Excel.XlBorderWeight.xlThin;
@@ -627,22 +634,24 @@ namespace EpidSimulation.ViewModel
                 Excel.Sheets excelSheets = _excelApp.Workbooks.get_Item(1).Sheets;
                 Excel.Worksheet workSheet = (Excel.Worksheet)excelSheets.get_Item(1);
 
-                Excel.Range cells = (Excel.Range)workSheet.Cells[_curLine, 2];
+                Excel.Range cells = (Excel.Range)workSheet.Cells[_curLine, 1];
                 cells.Value2 = CurSimulation.Iter;
-                cells = (Excel.Range)workSheet.Cells[_curLine, 3];
+                cells = (Excel.Range)workSheet.Cells[_curLine, 2];
                 cells.Value2 = CurSimulation.AmountZd;
-                cells = (Excel.Range)workSheet.Cells[_curLine, 4];
+                cells = (Excel.Range)workSheet.Cells[_curLine, 3];
                 cells.Value2 = CurSimulation.AmountInc;
-                cells = (Excel.Range)workSheet.Cells[_curLine, 5];
+                cells = (Excel.Range)workSheet.Cells[_curLine, 4];
                 cells.Value2 = CurSimulation.AmountProdorm;
-                cells = (Excel.Range)workSheet.Cells[_curLine, 6];
+                cells = (Excel.Range)workSheet.Cells[_curLine, 5];
                 cells.Value2 = CurSimulation.AmountClin;
-                cells = (Excel.Range)workSheet.Cells[_curLine, 7];
+                cells = (Excel.Range)workSheet.Cells[_curLine, 6];
                 cells.Value2 = CurSimulation.AmountAsympt;
-                cells = (Excel.Range)workSheet.Cells[_curLine, 8];
+                cells = (Excel.Range)workSheet.Cells[_curLine, 7];
                 cells.Value2 = CurSimulation.AmountVzd;
-                cells = (Excel.Range)workSheet.Cells[_curLine, 9];
+                cells = (Excel.Range)workSheet.Cells[_curLine, 8];
                 cells.Value2 = CurSimulation.AmountDied;
+                cells = (Excel.Range)workSheet.Cells[_curLine, 9];
+                cells.Value2 = CurSimulation.StR0;
 
                 _curLine++;
             }

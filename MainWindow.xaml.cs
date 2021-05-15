@@ -27,6 +27,11 @@ namespace EpidSimulation
             e.Handled = !(Char.IsDigit(e.Text, 0));
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            HelpWindow wHelp = new HelpWindow();
+            wHelp.ShowDialog();
+        }
     }
 
 }

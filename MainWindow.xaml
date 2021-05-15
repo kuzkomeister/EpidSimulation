@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EpidSimulation.ViewModel"
         mc:Ignorable="d"
-        Title="COVID-19" Height="780" Width="1320" ResizeMode="CanResize" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        Title="Моделирование эпидемии" Height="780" Width="1320" ResizeMode="CanResize" WindowStartupLocation="CenterScreen" WindowState="Maximized" Icon="/Resource/virus.png" Loaded="Window_Loaded">
     <Window.Resources>
         <local:MainWindowViewModel x:Key="MainViewModel"/>
     </Window.Resources>
@@ -244,7 +244,7 @@
             <Button Content="Вывод в Excel" Command="{Binding bCreateExcel_Click}"/>
             <Separator Background="Black"/>
             <Image Source="/Resource/Vopros.jpg"/>
-            <Button Content="Справка" Command=""/>
+            <Button Content="Справка" Command="{Binding bCreateHelp_Click}"/>
         </ToolBar>
 
         

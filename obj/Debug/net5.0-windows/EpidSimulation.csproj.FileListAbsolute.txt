@@ -38,3 +38,5 @@ C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\obj\Debug
 C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\obj\Debug\net5.0-windows\GeneratedInternalTypeHelper.g.cs
 C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\obj\Debug\net5.0-windows\Interop.Microsoft.Office.Interop.Excel.dll
 C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\obj\Debug\net5.0-windows\EpidSimulation.csproj.ResolveComReference.cache
+C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\obj\Debug\net5.0-windows\HelpWindow.g.cs
+C:\Users\User\Desktop\Diplom\Application\EpidSimulation\EpidSimulation\obj\Debug\net5.0-windows\HelpWindow.baml
