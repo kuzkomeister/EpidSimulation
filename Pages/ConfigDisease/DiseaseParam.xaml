@@ -27,7 +27,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Orientation="Vertical">
-            <Label Content="Параметры заболевания:" FontWeight="Bold"/>
+            <Label Content="Характеристики заболевания:" FontWeight="Bold"/>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Label Content="Инкубационный период: от"/>
                 <TextBox Width="75" Margin="2,0,0,0" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeIncub_A}"/>

@@ -24,6 +24,7 @@ namespace EpidSimulation.ViewModel
         private ConfigDisease _config;
         private MainWindowViewModel _mwvm;
 
+        #region Свойства для ввода
         //===== Вероятности
         private double _maskProtectionFor;
         public double MaskProtectionFor
@@ -114,7 +115,148 @@ namespace EpidSimulation.ViewModel
             }
             get => _probabilityInfContact;
         }
+
+        //===== Радиусы
+        private double _rMeet;
+        public double RMeet
+        {
+            set
+            {
+                RadiusMeet = value > 0 ? value : 0;
+                _rMeet = RadiusMeet - RadiusHuman > 0 ? RadiusMeet - RadiusHuman : 0;
+                RaisePropertyChanged("RMeet");
+            }
+            get => _rMeet;
+        }
+
+        private double _rHandshake;
+        public double RHandshake
+        {
+            set
+            {
+                RadiusHandshake = value > 0 ? value : 0;
+                _rHandshake = RadiusHandshake - RadiusHuman > 0 ? RadiusHandshake - RadiusHuman : 0;
+                RaisePropertyChanged("RHandshake");
+            }
+            get => _rHandshake;
+        }
+
+        private double _rSocDist;
+        public double RSocDist
+        {
+            set
+            {
+                RadiusSocDist = value > 0 ? value : 0;
+                _rSocDist = RadiusSocDist - RadiusHuman > 0 ? RadiusSocDist - RadiusHuman : 0;
+                RaisePropertyChanged("RSocDist");
+            }
+            get => _rSocDist;
+        }
+
+        // радиусы для отображения и ввода в настройки
+        public double CenterEll { get => 100; }
+
+        private double _radiusHuman;
+        public double RadiusHuman
+        {
+            set
+            {
+                _config.RadiusHuman = value;
+                _radiusHuman = _config.RadiusHuman;
+                RMeet = _config.RadiusAirborne - RadiusHuman;
+                RHandshake = _config.RadiusContact - RadiusHuman;
+                RSocDist = _config.RadiusSocDist - RadiusHuman;
+                LeftTopHuman = CenterEll - RadiusHuman * 50;
+                RaisePropertyChanged("RadiusHuman");
+            }
+            get => _radiusHuman;
+        }
+
+        private double _radiusMeet;
+        public double RadiusMeet
+        {
+            set
+            {
+                _config.RadiusAirborne = value;
+                _radiusMeet = _config.RadiusAirborne;
+                LeftTopMeet = CenterEll - RadiusMeet * 50;
+                RaisePropertyChanged("RadiusMeet");
+            }
+            get => _radiusMeet;
+        }
+
+        private double _radiusHandshake;
+        public double RadiusHandshake
+        {
+            set
+            {
+                _config.RadiusContact = value;
+                _radiusHandshake = _config.RadiusContact;
+                LeftTopHandshake = CenterEll - RadiusHandshake * 50;
+                RaisePropertyChanged("RadiusHandshake");
+            }
+            get => _radiusHandshake;
+        }
+
+        private double _radiusSocDist;
+        public double RadiusSocDist
+        {
+            set
+            {
+                _config.RadiusSocDist = value;
+                _radiusSocDist = _config.RadiusSocDist;
+                LeftTopSocDist = CenterEll - RadiusSocDist * 50;
+                RaisePropertyChanged("RadiusSocDist");
+            }
+            get => _radiusSocDist;
+        }
+
+        // координаты для отображения
+        private double _leftTopHuman;
+        public double LeftTopHuman
+        {
+            set
+            {
+                _leftTopHuman = value;
+                RaisePropertyChanged("LeftTopHuman");
+            }
+            get => _leftTopHuman;
+        }
+
+        private double _leftTopMeet;
+        public double LeftTopMeet
+        {
+            set
+            {
+                _leftTopMeet = value;
+                RaisePropertyChanged("LeftTopMeet");
+            }
+            get => _leftTopMeet;
+        }
+
+        private double _leftTopHandshake;
+        public double LeftTopHandshake
+        {
+            set
+            {
+                _leftTopHandshake = value;
+                RaisePropertyChanged("LeftTopHandshake");
+            }
+            get => _leftTopHandshake;
+        }
+
+        private double _leftTopSocDist;
+        public double LeftTopSocDist
+        {
+            set
+            {
+                _leftTopSocDist = value;
+                RaisePropertyChanged("LeftTopSocDist");
+            }
+            get => _leftTopSocDist;
+        }
         //=======================================
+        #endregion
 
         private Page _currentPage;
         public Page CurrentPage
@@ -277,13 +419,18 @@ namespace EpidSimulation.ViewModel
             ProbabilityInfNN = _config.ProbabilityInfAirborne;
             MaskProtectionFor = _config.MaskProtectionFor;
             MaskProtectionFrom = _config.MaskProtectionFrom;
-            
+
+            RadiusHuman = _config.RadiusHuman;
+            RMeet = _config.RadiusAirborne - RadiusHuman;
+            RHandshake = _config.RadiusContact - RadiusHuman;
+            RSocDist = _config.RadiusSocDist - RadiusHuman;
+
             _diseaseParam = new Pages.ConfigDisease.DiseaseParam();
             _diseaseParam.DataContext = _config;
             _incidence = new Pages.ConfigDisease.Incidence();
             _incidence.DataContext = _config;
             _interactionLevel = new Pages.ConfigDisease.InteractionLevel();
-            _interactionLevel.DataContext = _config;
+            _interactionLevel.DataContext = this;
             _prevalence = new Pages.ConfigDisease.Prevalence();
             _prevalence.DataContext = this;
 

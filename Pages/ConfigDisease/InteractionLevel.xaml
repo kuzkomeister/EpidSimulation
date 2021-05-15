@@ -13,7 +13,7 @@
     <Page.Resources>
         <c:StringToDoubleConverter x:Key="myStringToDoubleConverter"/>
         <c:ShanceToProcentConverter x:Key="myShanceToProcentConverter"/>
-        <c:LeftToCenterConverter x:Key="myLeftToCenterConverter"/>
+        <c:SummParamConverter x:Key="mySummParamConverter"/>
     </Page.Resources>
 
 
@@ -23,67 +23,80 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.75*"/>
             <RowDefinition Height="2.7*"/>
             <RowDefinition Height="1.3*"/>
         </Grid.RowDefinitions>
 
+        <Grid.Resources>
+            <Style TargetType="StackPanel">
+                <Setter Property="Orientation" Value="Horizontal"/>
+                <Setter Property="Margin" Value="10,10,0,0"/>
+            </Style>
+        </Grid.Resources>
+
+        <Canvas Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="50,50,0,0">
+            <Ellipse Fill="DeepSkyBlue"  
+                     Canvas.Left="{Binding LeftTopSocDist}" 
+                     Canvas.Top="{Binding LeftTopSocDist}"
+                     Height="{Binding RadiusSocDist, Converter={StaticResource myShanceToProcentConverter}}" 
+                     Width="{Binding RadiusSocDist, Converter={StaticResource myShanceToProcentConverter}}"/>
+            <Ellipse Fill="Red" 
+                     Canvas.Left="{Binding LeftTopMeet}"
+                     Canvas.Top="{Binding LeftTopMeet}"
+                     Height="{Binding RadiusMeet, Converter={StaticResource myShanceToProcentConverter}}" 
+                     Width="{Binding RadiusMeet, Converter={StaticResource myShanceToProcentConverter}}"/>
+            <Ellipse Fill="Pink" 
+                     Canvas.Left="{Binding LeftTopHandshake}" 
+                     Canvas.Top="{Binding LeftTopHandshake}"
+                     Height="{Binding RadiusHandshake, Converter={StaticResource myShanceToProcentConverter}}" 
+                     Width="{Binding RadiusHandshake, Converter={StaticResource myShanceToProcentConverter}}"/>
+            <Ellipse Fill="Gray" 
+                     Canvas.Left="{Binding LeftTopHuman}"
+                     Canvas.Top="{Binding LeftTopHuman}"
+                     Height="{Binding RadiusHuman, Converter={StaticResource myShanceToProcentConverter}}" 
+                     Width="{Binding RadiusHuman, Converter={StaticResource myShanceToProcentConverter}}" StrokeThickness="1" Stroke="Black"/>
+        </Canvas>
+        
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical">
-            <Label Content="Уровень взаимодействия" FontWeight="Bold"/>
-            <TextBlock Text="Уровень взаимодействия - это параметры, влияющие на количество людей, с которыми больной контактировал" TextWrapping="Wrap"/>
+            
+            <Label Content="Уровень взаимодействия" FontWeight="Bold" Margin="-4,0,0,0"/>
+            <TextBlock Text="Уровень взаимодействия - это параметры, влияющие на количество людей, с которыми больной сможет проконтактировать за раз" TextWrapping="Wrap"/>
             <Label Content="Радиусы:"/>
-            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+            <StackPanel>
                 <Label Content="Человека:"/>
                 <TextBox Width="100" Margin="77,0,0,0" PreviewTextInput="DoublePreviewTextInput" Text="{Binding RadiusHuman, Converter={StaticResource myStringToDoubleConverter}}"/>
                 <Label Content="единиц"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                <Label Content="Социальной дистанции:"/>
-                <TextBox Width="100" PreviewTextInput="DoublePreviewTextInput" Text="{Binding RadiusSocDist, Converter={StaticResource myStringToDoubleConverter}}"/>
-                <Label Content="единиц"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                <Label Content="Встреч:"/>
-                <TextBox Width="100" Margin="92,0,0,0" PreviewTextInput="DoublePreviewTextInput" Text="{Binding RadiusAirborne, Converter={StaticResource myStringToDoubleConverter}}"/>
-                <Label Content="единиц"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+            <StackPanel>
                 <Label Content="Рукопожатий:"/>
-                <TextBox Width="100" Margin="56,0,0,0" PreviewTextInput="DoublePreviewTextInput" Text="{Binding RadiusContact, Converter={StaticResource myStringToDoubleConverter}}"/>
+                <TextBox Width="100" Margin="56,0,0,0" PreviewTextInput="DoublePreviewTextInput" Text="{Binding RHandshake, Converter={StaticResource myStringToDoubleConverter}}"/>
                 <Label Content="единиц"/>
             </StackPanel>
+            <StackPanel>
+                <Label Content="Встреч:"/>
+                <TextBox Width="100" Margin="92,0,0,0" PreviewTextInput="DoublePreviewTextInput" Text="{Binding RMeet, Converter={StaticResource myStringToDoubleConverter}}"/>
+                <Label Content="единиц"/>
+            </StackPanel>
+            <StackPanel>
+                <Label Content="Социальной дистанции:"/>
+                <TextBox Width="100" PreviewTextInput="DoublePreviewTextInput" Text="{Binding RSocDist, Converter={StaticResource myStringToDoubleConverter}}"/>
+                <Label Content="единиц"/>
+            </StackPanel>
+
         </StackPanel>
 
-
-
-
-        <Ellipse Fill="DeepSkyBlue" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" 
-                     Height="{Binding RadiusSocDist, Converter={StaticResource myShanceToProcentConverter}}" 
-                     Width="{Binding RadiusSocDist, Converter={StaticResource myShanceToProcentConverter}}"/>
-        <Ellipse Fill="Red" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
-                     Height="{Binding RadiusAirborne, Converter={StaticResource myShanceToProcentConverter}}" 
-                     Width="{Binding RadiusAirborne, Converter={StaticResource myShanceToProcentConverter}}"/>
-        <Ellipse Fill="Pink" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
-                     Height="{Binding RadiusContact, Converter={StaticResource myShanceToProcentConverter}}" 
-                     Width="{Binding RadiusContact, Converter={StaticResource myShanceToProcentConverter}}"/>
-        <Ellipse Fill="Gray" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
-                     Height="{Binding RadiusHuman, Converter={StaticResource myShanceToProcentConverter}}" 
-                     Width="{Binding RadiusHuman, Converter={StaticResource myShanceToProcentConverter}}" StrokeThickness="1" Stroke="Black"/>
-
-        
-
         <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical">
-            <Label Content="*Все радиусы включают в себя радиус человека, т.е. если радиус человека = 0.5, то при вводе радиуса встречи = 1.5, он автоматически станет 2" FontSize="11.7"/>
-            <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
+            <StackPanel>
                 <Rectangle Fill="DeepSkyBlue" Height="10" Width="10" Stroke="Black" StrokeThickness="1"/>
                 <Label Content=" - Область социальной дистанции"/>
                 <Rectangle Fill="Red" Height="10" Width="10" Stroke="Black" StrokeThickness="1" Margin="100,0,0,0"/>
                 <Label Content=" - Область возможной воздушно-капельной передачи инфекции"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
+            <StackPanel>
                 <Rectangle Fill="Gray" Height="10" Width="10" Stroke="Black" StrokeThickness="1"/>
                 <Label Content=" - Область самого человека"/>
-                <Rectangle Fill="Pink" Height="10" Width="10" Stroke="Black" StrokeThickness="1" Margin="134,0,0,0"/>
+                <Rectangle Fill="Pink" Height="10" Width="10" Stroke="Black" StrokeThickness="1" Margin="135,0,0,0"/>
                 <Label Content=" - Область возможной контактной передачи инфекции"/>
             </StackPanel>
         </StackPanel>

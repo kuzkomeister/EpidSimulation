@@ -42,7 +42,7 @@ namespace EpidSimulation.Frontend
             {
                 Source = human,
                 Path = new System.Windows.PropertyPath("X"),
-                Converter = new LeftToCenterConverter(),
+                Converter = new SummParamConverter(),
                 ConverterParameter = -Human.Config.RadiusHuman
             };
             CondCircle.SetBinding(Canvas.LeftProperty, bind);
@@ -51,7 +51,7 @@ namespace EpidSimulation.Frontend
             {
                 Source = human,
                 Path = new System.Windows.PropertyPath("X"),
-                Converter = new LeftToCenterConverter(),
+                Converter = new SummParamConverter(),
                 ConverterParameter = -Human.Config.RadiusHuman / 2
             };
             MaskCircle.SetBinding(Canvas.LeftProperty, bind);
@@ -60,7 +60,7 @@ namespace EpidSimulation.Frontend
                 {
                     Source = human,
                     Path = new System.Windows.PropertyPath("X"),
-                    Converter = new LeftToCenterConverter(),
+                    Converter = new SummParamConverter(),
                     ConverterParameter = -Human.Config.RadiusSocDist 
                 };
             SocDistCircle.SetBinding(Canvas.LeftProperty, bind);
@@ -70,7 +70,7 @@ namespace EpidSimulation.Frontend
             {
                 Source = human,
                 Path = new System.Windows.PropertyPath("Y"),
-                Converter = new LeftToCenterConverter(),
+                Converter = new SummParamConverter(),
                 ConverterParameter = -Human.Config.RadiusHuman
             };
             CondCircle.SetBinding(Canvas.TopProperty, bind);
@@ -79,7 +79,7 @@ namespace EpidSimulation.Frontend
                 {
                     Source = human,
                     Path = new System.Windows.PropertyPath("Y"),
-                    Converter = new LeftToCenterConverter(),
+                    Converter = new SummParamConverter(),
                     ConverterParameter = -Human.Config.RadiusHuman / 2
                 };
             MaskCircle.SetBinding(Canvas.TopProperty, bind);
@@ -88,7 +88,7 @@ namespace EpidSimulation.Frontend
                 {
                     Source = human,
                     Path = new System.Windows.PropertyPath("Y"),
-                    Converter = new LeftToCenterConverter(),
+                    Converter = new SummParamConverter(),
                     ConverterParameter = -Human.Config.RadiusSocDist 
                 };
             SocDistCircle.SetBinding(Canvas.TopProperty, bind);
