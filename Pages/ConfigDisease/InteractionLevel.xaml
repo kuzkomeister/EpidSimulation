@@ -91,13 +91,13 @@
                 <Rectangle Fill="DeepSkyBlue" Height="10" Width="10" Stroke="Black" StrokeThickness="1"/>
                 <Label Content=" - Область социальной дистанции"/>
                 <Rectangle Fill="Red" Height="10" Width="10" Stroke="Black" StrokeThickness="1" Margin="100,0,0,0"/>
-                <Label Content=" - Область возможной воздушно-капельной передачи инфекции"/>
+                <Label Content=" - Область возможной встречи"/>
             </StackPanel>
             <StackPanel>
                 <Rectangle Fill="Gray" Height="10" Width="10" Stroke="Black" StrokeThickness="1"/>
                 <Label Content=" - Область самого человека"/>
                 <Rectangle Fill="Pink" Height="10" Width="10" Stroke="Black" StrokeThickness="1" Margin="135,0,0,0"/>
-                <Label Content=" - Область возможной контактной передачи инфекции"/>
+                <Label Content=" - Область возможного рукопожатия"/>
             </StackPanel>
         </StackPanel>
 

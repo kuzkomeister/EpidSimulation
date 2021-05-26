@@ -21,7 +21,7 @@ namespace EpidSimulation.ViewModel
         private Page _interactionLevel;
         private Page _prevalence;
 
-        private ConfigDisease _config;
+        private Config _config;
         private MainWindowViewModel _mwvm;
 
         #region Свойства для ввода
@@ -413,7 +413,7 @@ namespace EpidSimulation.ViewModel
 
         public ConfigDiseaseWindowViewModel(MainWindowViewModel mwvm)
         {
-            _config = (ConfigDisease)mwvm.Config.Clone();
+            _config = (Config)mwvm.Config.Clone();
             _mwvm = mwvm;
             ProbabilityInfContact = _config.ProbabilityInfContact;
             ProbabilityInfNN = _config.ProbabilityInfAirborne;

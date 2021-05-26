@@ -27,8 +27,8 @@ namespace EpidSimulation.ViewModel
             get => _simulation;
         }
 
-        private ConfigDisease _config;
-        public ConfigDisease Config
+        private Config _config;
+        public Config Config
         {
             set
             {
@@ -143,7 +143,7 @@ namespace EpidSimulation.ViewModel
             BIStartStopSim = _biStart;
             BIExcel = _biExcelOn;
 
-            Config = new ConfigDisease();
+            Config = new Config();
             CurSimulation = new Simulation();  
             CurSimulation.SetNewSession(
                 100, 100,
@@ -447,8 +447,11 @@ namespace EpidSimulation.ViewModel
             {
                 return new RelayCommand(() =>
                 {
-                    ConfigDiseaseWindow wConfig = new ConfigDiseaseWindow(this);
-                    wConfig.ShowDialog();
+                    if (!_statusExcel)
+                    {
+                        ConfigDiseaseWindow wConfig = new ConfigDiseaseWindow(this);
+                        wConfig.ShowDialog();
+                    }
                 });
             }
         }
@@ -573,6 +576,9 @@ namespace EpidSimulation.ViewModel
                     }
                     else
                     {
+
+                        _curLine--;
+                        CreateDiagramm("A1", "H" + _curLine.ToString(), "Диаграмма эпид процесса", "График количества заболевших", 1);
                         _excelApp.Quit();
                         _statusExcel = false;
                         BIExcel = _biExcelOn;
@@ -680,9 +686,9 @@ namespace EpidSimulation.ViewModel
                     "\nЧастота бессимптомных: " + Config.ProbabilityAsymptomatic*100 + " %" +
                     "\n\nУровень взаимодействия" +
                     "\nРадиус человека: " + Config.RadiusHuman +
-                    "\nДальность возможных встреч: " + Config.RadiusAirborne +
-                    "\nДальность возможных рукопожатий: " +Config.RadiusContact +
-                    "\nРадиус социальной дистанции: " + Config.RadiusSocDist +
+                    "\nДальность возможных рукопожатий: " + (Config.RadiusContact - Config.RadiusHuman) +
+                    "\nДальность возможных встреч: " + (Config.RadiusAirborne - Config.RadiusHuman) +
+                    "\nРадиус социальной дистанции: " + (Config.RadiusSocDist - Config.RadiusHuman) +
                     "\n\nУровень распространения: " +
                     "\nБазовый шанс заразиться воздушно-капельным путем: " + Config.ProbabilityInfAirborne*100 + " %" +
                     "\nБазовый шанс заразиться контактным путем: " + Config.ProbabilityInfContact*100 + " %" +

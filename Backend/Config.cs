@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EpidSimulation.Backend
 {
-    public class ConfigDisease : ICloneable
+    public class Config : ICloneable
     {
         private Random random = new Random(DateTime.Now.Second * DateTime.Now.Minute + DateTime.Now.Hour + DateTime.Now.Day);
 
@@ -301,7 +301,7 @@ namespace EpidSimulation.Backend
         #endregion
         //====================================
 
-        public ConfigDisease()
+        public Config()
         {
             TimeIncub_B = 0; TimeIncub_A = 0;
             TimeProdorm_B = 0; TimeProdorm_A = 0;

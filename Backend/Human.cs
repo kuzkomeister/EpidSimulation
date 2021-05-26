@@ -15,7 +15,7 @@ namespace EpidSimulation.Backend
         private void OnPropertyChanged(string propertyName)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         
-        static public ConfigDisease Config;
+        static public Config Config;
 
         private int _condition;  // Состояние человека
         public int Condition { get => _condition; set { _condition = value; OnPropertyChanged("Condition"); } }

@@ -108,15 +108,31 @@
             <Separator Margin="10"/>
             <TextBlock Text="Об возможных состояниях рук людей:" Margin="10,5,0,0"/>
             <StackPanel>
-                <Ellipse Width="10" Height="10" Fill="Green" Stroke="Black"/>
-                <TextBlock Text=" - Восприимчивый с чистыми руками"/>
+                <Ellipse Width="20" Height="20" Fill="Green" Stroke="Black" StrokeThickness="2"/>
+                <TextBlock Text=" - Восприимчивый с чистыми руками" VerticalAlignment="Center"/>
             </StackPanel>
             <StackPanel>
-                <Ellipse Width="10" Height="10" Fill="Green" Stroke="Red"/>
-                <TextBlock Text=" - Восприимчивый с инфекцией на руках"/>
+                <Ellipse Width="20" Height="20" Fill="Green" Stroke="Red" StrokeThickness="2"/>
+                <TextBlock Text=" - Восприимчивый с инфекцией на руках" VerticalAlignment="Center"/>
             </StackPanel>
 
-            <TextBlock Margin="10,100,0,0" Text="Приложение создано в рамках выпускной квалификационной работы Кузнецовым Кириллом Игоревичем студентом 41 группы ФКТиПМ КубГУ в 2021 году" TextWrapping="Wrap"/>
+            <Separator Margin="10"/>
+            <TextBlock Text="Об соблюдении масочного режима:"/>
+            <StackPanel>
+                <Canvas>
+                    <Ellipse Canvas.Left="0" Canvas.Top="0" Width="20" Height="20" Fill="Green" Stroke="Black" StrokeThickness="2"/>
+                    <Ellipse Canvas.Left="5" Canvas.Top="5" Width="10" Height="10" Fill="White"/>
+                </Canvas>
+                <TextBlock Text=" - Восприимчивый соблюдающий масочный режим" Margin="20,0,0,0"/>
+            </StackPanel>
+            <StackPanel Margin="10,10,0,0">
+                <Ellipse Canvas.Left="0" Canvas.Top="0" Width="20" Height="20" Fill="Green" Stroke="Black" StrokeThickness="2"/>
+                <TextBlock Text=" - Восприимчивый не соблюдающий масочный режим"/>
+            </StackPanel>
+
+            <TextBlock Margin="10,10,0,0" Text="Приложение создано в рамках выпускной квалификационной работы" HorizontalAlignment="Center"/>
+            <TextBlock Margin="10,0,0,0" Text="Кузнецовым Кириллом Игоревичем студентом 41 группы ФКТиПМ КубГУ в 2021 году" HorizontalAlignment="Center"/>
+            <TextBlock Margin="10,0,0,0" Text="и успешно защищена на отлично" HorizontalAlignment="Center"/>
         </StackPanel>
         
     </Grid>

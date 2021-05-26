@@ -36,7 +36,7 @@
                 <Label Content="итераций"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                <Label Content="Продормальный период: от"/>
+                <Label Content="Продромальный период: от"/>
                 <TextBox Width="75" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeProdorm_A}"/>
                 <Label Content="до"/>
                 <TextBox Width="75" PreviewTextInput="IntPreviewTextInput" Text="{Binding TimeProdorm_B}"/>
