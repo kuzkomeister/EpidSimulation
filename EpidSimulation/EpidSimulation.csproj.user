@@ -1,51 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup />
+  <PropertyGroup>
+    <ShowAllFiles>false</ShowAllFiles>
+  </PropertyGroup>
   <ItemGroup>
     <ApplicationDefinition Update="App.xaml">
       <SubType>Designer</SubType>
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="ConfigDiseaseWindow.xaml.cs">
+    <Compile Update="Views\F_ConfigDisease.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="HelpWindow.xaml.cs">
+    <Compile Update="Views\F_Welcome.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Pages\ConfigDisease\DiseaseParam.xaml.cs">
+    <Compile Update="Views\PagesConfigDisease\P_DiseaseParam.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Pages\ConfigDisease\Incidence.xaml.cs">
+    <Compile Update="Views\PagesConfigDisease\P_Incidence.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Pages\ConfigDisease\InteractionLevel.xaml.cs">
+    <Compile Update="Views\PagesConfigDisease\P_InteractionLevel.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Pages\ConfigDisease\Prevalence.xaml.cs">
+    <Compile Update="Views\PagesConfigDisease\P_Prevalence.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="HelpWindow.xaml">
+    <Page Update="Views\F_Welcome.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="MainWindow.xaml">
+    <Page Update="Views\F_Workplace.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="ConfigDiseaseWindow.xaml">
+    <Page Update="Views\F_ConfigDisease.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Pages\ConfigDisease\DiseaseParam.xaml">
+    <Page Update="Views\PagesConfigDisease\P_DiseaseParam.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Pages\ConfigDisease\Incidence.xaml">
+    <Page Update="Views\PagesConfigDisease\P_Incidence.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Pages\ConfigDisease\InteractionLevel.xaml">
+    <Page Update="Views\PagesConfigDisease\P_InteractionLevel.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Pages\ConfigDisease\Prevalence.xaml">
+    <Page Update="Views\PagesConfigDisease\P_Prevalence.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

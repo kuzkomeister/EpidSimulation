@@ -9,12 +9,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using EpidSimulation.Backend;
+using EpidSimulation.Models;
 using System.ComponentModel;
+using EpidSimulation.Views.PagesConfigDisease;
 
-namespace EpidSimulation.ViewModel
+namespace EpidSimulation.ViewModels
 {
-    public class ConfigDiseaseWindowViewModel : ViewModelBase
+    public class VMF_ConfigDisease : ViewModelBase
     {   
         private Page _diseaseParam;
         private Page _incidence;
@@ -22,7 +23,7 @@ namespace EpidSimulation.ViewModel
         private Page _prevalence;
 
         private Config _config;
-        private MainWindowViewModel _mwvm;
+        private VMF_Workplace _mwvm;
 
         #region Свойства для ввода
         //===== Вероятности
@@ -411,7 +412,7 @@ namespace EpidSimulation.ViewModel
             );
         }
 
-        public ConfigDiseaseWindowViewModel(MainWindowViewModel mwvm)
+        public VMF_ConfigDisease(VMF_Workplace mwvm)
         {
             _config = (Config)mwvm.Config.Clone();
             _mwvm = mwvm;
@@ -425,13 +426,13 @@ namespace EpidSimulation.ViewModel
             RHandshake = _config.RadiusContact - RadiusHuman;
             RSocDist = _config.RadiusSocDist - RadiusHuman;
 
-            _diseaseParam = new Pages.ConfigDisease.DiseaseParam();
+            _diseaseParam = new P_DiseaseParam();
             _diseaseParam.DataContext = _config;
-            _incidence = new Pages.ConfigDisease.Incidence();
+            _incidence = new P_Incidence();
             _incidence.DataContext = _config;
-            _interactionLevel = new Pages.ConfigDisease.InteractionLevel();
+            _interactionLevel = new P_InteractionLevel();
             _interactionLevel.DataContext = this;
-            _prevalence = new Pages.ConfigDisease.Prevalence();
+            _prevalence = new P_Prevalence();
             _prevalence.DataContext = this;
 
             FinalPageVisible = Visibility.Visible;

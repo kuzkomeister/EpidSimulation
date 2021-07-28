@@ -12,25 +12,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Globalization;
-using EpidSimulation.Pages.ConfigDisease;
 
-namespace EpidSimulation.Pages.ConfigDisease
+namespace EpidSimulation.Views.PagesConfigDisease
 {
     /// <summary>
-    /// Логика взаимодействия для Prevalence.xaml
+    /// Логика взаимодействия для DiseaseParam.xaml
     /// </summary>
-    
-
-    public partial class Prevalence : Page
+    public partial class P_DiseaseParam : Page
     {
-        
-
-        public Prevalence()
+        public P_DiseaseParam()
         {
             InitializeComponent();
-
         }
+
 
         public int DS_Count(string s)
         {
@@ -42,7 +36,11 @@ namespace EpidSimulation.Pages.ConfigDisease
         private void DoublePreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !((Char.IsDigit(e.Text, 0) || ((e.Text == System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0].ToString()) && (DS_Count(((TextBox)sender).Text) < 1))));
-        }   
-    
+        }
+
+        private void IntPreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !(Char.IsDigit(e.Text, 0));
+        }
     }
 }

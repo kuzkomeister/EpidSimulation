@@ -6,20 +6,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Shapes;
 using System.Windows.Media;
-using EpidSimulation.Backend;
+using EpidSimulation.Models;
 using System.Windows.Controls;
 using System.Windows.Data;
+using EpidSimulation.Utils;
 
-namespace EpidSimulation.Frontend
+namespace EpidSimulation.ViewModels
 {
-    class FigureHuman
+    class VM_Human
     {
         public Ellipse CondCircle;
         public Ellipse MaskCircle = null;
         public Ellipse SocDistCircle = null;
         public Human human;
 
-        public FigureHuman(Human human)
+        public VM_Human(Human human)
         {
             this.human = human;
             //===== Создание фигур

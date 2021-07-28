@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace EpidSimulation.Backend
+namespace EpidSimulation.Models
 {
     public class NodeRegion
     {

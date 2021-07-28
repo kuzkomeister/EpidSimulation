@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,15 +7,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using EpidSimulation.Backend;
-using EpidSimulation.Frontend;
+using EpidSimulation.Models;
+using EpidSimulation.Views;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Excel =  Microsoft.Office.Interop.Excel;
 
-namespace EpidSimulation.ViewModel
+namespace EpidSimulation.ViewModels
 {
-    public partial class MainWindowViewModel : ViewModelBase
+    public partial class VMF_Workplace : ViewModelBase
     {
         private Simulation _simulation;
         public Simulation CurSimulation
@@ -44,7 +41,7 @@ namespace EpidSimulation.ViewModel
             get => _canvasMap;
         }
 
-        private LinkedList<FigureHuman> _figures;
+        private LinkedList<VM_Human> _figures;
         private QuadTree _curNode;
         
         private DispatcherTimer _timer;
@@ -110,7 +107,7 @@ namespace EpidSimulation.ViewModel
         }
         #endregion
 
-        public MainWindowViewModel()
+        public VMF_Workplace()
         {
             #region InitBitMapImages
 
@@ -207,20 +204,20 @@ namespace EpidSimulation.ViewModel
 
         private void CreateAndAddFigures(LinkedList<Human> people)
         {
-            _figures = new LinkedList<FigureHuman>();
+            _figures = new LinkedList<VM_Human>();
             foreach (Human human in people)
             {
-                FigureHuman figure = new FigureHuman(human);
+                VM_Human figure = new VM_Human(human);
                 _figures.AddFirst(figure);
             }
 
-            foreach (FigureHuman figure in _figures)
+            foreach (VM_Human figure in _figures)
             {
                 if (figure.SocDistCircle != null)
                     CanvasMap.Children.Add(figure.SocDistCircle);
             }
 
-            foreach (FigureHuman figure in _figures)
+            foreach (VM_Human figure in _figures)
             {
                 CanvasMap.Children.Add(figure.CondCircle);
                 if (figure.MaskCircle != null)
@@ -231,7 +228,7 @@ namespace EpidSimulation.ViewModel
 
         private void ClearDeads()
         {
-            for (LinkedListNode<FigureHuman> figure = _figures.First; figure != null;)
+            for (LinkedListNode<VM_Human> figure = _figures.First; figure != null;)
             {
                 if (figure.Value.CondCircle.Fill == Brushes.DarkGray)
                 {
@@ -244,7 +241,7 @@ namespace EpidSimulation.ViewModel
                     {
                         _canvasMap.Children.Remove(figure.Value.SocDistCircle);
                     }
-                    LinkedListNode<FigureHuman> temp = figure;
+                    LinkedListNode<VM_Human> temp = figure;
                     figure = figure.Next;
                     _figures.Remove(temp);
                 }
@@ -259,7 +256,7 @@ namespace EpidSimulation.ViewModel
         {
             if (_figures != null)
             {
-                foreach (FigureHuman figure in _figures)
+                foreach (VM_Human figure in _figures)
                 {
                     _canvasMap.Children.Remove(figure.CondCircle);
                     if (figure.MaskCircle != null)
@@ -281,7 +278,7 @@ namespace EpidSimulation.ViewModel
             LinkedList<LinkedList<Human>> tempList = new LinkedList<LinkedList<Human>>();
             _curNode.GetListObjects(tempList);
 
-            foreach (FigureHuman figure in _figures)
+            foreach (VM_Human figure in _figures)
             {
                 bool vis = false;
                 foreach (LinkedList<Human> l in tempList)
@@ -419,7 +416,7 @@ namespace EpidSimulation.ViewModel
                 {
                     if (!_statusDebug)
                     {
-                        foreach (FigureHuman figure in _figures)
+                        foreach (VM_Human figure in _figures)
                         {
                             if (figure.human.SocDist && figure.CondCircle.Visibility == 0)
                                 figure.SocDistCircle.Visibility = Visibility.Visible;
@@ -429,7 +426,7 @@ namespace EpidSimulation.ViewModel
                     }
                     else
                     {
-                        foreach (FigureHuman figure in _figures)
+                        foreach (VM_Human figure in _figures)
                         {
                             if (figure.SocDistCircle != null)
                                 figure.SocDistCircle.Visibility = Visibility.Hidden;
@@ -449,7 +446,7 @@ namespace EpidSimulation.ViewModel
                 {
                     if (!_statusExcel)
                     {
-                        ConfigDiseaseWindow wConfig = new ConfigDiseaseWindow(this);
+                        F_ConfigDisease wConfig = new F_ConfigDisease(this);
                         wConfig.ShowDialog();
                     }
                 });
@@ -462,7 +459,7 @@ namespace EpidSimulation.ViewModel
             {
                 return new RelayCommand(() =>
                 {
-                    HelpWindow wHelp = new HelpWindow();
+                    F_Welcome wHelp = new F_Welcome();
                     wHelp.ShowDialog();
                 });
             }

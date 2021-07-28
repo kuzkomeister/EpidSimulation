@@ -1,23 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using EpidSimulation.Backend;
-using EpidSimulation.Frontend;
 
 
-namespace EpidSimulation
+namespace EpidSimulation.Views
 {
-    public partial class MainWindow : Window
+    public partial class F_Workplace : Window
     {
 
-        public MainWindow()
+        public F_Workplace()
         {
             InitializeComponent();
         }
@@ -29,7 +20,7 @@ namespace EpidSimulation
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            HelpWindow wHelp = new HelpWindow();
+            F_Welcome wHelp = new F_Welcome();
             wHelp.ShowDialog();
         }
     }
