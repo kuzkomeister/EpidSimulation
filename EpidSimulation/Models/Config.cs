@@ -2,12 +2,14 @@
 
 namespace EpidSimulation.Models
 {
+    /// <summary>
+    /// Класс хранящий информацию о параметрах модели и предоставляющий ее по запросам
+    /// </summary>
     public class Config : ICloneable
     {
         private Random random = new Random(DateTime.Now.Second * DateTime.Now.Minute + DateTime.Now.Hour + DateTime.Now.Day);
 
-        //===== Основные характеристики болезни
-        #region Fields
+        #region [ Поля и свойства ]
 
         // Инкубационный период
         private int _timeIncub_a, _timeIncub_b;       
@@ -295,8 +297,8 @@ namespace EpidSimulation.Models
         }
 
         #endregion
-        //====================================
 
+        // Конструктор с значения умолчанию
         public Config()
         {
             TimeIncub_B = 0; TimeIncub_A = 0;
@@ -320,22 +322,40 @@ namespace EpidSimulation.Models
             TimeChangeDirect_B = 100; TimeChangeDirect_A = 50;
         }
 
+        /// <summary>
+        /// Клонирование объекта
+        /// </summary>
+        /// <returns>Клонированный объект</returns>
         public object Clone()
         {
             return this.MemberwiseClone();
         }
 
-        //===== Вероятность
+        #region [ Вычисление вероятностей ]
+        /// <summary>
+        /// Вычисление возможности заражения от контактной передачи инфекции
+        /// </summary>
+        /// <returns>Успешность заражения</returns>
         public bool GetPermissionInfContact()
         {
             return random.NextDouble() <= ProbabilityInfContact;
         }
 
+        /// <summary>
+        /// Вычисление возможности умереть
+        /// </summary>
+        /// <returns>Успешность умереть</returns>
         public bool GetPermissionDie()
         {
             return random.NextDouble() <= ProbabilityDie;
         }
 
+        /// <summary>
+        /// Вычисление возможности заражения от воздушно-капельной передачи инфекции
+        /// </summary>
+        /// <param name="maskFrom"> - Наличие маски у источника инфекции</param>
+        /// <param name="maskFor"> - Наличие маски у восприимчивого организма</param>
+        /// <returns>Успешность передачи инфекции</returns>
         public bool GetPermissionInfect(bool maskFrom, bool maskFor)
         {
             if (maskFor)
@@ -355,12 +375,17 @@ namespace EpidSimulation.Models
             }
         }
 
+        /// <summary>
+        /// Вычисление возможности стать бессимптомным
+        /// </summary>
+        /// <returns>Успешность стать бессимптомным</returns>
         public bool GetPermissionAsymptomatic()
         {
             return random.NextDouble() <= ProbabilityAsymptomatic;
         }
+        #endregion
 
-        //===== Получить случайное время для таймера
+        #region [ Вычисление времени таймеров ]
         public int GetTimeMeet()
         {
             return random.Next(TimeAirborne_A, TimeAirborne_B);
@@ -405,12 +430,15 @@ namespace EpidSimulation.Models
         {
             return random.Next(TimeRecovery_A, TimeRecovery_B);
         }
+        #endregion
 
-        //==== Поменять направление движения
-
+        /// <summary>
+        /// Вычисление направления в интервале [-MaxDist, MaxDist]
+        /// </summary>
+        /// <returns>Значение в диапазоне [-MaxDist, MaxDist] </returns>
         public double GetDirection()
         {
-            return random.NextDouble() * (2 * MaxDist) - MaxDist;
+            return (random.NextDouble() * (2 * MaxDist)) - MaxDist;
         }
 
     }

@@ -13,7 +13,7 @@ using EpidSimulation.Utils;
 
 namespace EpidSimulation.ViewModels
 {
-    class VM_Human
+    class VM_Human : VM_BASIC
     {
         public Ellipse CondCircle;
         public Ellipse MaskCircle = null;

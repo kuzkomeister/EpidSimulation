@@ -8,14 +8,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using EpidSimulation.Models;
+using EpidSimulation.Utils;
 using EpidSimulation.Views;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 using Excel =  Microsoft.Office.Interop.Excel;
 
 namespace EpidSimulation.ViewModels
 {
-    public partial class VMF_Workplace : ViewModelBase
+    public partial class VMF_Workplace : VM_BASIC
     {
         private Simulation _simulation;
         public Simulation CurSimulation
@@ -73,7 +72,7 @@ namespace EpidSimulation.ViewModels
             set
             {
                 _biSocDist = value;
-                RaisePropertyChanged("BISocDist");
+                OnPropertyChanged();
             } 
             get => _biSocDist; 
         }
@@ -87,7 +86,7 @@ namespace EpidSimulation.ViewModels
             set
             {
                 _biStartStopSim = value;
-                RaisePropertyChanged("BIStartStopSim");
+                OnPropertyChanged();
             }
             get => _biStartStopSim;
         }
@@ -101,7 +100,7 @@ namespace EpidSimulation.ViewModels
             set
             {
                 _biExcel = value;
-                RaisePropertyChanged("BIExcel");
+                OnPropertyChanged();
             }
             get => _biExcel;
         }
@@ -385,93 +384,70 @@ namespace EpidSimulation.ViewModels
         }
 
         // Включить/Выключить симуляцию
-        public ICommand bStartStopSimulation_Click
+        public ICommand bStartStopSimulation_Click => new RelayCommand(_DoStartStopSimulation_Click, _AlwaysTrue);
+        private void _DoStartStopSimulation_Click()
         {
-            get
+            if (_statusTimer)
             {
-                return new RelayCommand(() =>
-                {
-                    if (_statusTimer)
-                    {
-                        _timer.Stop();
-                        _statusTimer = false;
-                        BIStartStopSim = _biStart;
-                    }
-                    else
-                    {
-                        _timer.Start();
-                        _statusTimer = true;
-                        BIStartStopSim = _biStop;
-                    }
-                });
+                _timer.Stop();
+                _statusTimer = false;
+                BIStartStopSim = _biStart;
+            }
+            else
+            {
+                _timer.Start();
+                _statusTimer = true;
+                BIStartStopSim = _biStop;
             }
         }
 
         // Включить/Выключить отображение соц дистанции
-        public ICommand bOnOffDebug_Click
+        public ICommand bOnOffDebug_Click => new RelayCommand(_DoOnOffDebug_Click, _AlwaysTrue);
+        private void _DoOnOffDebug_Click()
         {
-            get
+            if (!_statusDebug)
             {
-                return new RelayCommand(() =>
+                foreach (VM_Human figure in _figures)
                 {
-                    if (!_statusDebug)
-                    {
-                        foreach (VM_Human figure in _figures)
-                        {
-                            if (figure.human.SocDist && figure.CondCircle.Visibility == 0)
-                                figure.SocDistCircle.Visibility = Visibility.Visible;
-                        }
-                        BISocDist = _biSocDistHidden;
-                        _statusDebug = true;
-                    }
-                    else
-                    {
-                        foreach (VM_Human figure in _figures)
-                        {
-                            if (figure.SocDistCircle != null)
-                                figure.SocDistCircle.Visibility = Visibility.Hidden;
-                        }
-                        BISocDist = _biSocDistVisible;
-                        _statusDebug = false;
-                    }
-                });
+                    if (figure.human.SocDist && figure.CondCircle.Visibility == 0)
+                        figure.SocDistCircle.Visibility = Visibility.Visible;
+                }
+                BISocDist = _biSocDistHidden;
+                _statusDebug = true;
+            }
+            else
+            {
+                foreach (VM_Human figure in _figures)
+                {
+                    if (figure.SocDistCircle != null)
+                        figure.SocDistCircle.Visibility = Visibility.Hidden;
+                }
+                BISocDist = _biSocDistVisible;
+                _statusDebug = false;
             }
         }
 
-        public ICommand bCreateConfig_Click
+        public ICommand bCreateConfig_Click => new RelayCommand(_DoCreateConfig_Click, _AlwaysTrue);
+        private void _DoCreateConfig_Click()
         {
-            get
+            if (!_statusExcel)
             {
-                return new RelayCommand(() =>
-                {
-                    if (!_statusExcel)
-                    {
-                        F_ConfigDisease wConfig = new F_ConfigDisease(this);
-                        wConfig.ShowDialog();
-                    }
-                });
+                F_ConfigDisease wConfig = new F_ConfigDisease(this);
+                wConfig.ShowDialog();
             }
         }
 
-        public ICommand bCreateHelp_Click
+        public ICommand bCreateHelp_Click => new RelayCommand(_DoCreateHelp_Click, _AlwaysTrue);
+        private void _DoCreateHelp_Click()
         {
-            get
-            {
-                return new RelayCommand(() =>
-                {
-                    F_Welcome wHelp = new F_Welcome();
-                    wHelp.ShowDialog();
-                });
-            }
+            F_Welcome wHelp = new F_Welcome();
+            wHelp.ShowDialog();
         }
 
-        public ICommand bCreateSimulation_Click
+        public ICommand bCreateSimulation_Click => new RelayCommand(_DoCreateSimulation_Click, _AlwaysTrue);
+        private void _DoCreateSimulation_Click()
         {
-            get
-            {
-                return new RelayCommand(() =>
-                {
-                    CurSimulation.SetNewSession(
+            CurSimulation.SetNewSession(
                         SizeWidth, SizeHeight,
                         AmountZdNothing, AmountZdMask, AmountZdSocDist, AmountZdAll,
                         AmountIncNothing, AmountIncMask, AmountIncSocDist, AmountIncAll,
@@ -480,107 +456,95 @@ namespace EpidSimulation.ViewModels
                         AmountVzdNothing, AmountVzdMask, AmountVzdSocDist, AmountVzdAll,
                         AmountAsymptNothing, AmountAsymptMask, AmountAsymptSocDist, AmountAsymptAll,
                         StatusCollision);
-                    _curNode = CurSimulation.Root;
-                    ClearMap();
-                    CreateAndAddFigures(CurSimulation.People);
+            _curNode = CurSimulation.Root;
+            ClearMap();
+            CreateAndAddFigures(CurSimulation.People);
 
-                    _regionBackground.Width = CurSimulation.SizeWidth;
-                    _regionBackground.Height = CurSimulation.SizeHeight;
-                    _lineHMP.Y1 = CurSimulation.SizeHeight / 2;
-                    _lineHMP.X2 = CurSimulation.SizeWidth;
-                    _lineHMP.Y2 = CurSimulation.SizeHeight / 2;
+            _regionBackground.Width = CurSimulation.SizeWidth;
+            _regionBackground.Height = CurSimulation.SizeHeight;
+            _lineHMP.Y1 = CurSimulation.SizeHeight / 2;
+            _lineHMP.X2 = CurSimulation.SizeWidth;
+            _lineHMP.Y2 = CurSimulation.SizeHeight / 2;
 
-                    _lineVMP.X1 = CurSimulation.SizeWidth / 2;
-                    _lineVMP.X2 = CurSimulation.SizeWidth / 2;
-                    _lineVMP.Y2 = CurSimulation.SizeHeight;
+            _lineVMP.X1 = CurSimulation.SizeWidth / 2;
+            _lineVMP.X2 = CurSimulation.SizeWidth / 2;
+            _lineVMP.Y2 = CurSimulation.SizeHeight;
 
-                    WindowHeight = 750;
-                    WindowWidth = 1920 / 2;
+            WindowHeight = 750;
+            WindowWidth = 1920 / 2;
 
-                    _scaleNode.ScaleX = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
-                    _scaleNode.ScaleY = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
+            _scaleNode.ScaleX = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
+            _scaleNode.ScaleY = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
 
-                    _timer.Stop();
-                    _statusTimer = false;
-                    BIStartStopSim = _biStart;
-                    _statusDebug = false;
-                    BISocDist = _biSocDistVisible;
-                    CurSimulation.OnOffCollision(StatusCollision);
+            _timer.Stop();
+            _statusTimer = false;
+            BIStartStopSim = _biStart;
+            _statusDebug = false;
+            BISocDist = _biSocDistVisible;
+            CurSimulation.OnOffCollision(StatusCollision);
 
-                    if (_statusExcel && _excelApp.Visible)
-                    {
-                        CreateWorkbook();
-                        _curLine = 2;
-                        WriteLineExcel();
-                        WriteConfigExcel();
-                    }
-                });
+            if (_statusExcel && _excelApp.Visible)
+            {
+                CreateWorkbook();
+                _curLine = 2;
+                WriteLineExcel();
+                WriteConfigExcel();
             }
         }
 
-        public ICommand bClearFields_Click
+        public ICommand bClearFields_Click => new RelayCommand(_DoClearFields_Click, _AlwaysTrue);
+        private void _DoClearFields_Click()
         {
-            get
-            {
-                return new RelayCommand(() =>
-                {
-                    SizeWidth = 10; SizeHeight = 10;
-                    AmountZdNothing = 0; AmountZdMask = 0; AmountZdSocDist = 0; AmountZdAll = 0;
-                    AmountIncNothing = 0; AmountIncMask = 0; AmountIncSocDist = 0; AmountIncAll = 0;
-                    AmountProdNothing = 0; AmountProdMask = 0; AmountProdSocDist = 0; AmountProdAll = 0;
-                    AmountClinNothing = 0; AmountClinMask = 0; AmountClinSocDist = 0; AmountClinAll = 0;
-                    AmountVzdNothing = 0; AmountVzdMask = 0; AmountVzdSocDist = 0; AmountVzdAll = 0;
-                    AmountAsymptNothing = 0; AmountAsymptMask = 0; AmountAsymptSocDist = 0; AmountAsymptAll = 0;
-                    RaisePropertyChanged("SizeWidth"); RaisePropertyChanged("SizeHeight");
-                    RaisePropertyChanged("AmountZdNothing"); RaisePropertyChanged("AmountZdMask"); 
-                    RaisePropertyChanged("AmountZdSocDist"); RaisePropertyChanged("AmountZdAll");
-                    RaisePropertyChanged("AmountIncNothing"); RaisePropertyChanged("AmountIncMask"); 
-                    RaisePropertyChanged("AmountIncSocDist"); RaisePropertyChanged("AmountIncAll");
-                    RaisePropertyChanged("AmountProdNothing"); RaisePropertyChanged("AmountProdMask"); 
-                    RaisePropertyChanged("AmountProdSocDist"); RaisePropertyChanged("AmountProdAll");
-                    RaisePropertyChanged("AmountClinNothing"); RaisePropertyChanged("AmountClinMask"); 
-                    RaisePropertyChanged("AmountClinSocDist"); RaisePropertyChanged("AmountClinAll");
-                    RaisePropertyChanged("AmountVzdNothing"); RaisePropertyChanged("AmountVzdMask"); 
-                    RaisePropertyChanged("AmountVzdSocDist"); RaisePropertyChanged("AmountVzdAll");
-                    RaisePropertyChanged("AmountAsymptNothing"); RaisePropertyChanged("AmountAsymptMask"); 
-                    RaisePropertyChanged("AmountAsymptSocDist"); RaisePropertyChanged("AmountAsymptAll");
-                });
-            }
+            SizeWidth = 10; SizeHeight = 10;
+            AmountZdNothing = 0; AmountZdMask = 0; AmountZdSocDist = 0; AmountZdAll = 0;
+            AmountIncNothing = 0; AmountIncMask = 0; AmountIncSocDist = 0; AmountIncAll = 0;
+            AmountProdNothing = 0; AmountProdMask = 0; AmountProdSocDist = 0; AmountProdAll = 0;
+            AmountClinNothing = 0; AmountClinMask = 0; AmountClinSocDist = 0; AmountClinAll = 0;
+            AmountVzdNothing = 0; AmountVzdMask = 0; AmountVzdSocDist = 0; AmountVzdAll = 0;
+            AmountAsymptNothing = 0; AmountAsymptMask = 0; AmountAsymptSocDist = 0; AmountAsymptAll = 0;
+            OnPropertyChanged(nameof(SizeWidth)); OnPropertyChanged(nameof(SizeWidth));
+            OnPropertyChanged(nameof(AmountZdNothing)); OnPropertyChanged(nameof(SizeWidth));
+            OnPropertyChanged(nameof(AmountZdSocDist)); OnPropertyChanged(nameof(AmountZdAll));
+            OnPropertyChanged(nameof(AmountIncNothing)); OnPropertyChanged(nameof(AmountIncMask));
+            OnPropertyChanged(nameof(AmountIncSocDist)); OnPropertyChanged(nameof(AmountIncAll));
+            OnPropertyChanged(nameof(AmountProdNothing)); OnPropertyChanged(nameof(AmountProdMask));
+            OnPropertyChanged(nameof(AmountProdSocDist)); OnPropertyChanged(nameof(AmountProdAll));
+            OnPropertyChanged(nameof(AmountClinNothing)); OnPropertyChanged(nameof(AmountClinMask));
+            OnPropertyChanged(nameof(AmountClinSocDist)); OnPropertyChanged(nameof(AmountClinAll));
+            OnPropertyChanged(nameof(AmountVzdNothing)); OnPropertyChanged(nameof(AmountVzdMask));
+            OnPropertyChanged(nameof(AmountVzdSocDist)); OnPropertyChanged(nameof(AmountVzdAll));
+            OnPropertyChanged(nameof(AmountAsymptNothing)); OnPropertyChanged(nameof(AmountAsymptMask));
+            OnPropertyChanged(nameof(AmountAsymptSocDist)); OnPropertyChanged(nameof(AmountAsymptAll));
         }
 
-        public ICommand bCreateExcel_Click
+        public ICommand bCreateExcel_Click => new RelayCommand(_DoCreateExcel_Click, _AlwaysTrue);
+        private void _DoCreateExcel_Click()
         {
-            get
+            if (!_statusExcel)
             {
-                return new RelayCommand(() =>
+                try
                 {
-                    if (!_statusExcel)
-                    {
-                        try
-                        {
-                            _excelApp = new Excel.Application { Visible = true };
-                            CreateWorkbook();
-                            _statusExcel = true;
-                            _curLine = 2;
-                            WriteLineExcel();
-                            WriteConfigExcel();
-                            BIExcel = _biExcelOff;
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message);
-                        }
-                    }
-                    else
-                    {
+                    _excelApp = new Excel.Application { Visible = true };
+                    CreateWorkbook();
+                    _statusExcel = true;
+                    _curLine = 2;
+                    WriteLineExcel();
+                    WriteConfigExcel();
+                    BIExcel = _biExcelOff;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            else
+            {
 
-                        _curLine--;
-                        CreateDiagramm("A1", "H" + _curLine.ToString(), "Диаграмма эпид процесса", "График количества заболевших", 1);
-                        _excelApp.Quit();
-                        _statusExcel = false;
-                        BIExcel = _biExcelOn;
-                    }
-                });
+                _curLine--;
+                CreateDiagramm("A1", "H" + _curLine.ToString(), "Диаграмма эпид процесса", "График количества заболевших", 1);
+                _excelApp.Quit();
+                _statusExcel = false;
+                BIExcel = _biExcelOn;
             }
         }
 
@@ -720,36 +684,7 @@ namespace EpidSimulation.ViewModels
             }
         }
 
-        //===== Переключение между клетками ПЕРЕДЕЛАТЬ НА КОМАНДЫ
-        private void miNodeChild_Click(object sender, RoutedEventArgs e)
-        {
-            MenuItem mi = (MenuItem)sender;
-            if (_curNode.Child(Convert.ToInt32(mi.Tag)) != null)
-            {
-                _curNode = _curNode.Child(Convert.ToInt32(mi.Tag));
-                (double x, double y) p = _curNode.LVPoint;
-               /*
-                double tsx = _scaleNode.ScaleX;
-                double tsy = _scaleNode.ScaleY;
-                scaleNode.ScaleX = 1;
-                scaleNode.ScaleY = 1;
-                transNode.X -= p.x;
-                transNode.Y -= p.y;
-                scaleNode.ScaleX = tsx;
-                scaleNode.ScaleY = tsy; 
-               */
-                MakeVisibleNodeHumans();
-            }
-        }
-
-        private void miNodeParent_Click(object sender, RoutedEventArgs e)
-        {
-            if (_curNode.Parent != null)
-            {
-                _curNode = _curNode.Parent;
-                MakeVisibleNodeHumans();
-            }
-        }
+        
 
 
        

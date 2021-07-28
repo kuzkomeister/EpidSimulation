@@ -7,15 +7,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 using EpidSimulation.Models;
-using System.ComponentModel;
 using EpidSimulation.Views.PagesConfigDisease;
+using EpidSimulation.Utils;
 
 namespace EpidSimulation.ViewModels
 {
-    public class VMF_ConfigDisease : ViewModelBase
+    public class VMF_ConfigDisease : VM_BASIC
     {   
         private Page _diseaseParam;
         private Page _incidence;
@@ -63,7 +61,7 @@ namespace EpidSimulation.ViewModels
             set
             {
                 _probabilityInfMM = 0 <= value && value <= 1 ? value : _probabilityInfMM;
-                RaisePropertyChanged("ProbabilityInfMM");
+                OnPropertyChanged();
             }
             get => _probabilityInfMM;
         }
@@ -74,7 +72,7 @@ namespace EpidSimulation.ViewModels
             set
             {
                 _probabilityInfNM = 0 <= value && value <= 1 ? value : _probabilityInfNM;
-                RaisePropertyChanged("ProbabilityInfNM");
+                OnPropertyChanged();
             }
             get => _probabilityInfNM;
         }
@@ -85,7 +83,7 @@ namespace EpidSimulation.ViewModels
             set 
             { 
                 _probabilityInfMN = 0 <= value && value <= 1 ? value : _probabilityInfMN;
-                RaisePropertyChanged("ProbabilityInfMN");
+                OnPropertyChanged();
             }
             get => _probabilityInfMN;
         }
@@ -101,7 +99,7 @@ namespace EpidSimulation.ViewModels
                 ProbabilityInfMM = ProbabilityInfNN * (1 - MaskProtectionFor) * (1 - MaskProtectionFrom);
                 ProbabilityInfMN = ProbabilityInfNN * (1 - MaskProtectionFrom);
                 ProbabilityInfNM = ProbabilityInfNN * (1 - MaskProtectionFor);
-                RaisePropertyChanged("ProbabilityInfNN");
+                OnPropertyChanged();
             }
             get => _probabilityInfNN;
         }
@@ -125,7 +123,7 @@ namespace EpidSimulation.ViewModels
             {
                 RadiusMeet = value > 0 ? value : 0;
                 _rMeet = RadiusMeet - RadiusHuman > 0 ? RadiusMeet - RadiusHuman : 0;
-                RaisePropertyChanged("RMeet");
+                OnPropertyChanged();
             }
             get => _rMeet;
         }
@@ -137,7 +135,7 @@ namespace EpidSimulation.ViewModels
             {
                 RadiusHandshake = value > 0 ? value : 0;
                 _rHandshake = RadiusHandshake - RadiusHuman > 0 ? RadiusHandshake - RadiusHuman : 0;
-                RaisePropertyChanged("RHandshake");
+                OnPropertyChanged();
             }
             get => _rHandshake;
         }
@@ -149,7 +147,7 @@ namespace EpidSimulation.ViewModels
             {
                 RadiusSocDist = value > 0 ? value : 0;
                 _rSocDist = RadiusSocDist - RadiusHuman > 0 ? RadiusSocDist - RadiusHuman : 0;
-                RaisePropertyChanged("RSocDist");
+                OnPropertyChanged();
             }
             get => _rSocDist;
         }
@@ -168,7 +166,7 @@ namespace EpidSimulation.ViewModels
                 RHandshake = _config.RadiusContact - RadiusHuman;
                 RSocDist = _config.RadiusSocDist - RadiusHuman;
                 LeftTopHuman = CenterEll - RadiusHuman * 50;
-                RaisePropertyChanged("RadiusHuman");
+                OnPropertyChanged();
             }
             get => _radiusHuman;
         }
@@ -181,7 +179,7 @@ namespace EpidSimulation.ViewModels
                 _config.RadiusAirborne = value;
                 _radiusMeet = _config.RadiusAirborne;
                 LeftTopMeet = CenterEll - RadiusMeet * 50;
-                RaisePropertyChanged("RadiusMeet");
+                OnPropertyChanged();
             }
             get => _radiusMeet;
         }
@@ -194,7 +192,7 @@ namespace EpidSimulation.ViewModels
                 _config.RadiusContact = value;
                 _radiusHandshake = _config.RadiusContact;
                 LeftTopHandshake = CenterEll - RadiusHandshake * 50;
-                RaisePropertyChanged("RadiusHandshake");
+                OnPropertyChanged();
             }
             get => _radiusHandshake;
         }
@@ -207,7 +205,7 @@ namespace EpidSimulation.ViewModels
                 _config.RadiusSocDist = value;
                 _radiusSocDist = _config.RadiusSocDist;
                 LeftTopSocDist = CenterEll - RadiusSocDist * 50;
-                RaisePropertyChanged("RadiusSocDist");
+                OnPropertyChanged();
             }
             get => _radiusSocDist;
         }
@@ -219,7 +217,7 @@ namespace EpidSimulation.ViewModels
             set
             {
                 _leftTopHuman = value;
-                RaisePropertyChanged("LeftTopHuman");
+                OnPropertyChanged();
             }
             get => _leftTopHuman;
         }
@@ -230,7 +228,7 @@ namespace EpidSimulation.ViewModels
             set
             {
                 _leftTopMeet = value;
-                RaisePropertyChanged("LeftTopMeet");
+                OnPropertyChanged();
             }
             get => _leftTopMeet;
         }
@@ -241,7 +239,7 @@ namespace EpidSimulation.ViewModels
             set
             {
                 _leftTopHandshake = value;
-                RaisePropertyChanged("LeftTopHandshake");
+                OnPropertyChanged();
             }
             get => _leftTopHandshake;
         }
@@ -252,13 +250,14 @@ namespace EpidSimulation.ViewModels
             set
             {
                 _leftTopSocDist = value;
-                RaisePropertyChanged("LeftTopSocDist");
+                OnPropertyChanged();
             }
             get => _leftTopSocDist;
         }
         //=======================================
         #endregion
 
+        // Текущая страница
         private Page _currentPage;
         public Page CurrentPage
         {
@@ -266,10 +265,10 @@ namespace EpidSimulation.ViewModels
             set 
             { 
                 _currentPage = value;
-                RaisePropertyChanged("CurrentPage");
+                OnPropertyChanged();
             }
         }
-        private int _numPage;
+        private int _numPage;       
 
         // Статусы для видимости кнопок
         private Visibility _finalPageVisible;
@@ -278,7 +277,7 @@ namespace EpidSimulation.ViewModels
             set 
             { 
                 _finalPageVisible = value;
-                RaisePropertyChanged("FinalPageVisible");
+                OnPropertyChanged();
                 CompleteBtnVisible = value == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
             }
             get => _finalPageVisible;
@@ -290,7 +289,7 @@ namespace EpidSimulation.ViewModels
             set
             {
                 _completeBtnVisible = value;
-                RaisePropertyChanged("CompleteBtnVisible");
+                OnPropertyChanged();
             }
 
             get 
@@ -305,7 +304,7 @@ namespace EpidSimulation.ViewModels
             set
             {
                 _firstPageVisible = value;
-                RaisePropertyChanged("FirstPageVisible");
+                OnPropertyChanged();
             }
             get => _firstPageVisible;
         }
@@ -318,10 +317,38 @@ namespace EpidSimulation.ViewModels
             set
             {
                 _frameOpacity = value;
-                RaisePropertyChanged("FrameOpacity");
+                OnPropertyChanged();
             }
         }
 
+
+        #region [ Команды для кнопок переключения и сохранения]
+        // Нажатие на кнопку переключения на предыдущую страницу
+        public ICommand bPreviousPage_Click => new RelayCommand(_DoPreviousPage_Click, _AlwaysTrue);
+        private void _DoPreviousPage_Click()
+        {
+            SlowOpacity(PreviousPage());
+        }
+
+        // Нажатие на кнопку переключения на следующую страницу
+        public ICommand bNextPage_Click => new RelayCommand(_DoNextPage_Click, _AlwaysTrue);
+        private void _DoNextPage_Click()
+        {
+            SlowOpacity(PreviousPage());
+        }
+
+        // Нажатие на кнопку сохранения изменений параметров
+        public ICommand bComplete_Click => new RelayCommand(_DoNextPage_Click, _AlwaysTrue);
+        private void _DoComplete_Click()
+        {
+            _mwvm.Config = _config;
+        }
+
+
+        /// <summary>
+        /// Получить предыдущую страницу
+        /// </summary>
+        /// <returns>Предыдущая страница</returns>
         private Page PreviousPage()
         {
             Page result = CurrentPage;
@@ -345,14 +372,10 @@ namespace EpidSimulation.ViewModels
             return result;
         }
 
-        public ICommand bPreviousPage_Click
-        {
-            get
-            {
-                return new RelayCommand(() => SlowOpacity(PreviousPage()));
-            }
-        }
-
+        /// <summary>
+        /// Получить следующую страницу
+        /// </summary>
+        /// <returns>Следующая страница</returns>
         private Page NextPage()
         {
             Page result = CurrentPage;
@@ -376,23 +399,10 @@ namespace EpidSimulation.ViewModels
             return result;
         }
 
-        public ICommand bNextPage_Click
-        {
-            get
-            {
-                return new RelayCommand(() => SlowOpacity(NextPage())); 
-            }
-        } 
-
-        public ICommand bComplete_Click
-        {
-            get
-            {
-                return new RelayCommand(() => _mwvm.Config = _config);
-            }
-        }
-        
-
+        /// <summary>
+        /// Анимация переключения между страницами
+        /// </summary>
+        /// <param name="page">переключаемая страница</param>
         private async void SlowOpacity(Page page)
         {
             await Task.Factory.StartNew(() =>
@@ -411,7 +421,12 @@ namespace EpidSimulation.ViewModels
             }
             );
         }
+        #endregion
 
+        /// <summary>
+        /// Конструктор ViewModel формы
+        /// </summary>
+        /// <param name="mwvm">ViewModel формы основного окна</param>
         public VMF_ConfigDisease(VMF_Workplace mwvm)
         {
             _config = (Config)mwvm.Config.Clone();
