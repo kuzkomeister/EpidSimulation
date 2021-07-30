@@ -209,7 +209,7 @@ namespace EpidSimulation.Models
         {
             _people.Remove(human);
             _count--;
-            if (human.Condition != 6)
+            if (human.Condition != HumanCondition.Dead)
             {
                 _count++;
                 Relocate(human);

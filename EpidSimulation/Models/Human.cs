@@ -11,17 +11,9 @@ namespace EpidSimulation.Models
         
         static public Config Config;
 
-        private int _condition;  // Состояние человека
-        public int Condition { get => _condition; set { _condition = value; OnPropertyChanged("Condition"); } }
-        /*
-            0 - здоровый 
-            1 - инфицированный в инкубационном периоде
-            2 - инфицированный в продормальном периоде
-            3 - инфицированный в клиническом периоде
-            4 - выздоровевший
-            5 - бессимптомный
-            6 - мертвый
-         */
+        private HumanCondition _condition;  // Состояние человека
+        public HumanCondition Condition { get => _condition; set { _condition = value; OnPropertyChanged("Condition"); } }
+        
 
         //===== Параметры перемещения
         private double _x;   // Координата х
@@ -65,7 +57,7 @@ namespace EpidSimulation.Models
         #region constructor
         public Human(int condition, bool mask, bool socDist, double x, double y)
         {
-            Condition = condition;
+            Condition = (HumanCondition)condition;
             X = x; 
             Y = y;
             
@@ -94,16 +86,16 @@ namespace EpidSimulation.Models
 
         public void DoDela(Simulation simulation)
         {
-            if (Condition != 6)
+            if (Condition != HumanCondition.Dead)
             {
-                int oldCond = Condition;
+                HumanCondition oldCond = Condition;
                 CourseDisease();
                 Meet(simulation);
                 ContactTM(simulation);
                 Rotate();
                 Move?.Invoke(simulation);
 
-                simulation.SetAmountCond(oldCond, Condition);
+                simulation.SetAmountCond((int)oldCond, (int)Condition);
             }
         }
 
@@ -261,7 +253,9 @@ namespace EpidSimulation.Models
             Handshake(simulation);
             if (Condition == 0)
                 TouchTheFace(simulation);
-            if (Condition == 2 || Condition == 3 || Condition == 5)
+            if (Condition == HumanCondition.ProdromalInfected || 
+                Condition == HumanCondition.ClinicallyInfected || 
+                Condition == HumanCondition.AsymptomaticInfected)
                 SetHandsDirty();
         }
 
@@ -291,7 +285,7 @@ namespace EpidSimulation.Models
                     simulation.StTouchesTheFaceWithInfect++;
                     if (Config.GetPermissionInfContact())
                     {
-                        Condition = 1;
+                        Condition = HumanCondition.IncubatedInfected;
                         simulation.StHandshakesInf++;
                     }   
                 }
@@ -338,33 +332,33 @@ namespace EpidSimulation.Models
         {
             switch (Condition)
             {
-                case 1:
+                case HumanCondition.IncubatedInfected:
                     if (_timeIncub == 0)
                     {
                         if (Config.GetPermissionAsymptomatic())
-                            Condition = 5;
+                            Condition = HumanCondition.AsymptomaticInfected;
                         else
-                            Condition = 2;
+                            Condition = HumanCondition.ProdromalInfected;
                     }
                     else
                         _timeIncub--;
                     break;
 
-                case 2:
+                case HumanCondition.ProdromalInfected:
                     if (_timeProdorm == 0)
-                        Condition = 3;
+                        Condition = HumanCondition.ClinicallyInfected;
                     else
                         _timeProdorm--;
                     break;
 
-                case 3:
-                case 5:
+                case HumanCondition.ClinicallyInfected:
+                case HumanCondition.AsymptomaticInfected:
                     if (_timeRecovery == 0)
                     {
                         if (Config.GetPermissionDie())
-                            Condition = 6;
+                            Condition = HumanCondition.Dead;
                         else
-                            Condition = 4;
+                            Condition = HumanCondition.Recovered;
                     }
                     else
                         _timeRecovery--;

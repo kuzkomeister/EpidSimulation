@@ -56,7 +56,9 @@ namespace EpidSimulation.Models
             int SumInfects = 0;
             foreach(Human human in People)
             {
-                if (human.Condition == 2 || human.Condition == 3 || human.Condition == 5)
+                if (human.Condition == HumanCondition.ProdromalInfected || 
+                    human.Condition == HumanCondition.ClinicallyInfected || 
+                    human.Condition == HumanCondition.AsymptomaticInfected)
                 {
                     SumInfects += human.AmountInfects;
                     amountPeople++;
@@ -463,24 +465,30 @@ namespace EpidSimulation.Models
             {
                 if (Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y, 2) < Human.Config.RadiusAirborneOptim)
                 {
-                    if ((human.Condition == 2 || human.Condition == 3 || human.Condition == 5) && tempHuman.Condition == 0)
+                    if ((human.Condition == HumanCondition.ProdromalInfected || 
+                        human.Condition == HumanCondition.ClinicallyInfected || 
+                        human.Condition == HumanCondition.AsymptomaticInfected) && 
+                        tempHuman.Condition == HumanCondition.Healthy)
                     {
                         StContacts++;
                         if (Human.Config.GetPermissionInfect(human.Mask, tempHuman.Mask))
                         {
                             human.AmountInfects++;
-                            tempHuman.Condition = 1;
+                            tempHuman.Condition = HumanCondition.IncubatedInfected;
                             SetAmountCond(0, 1);
                             StContactsInf++;
                         }
                     }
-                    else if ((tempHuman.Condition == 2 || tempHuman.Condition == 3 || human.Condition == 5) && human.Condition == 0)
+                    else if ((tempHuman.Condition == HumanCondition.ProdromalInfected || 
+                              tempHuman.Condition == HumanCondition.ClinicallyInfected || 
+                              human.Condition == HumanCondition.AsymptomaticInfected) && 
+                              human.Condition == HumanCondition.Healthy)
                     {
                         StContacts++;
                         if (Human.Config.GetPermissionInfect(tempHuman.Mask, human.Mask))
                         {
                             tempHuman.AmountInfects++;
-                            human.Condition = 1;
+                            human.Condition = HumanCondition.IncubatedInfected;
                             StContactsInf++;
                             break;
                         }
