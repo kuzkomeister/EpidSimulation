@@ -1,25 +1,48 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace EpidSimulation.Models
 {
     public class Human : INotifyPropertyChanged
     {
-        #region fields
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        
         static public Config Config;
 
-        private HumanCondition _condition;  // Состояние человека
-        public HumanCondition Condition { get => _condition; set { _condition = value; OnPropertyChanged("Condition"); } }
-        
+        #region [ Поля и свойства ]
+        private HumanConditions _condition;  // Состояние человека
+        public HumanConditions Condition 
+        { 
+            get => _condition; 
+            set 
+            { 
+                _condition = value; 
+                OnPropertyChanged(); 
+            } 
+        }
 
         //===== Параметры перемещения
-        private double _x;   // Координата х
-        private double _y;   // Координата у
-        public double X { get => _x; set { _x = value; OnPropertyChanged("X"); } }
-        public double Y { get => _y; set { _y = value; OnPropertyChanged("Y"); } }
+        private (double, double) _position;     
+        /// <summary>
+        /// Местоположение человека
+        /// </summary>
+        public (double X, double Y) Position    
+        {
+            get => _position;
+            set
+            {
+                _position = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(X));
+                OnPropertyChanged(nameof(Y));
+            }
+        } 
+        public double X
+        {
+            get => Position.X;
+        }
+        public double Y
+        {
+            get => Position.Y;
+        }
 
         private double[] _vectorDirection;   // Вектор направления и скорости человека
 
@@ -54,41 +77,13 @@ namespace EpidSimulation.Models
 
         #endregion
 
-        #region constructor
-        public Human(int condition, bool mask, bool socDist, double x, double y)
-        {
-            Condition = (HumanCondition)condition;
-            X = x; 
-            Y = y;
-            
-            Mask = mask; 
-            SocDist = socDist;
-            InfectHand = false;
-            Move = SocDist ? MoveWithSocDist : MoveWithoutCollision;
-
-            // Направление движения
-            _vectorDirection = new double[2];
-            _vectorDirection[0] = Config.GetDirection();
-            _vectorDirection[1] = Config.GetDirection();
-
-            // Устанавливаем таймеры
-            _timeIncub = Config.GetTimeIncub();
-            _timeProdorm = Config.GetTimeProdorm();
-            _timeRecovery = Config.GetTimeRecovery();
-            _timeMeet = Config.GetTimeMeet();
-            _timeHandToFaceContact = Config.GetTimeHandToFaceContact();
-            _timeWash = Config.GetTimeWash();
-            _timeChangeDirect = Config.GetTimeChangeDirect();
-            _timeHandshake = Config.GetTimeContact();
-            _timeInfHand = Config.GetTimeInfHand();
-        }
-        #endregion
+        
 
         public void DoDela(Simulation simulation)
         {
-            if (Condition != HumanCondition.Dead)
+            if (Condition != HumanConditions.Dead)
             {
-                HumanCondition oldCond = Condition;
+                HumanConditions oldCond = Condition;
                 CourseDisease();
                 Meet(simulation);
                 ContactTM(simulation);
@@ -117,21 +112,19 @@ namespace EpidSimulation.Models
 
             for (int i = 0; i < Config.MaxTryes && needChangeDir; ++i)
             {
-                if (simulation.CheckBarrier(X + _vectorDirection[0], Y + _vectorDirection[1]))
+                if (simulation.CheckBarrier(Position.X + _vectorDirection[0], Position.Y + _vectorDirection[1]))
                 {
-                    double oldX = X;
-                    double oldY = Y;
+                    double oldX = Position.X;
+                    double oldY = Position.Y;
 
-                    X += _vectorDirection[0];
-                    Y += _vectorDirection[1];
+                    Position = (Position.X + _vectorDirection[0], Position.Y + _vectorDirection[1]);
                     needChangeDir = false;
 
                     double distance = simulation.GetNearDistance(this);
 
                     if (distance < Config.RadiusSocDistOptim && distance < oldDistance)
                     {
-                        X = oldX;
-                        Y = oldY;
+                        Position = (oldX, oldY);
                         needChangeDir = true;
                     }
                 }
@@ -154,21 +147,19 @@ namespace EpidSimulation.Models
             bool needChangeDir = true;
             for (int i = 0; i < Config.MaxTryes && needChangeDir; ++i)
             {
-                if (simulation.CheckBarrier(X + _vectorDirection[0], Y + _vectorDirection[1]))
+                if (simulation.CheckBarrier(Position.X + _vectorDirection[0], Position.Y + _vectorDirection[1]))
                 {
-                    double oldX = X;
-                    double oldY = Y;
+                    double oldX = Position.X;
+                    double oldY = Position.Y;
 
-                    X += _vectorDirection[0];
-                    Y += _vectorDirection[1];
+                    Position = (Position.X + _vectorDirection[0], Position.Y + _vectorDirection[1]);
                     needChangeDir = false;
 
                     double distance = simulation.GetNearDistance(this);
 
                     if (distance != -1 && distance < Config.RadiusHumanOptim)
                     {
-                        X = oldX;
-                        Y = oldY;
+                        Position = (oldX, oldY);
                         needChangeDir = true;
                     }
                 }
@@ -191,13 +182,13 @@ namespace EpidSimulation.Models
             bool needChangeDir = true;
             for (int i = 0; i < Config.MaxTryes && needChangeDir; ++i)
             {
-                if (simulation.CheckBarrier(X + _vectorDirection[0], Y + _vectorDirection[1]))
+                if (simulation.CheckBarrier(Position.X + _vectorDirection[0], Position.Y + _vectorDirection[1]))
                 {
-                    double oldX = X;
-                    double oldY = Y;
+                    double oldX = Position.X;
+                    double oldY = Position.Y;
 
-                    X += _vectorDirection[0];
-                    Y += _vectorDirection[1];
+
+                    Position = (Position.X + _vectorDirection[0], Position.Y + _vectorDirection[1]);
                     needChangeDir = false;
                 }
                 else
@@ -253,9 +244,9 @@ namespace EpidSimulation.Models
             Handshake(simulation);
             if (Condition == 0)
                 TouchTheFace(simulation);
-            if (Condition == HumanCondition.ProdromalInfected || 
-                Condition == HumanCondition.ClinicallyInfected || 
-                Condition == HumanCondition.AsymptomaticInfected)
+            if (Condition == HumanConditions.ProdromalInfected || 
+                Condition == HumanConditions.ClinicallyInfected || 
+                Condition == HumanConditions.AsymptomaticInfected)
                 SetHandsDirty();
         }
 
@@ -285,7 +276,7 @@ namespace EpidSimulation.Models
                     simulation.StTouchesTheFaceWithInfect++;
                     if (Config.GetPermissionInfContact())
                     {
-                        Condition = HumanCondition.IncubatedInfected;
+                        Condition = HumanConditions.IncubatedInfected;
                         simulation.StHandshakesInf++;
                     }   
                 }
@@ -332,33 +323,33 @@ namespace EpidSimulation.Models
         {
             switch (Condition)
             {
-                case HumanCondition.IncubatedInfected:
+                case HumanConditions.IncubatedInfected:
                     if (_timeIncub == 0)
                     {
                         if (Config.GetPermissionAsymptomatic())
-                            Condition = HumanCondition.AsymptomaticInfected;
+                            Condition = HumanConditions.AsymptomaticInfected;
                         else
-                            Condition = HumanCondition.ProdromalInfected;
+                            Condition = HumanConditions.ProdromalInfected;
                     }
                     else
                         _timeIncub--;
                     break;
 
-                case HumanCondition.ProdromalInfected:
+                case HumanConditions.ProdromalInfected:
                     if (_timeProdorm == 0)
-                        Condition = HumanCondition.ClinicallyInfected;
+                        Condition = HumanConditions.ClinicallyInfected;
                     else
                         _timeProdorm--;
                     break;
 
-                case HumanCondition.ClinicallyInfected:
-                case HumanCondition.AsymptomaticInfected:
+                case HumanConditions.ClinicallyInfected:
+                case HumanConditions.AsymptomaticInfected:
                     if (_timeRecovery == 0)
                     {
                         if (Config.GetPermissionDie())
-                            Condition = HumanCondition.Dead;
+                            Condition = HumanConditions.Dead;
                         else
-                            Condition = HumanCondition.Recovered;
+                            Condition = HumanConditions.Recovered;
                     }
                     else
                         _timeRecovery--;
@@ -367,8 +358,42 @@ namespace EpidSimulation.Models
         }
 
 
+        #region [ Конструктор ]
+        public Human(int condition, bool mask, bool socDist, double x, double y)
+        {
+            Condition = (HumanConditions)condition;
+            Position = (x, y);
+            
+            Mask = mask; 
+            SocDist = socDist;
+            InfectHand = false;
+            Move = SocDist ? MoveWithSocDist : MoveWithoutCollision;
 
+            // Направление движения
+            _vectorDirection = new double[2];
+            _vectorDirection[0] = Config.GetDirection();
+            _vectorDirection[1] = Config.GetDirection();
 
+            // Устанавливаем таймеры
+            _timeIncub = Config.GetTimeIncub();
+            _timeProdorm = Config.GetTimeProdorm();
+            _timeRecovery = Config.GetTimeRecovery();
+            _timeMeet = Config.GetTimeMeet();
+            _timeHandToFaceContact = Config.GetTimeHandToFaceContact();
+            _timeWash = Config.GetTimeWash();
+            _timeChangeDirect = Config.GetTimeChangeDirect();
+            _timeHandshake = Config.GetTimeContact();
+            _timeInfHand = Config.GetTimeInfHand();
+        }
+        #endregion
 
+        /// <summary>
+        /// Объявление свойства из INotifyPropertyChanged
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

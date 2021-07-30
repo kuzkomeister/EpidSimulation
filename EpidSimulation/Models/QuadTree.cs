@@ -101,23 +101,23 @@ namespace EpidSimulation.Models
             double verticalMidPoint = _region.X + _region.Width / 2;
             double horizontalMidPoint = _region.Y + _region.Height / 2;
 
-            if ((human.X - RADIUS < verticalMidPoint && verticalMidPoint < human.X + RADIUS) ||
-                (human.Y - RADIUS < horizontalMidPoint && horizontalMidPoint < human.Y + RADIUS))
-            {
+            if ((human.Position.X - RADIUS < verticalMidPoint && verticalMidPoint < human.Position.X + RADIUS) ||
+                (human.Position.Y - RADIUS < horizontalMidPoint && horizontalMidPoint < human.Position.Y + RADIUS))
+            { 
                 index = -1;
             }
             else
             {
-                if (human.X > verticalMidPoint)
+                if (human.Position.X > verticalMidPoint)
                 {
-                    if (human.Y > horizontalMidPoint)
+                    if (human.Position.Y > horizontalMidPoint)
                         index = 3;
                     else
                         index = 0;
                 }
                 else
                 {
-                    if (human.Y > horizontalMidPoint)
+                    if (human.Position.Y > horizontalMidPoint)
                         index = 2;
                     else
                         index = 1;
@@ -209,7 +209,7 @@ namespace EpidSimulation.Models
         {
             _people.Remove(human);
             _count--;
-            if (human.Condition != HumanCondition.Dead)
+            if (human.Condition != HumanConditions.Dead)
             {
                 _count++;
                 Relocate(human);
@@ -220,8 +220,8 @@ namespace EpidSimulation.Models
         private void Relocate(Human human)
         {
             _count--;
-            if (_region.X < human.X - RADIUS && human.X + RADIUS < _region.Width &&
-                _region.Y < human.Y - RADIUS && human.Y + RADIUS < _region.Height)
+            if (_region.X < human.Position.X - RADIUS && human.Position.X + RADIUS < _region.Width &&
+                _region.Y < human.Position.Y - RADIUS && human.Position.Y + RADIUS < _region.Height)
             {
                 Insert(human);
             }

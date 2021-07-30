@@ -24,10 +24,10 @@ namespace EpidSimulation.ViewModels
         {
             this.human = human;
             //===== Создание фигур
-            CondCircle = CreateCircle(human.X, human.Y, Human.Config.RadiusHuman, Brushes.Green, Brushes.Black);
+            CondCircle = CreateCircle(human.Position.X, human.Position.Y, Human.Config.RadiusHuman, Brushes.Green, Brushes.Black);
             CondCircle.StrokeThickness = Human.Config.RadiusHuman / 10;
 
-            MaskCircle = CreateCircle(human.X, human.Y, Human.Config.RadiusHuman / 2, Brushes.White, Brushes.Black);
+            MaskCircle = CreateCircle(human.Position.X, human.Position.Y, Human.Config.RadiusHuman / 2, Brushes.White, Brushes.Black);
             MaskCircle.StrokeThickness = Human.Config.RadiusHuman / 10;
             MaskCircle.Visibility = System.Windows.Visibility.Hidden;
             if (human.Mask)
@@ -35,7 +35,7 @@ namespace EpidSimulation.ViewModels
                 MaskCircle.Visibility = System.Windows.Visibility.Visible;
             }
 
-            SocDistCircle = CreateCircle(human.X, human.Y, Human.Config.RadiusSocDist, Brushes.DeepSkyBlue, null);
+            SocDistCircle = CreateCircle(human.Position.X, human.Position.Y, Human.Config.RadiusSocDist, Brushes.DeepSkyBlue, null);
             SocDistCircle.Visibility = System.Windows.Visibility.Hidden;
 
             //==== Привязка координаты Х

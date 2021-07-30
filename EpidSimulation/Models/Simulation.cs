@@ -56,9 +56,9 @@ namespace EpidSimulation.Models
             int SumInfects = 0;
             foreach(Human human in People)
             {
-                if (human.Condition == HumanCondition.ProdromalInfected || 
-                    human.Condition == HumanCondition.ClinicallyInfected || 
-                    human.Condition == HumanCondition.AsymptomaticInfected)
+                if (human.Condition == HumanConditions.ProdromalInfected || 
+                    human.Condition == HumanConditions.ClinicallyInfected || 
+                    human.Condition == HumanConditions.AsymptomaticInfected)
                 {
                     SumInfects += human.AmountInfects;
                     amountPeople++;
@@ -352,8 +352,7 @@ namespace EpidSimulation.Models
 
                             if (CheckBarrier(rx, ry))
                             {
-                                human.X = rx;
-                                human.Y = ry;
+                                human.Position = (rx, ry);
                                 double distance = statusCollision ? GetNearDistance(human) : -1;
                                 if (distance != -1)
                                 {
@@ -463,32 +462,32 @@ namespace EpidSimulation.Models
             LinkedList<Human> tempList = GetRegionPeople(human);    
             foreach (Human tempHuman in tempList)
             {
-                if (Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y, 2) < Human.Config.RadiusAirborneOptim)
+                if (Math.Pow(human.Position.X - tempHuman.Position.X, 2) + Math.Pow(human.Position.Y - tempHuman.Position.Y, 2) < Human.Config.RadiusAirborneOptim)
                 {
-                    if ((human.Condition == HumanCondition.ProdromalInfected || 
-                        human.Condition == HumanCondition.ClinicallyInfected || 
-                        human.Condition == HumanCondition.AsymptomaticInfected) && 
-                        tempHuman.Condition == HumanCondition.Healthy)
+                    if ((human.Condition == HumanConditions.ProdromalInfected || 
+                        human.Condition == HumanConditions.ClinicallyInfected || 
+                        human.Condition == HumanConditions.AsymptomaticInfected) && 
+                        tempHuman.Condition == HumanConditions.Healthy)
                     {
                         StContacts++;
                         if (Human.Config.GetPermissionInfect(human.Mask, tempHuman.Mask))
                         {
                             human.AmountInfects++;
-                            tempHuman.Condition = HumanCondition.IncubatedInfected;
+                            tempHuman.Condition = HumanConditions.IncubatedInfected;
                             SetAmountCond(0, 1);
                             StContactsInf++;
                         }
                     }
-                    else if ((tempHuman.Condition == HumanCondition.ProdromalInfected || 
-                              tempHuman.Condition == HumanCondition.ClinicallyInfected || 
-                              human.Condition == HumanCondition.AsymptomaticInfected) && 
-                              human.Condition == HumanCondition.Healthy)
+                    else if ((tempHuman.Condition == HumanConditions.ProdromalInfected || 
+                              tempHuman.Condition == HumanConditions.ClinicallyInfected || 
+                              human.Condition == HumanConditions.AsymptomaticInfected) && 
+                              human.Condition == HumanConditions.Healthy)
                     {
                         StContacts++;
                         if (Human.Config.GetPermissionInfect(tempHuman.Mask, human.Mask))
                         {
                             tempHuman.AmountInfects++;
-                            human.Condition = HumanCondition.IncubatedInfected;
+                            human.Condition = HumanConditions.IncubatedInfected;
                             StContactsInf++;
                             break;
                         }
@@ -502,7 +501,7 @@ namespace EpidSimulation.Models
             LinkedList<Human> tempList = GetRegionPeople(human);
             foreach (Human tempHuman in tempList)
             {
-                if (Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y,2) < Human.Config.RadiusContactOptim)
+                if (Math.Pow(human.Position.X - tempHuman.Position.X, 2) + Math.Pow(human.Position.Y - tempHuman.Position.Y,2) < Human.Config.RadiusContactOptim)
                 {
 
                     if (human.InfectHand)
@@ -526,11 +525,11 @@ namespace EpidSimulation.Models
             double resDistance = -1;
             if (tempList.Count != 0)
             {
-                resDistance = Math.Pow(human.X - tempList.First.Value.X, 2) + Math.Pow(human.Y - tempList.First.Value.Y, 2);
+                resDistance = Math.Pow(human.Position.X - tempList.First.Value.Position.X, 2) + Math.Pow(human.Position.Y - tempList.First.Value.Position.Y, 2);
                 tempList.RemoveFirst();
                 StChecks++;
                 foreach (Human tempHuman in tempList){
-                    double distance = Math.Pow(human.X - tempHuman.X, 2) + Math.Pow(human.Y - tempHuman.Y, 2);
+                    double distance = Math.Pow(human.Position.X - tempHuman.Position.X, 2) + Math.Pow(human.Position.Y - tempHuman.Position.Y, 2);
                     if (distance < resDistance)
                         resDistance = distance;
                 }
