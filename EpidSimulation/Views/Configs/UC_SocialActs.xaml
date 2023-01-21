@@ -3,10 +3,35 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:uc="clr-namespace:EpidSimulation.Views.Primitive"
              xmlns:local="clr-namespace:EpidSimulation.Views.Configs"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" Background="White" 
+             d:DesignHeight="350" d:DesignWidth="550">
     <Grid>
-        <TextBlock Text="СОЦАКТИВНОСТЬ"/>
+        <StackPanel Margin="30">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type uc:UC_Period}">
+                    <Setter Property="Margin" Value="0,5"/>
+                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                </Style>
+            </StackPanel.Resources>
+
+            <StackPanel HorizontalAlignment="Left">
+                <TextBlock Text="Длина периодов ожидания до повторного выполнения:" FontWeight="DemiBold" FontSize="13"/>
+                <uc:UC_Period Text="Между воздушно-капельным событием"/>
+                <uc:UC_Period Text="Между контактным событием"/>
+                <uc:UC_Period Text="Между очищением поверхности"/>
+                <uc:UC_Period Text="Между загрязнением поверхности"/>
+                <uc:UC_Period Text="Между попытками заразится с поверхности"/>
+            </StackPanel>
+
+            <Rectangle Height="1" Fill="Gray" Margin="0,5"/>
+
+            <StackPanel HorizontalAlignment="Left">
+                <TextBlock Text="Примерное количество возможно-выполненных событий:" FontWeight="DemiBold" FontSize="13"/>
+                <TextBlock Text="TODO: Подсчет статистки"/>
+            </StackPanel>
+            
+        </StackPanel>
     </Grid>
 </UserControl>

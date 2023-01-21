@@ -8,7 +8,7 @@
              xmlns:local="clr-namespace:EpidSimulation.Views.Configs"
              xmlns:uc="clr-namespace:EpidSimulation.Views.Primitive"
              mc:Ignorable="d" Background="White"
-             d:DesignHeight="450" d:DesignWidth="550">
+             d:DesignHeight="350" d:DesignWidth="550">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

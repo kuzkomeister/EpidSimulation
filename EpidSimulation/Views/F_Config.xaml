@@ -6,6 +6,7 @@
         xmlns:uc="clr-namespace:EpidSimulation.Views.Configs"
         xmlns:local="clr-namespace:EpidSimulation.Views"
         mc:Ignorable="d"
+        ResizeMode="NoResize"
         Title="Настройки эпидемического процесса" 
         Height="450" Width="800">
     <Grid>
