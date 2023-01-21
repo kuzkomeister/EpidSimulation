@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:EpidSimulation"
              StartupUri="/Views/F_Workplace.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Views/NewStyleDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

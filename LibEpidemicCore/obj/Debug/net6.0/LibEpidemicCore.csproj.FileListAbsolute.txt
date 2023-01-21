@@ -1,0 +1,12 @@
+C:\Users\peace\Desktop\CsharpRepos\VKR\LibEpidemicCore\bin\Debug\net6.0\LibEpidemicCore.deps.json
+C:\Users\peace\Desktop\CsharpRepos\VKR\LibEpidemicCore\bin\Debug\net6.0\LibEpidemicCore.dll
+C:\Users\peace\Desktop\CsharpRepos\VKR\LibEpidemicCore\bin\Debug\net6.0\LibEpidemicCore.pdb
+C:\Users\peace\Desktop\CsharpRepos\VKR\LibEpidemicCore\obj\Debug\net6.0\LibEpidemicCore.csproj.AssemblyReference.cache
+C:\Users\peace\Desktop\CsharpRepos\VKR\LibEpidemicCore\obj\Debug\net6.0\LibEpidemicCore.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\peace\Desktop\CsharpRepos\VKR\LibEpidemicCore\obj\Debug\net6.0\LibEpidemicCore.AssemblyInfoInputs.cache
+C:\Users\peace\Desktop\CsharpRepos\VKR\LibEpidemicCore\obj\Debug\net6.0\LibEpidemicCore.AssemblyInfo.cs
+C:\Users\peace\Desktop\CsharpRepos\VKR\LibEpidemicCore\obj\Debug\net6.0\LibEpidemicCore.csproj.CoreCompileInputs.cache
+C:\Users\peace\Desktop\CsharpRepos\VKR\LibEpidemicCore\obj\Debug\net6.0\LibEpidemicCore.dll
+C:\Users\peace\Desktop\CsharpRepos\VKR\LibEpidemicCore\obj\Debug\net6.0\refint\LibEpidemicCore.dll
+C:\Users\peace\Desktop\CsharpRepos\VKR\LibEpidemicCore\obj\Debug\net6.0\LibEpidemicCore.pdb
+C:\Users\peace\Desktop\CsharpRepos\VKR\LibEpidemicCore\obj\Debug\net6.0\ref\LibEpidemicCore.dll

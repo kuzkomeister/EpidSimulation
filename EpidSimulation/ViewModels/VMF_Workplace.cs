@@ -14,8 +14,10 @@ using Excel =  Microsoft.Office.Interop.Excel;
 
 namespace EpidSimulation.ViewModels
 {
-    public partial class VMF_Workplace : VM_BASIC
+    public class VMF_Workplace : VM_BASIC
     {
+        #region [ OLD CODE ]
+
         private Simulation _simulation;
         public Simulation CurSimulation
         {
@@ -110,29 +112,29 @@ namespace EpidSimulation.ViewModels
         {
             #region InitBitMapImages
 
-            _biExcelOn.BeginInit();
-            _biExcelOn.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/ExcelLogoOn.png");
-            _biExcelOn.EndInit();
+            //_biExcelOn.BeginInit();
+            //_biExcelOn.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/ExcelLogoOn.png");
+            //_biExcelOn.EndInit();
 
-            _biExcelOff.BeginInit();
-            _biExcelOff.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/ExcelLogoOff.jpg");
-            _biExcelOff.EndInit();
+            //_biExcelOff.BeginInit();
+            //_biExcelOff.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/ExcelLogoOff.jpg");
+            //_biExcelOff.EndInit();
 
-            _biSocDistVisible.BeginInit();
-            _biSocDistVisible.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/SocDistVisible.jpg");
-            _biSocDistVisible.EndInit();
+            //_biSocDistVisible.BeginInit();
+            //_biSocDistVisible.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/SocDistVisible.jpg");
+            //_biSocDistVisible.EndInit();
 
-            _biSocDistHidden.BeginInit();
-            _biSocDistHidden.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/SocDistHidden.jpg");
-            _biSocDistHidden.EndInit();
+            //_biSocDistHidden.BeginInit();
+            //_biSocDistHidden.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/SocDistHidden.jpg");
+            //_biSocDistHidden.EndInit();
 
-            _biStart.BeginInit();
-            _biStart.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/play.png");
-            _biStart.EndInit();
+            //_biStart.BeginInit();
+            //_biStart.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/play.png");
+            //_biStart.EndInit();
 
-            _biStop.BeginInit();
-            _biStop.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/pause.png");
-            _biStop.EndInit();
+            //_biStop.BeginInit();
+            //_biStop.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/pause.png");
+            //_biStop.EndInit();
             #endregion
 
             BISocDist = _biSocDistVisible;
@@ -437,6 +439,8 @@ namespace EpidSimulation.ViewModels
             }
         }
 
+
+
         public ICommand bCreateHelp_Click => new RelayCommand(_DoCreateHelp_Click, _AlwaysTrue);
         private void _DoCreateHelp_Click()
         {
@@ -684,11 +688,23 @@ namespace EpidSimulation.ViewModels
             }
         }
 
-        
+        #endregion
+
+        #region [ Свойства VM ]
+
+        #endregion
+
+        #region [ Команды ]
+
+        public RelayCommand CmdOpenConfig { get => new RelayCommand(_DoOpenConfig); }
+        private void _DoOpenConfig()
+        {
+            var formConfig = new F_Config();
+            formConfig.ShowDialog();
+        }
 
 
-       
-
+        #endregion
 
 
 

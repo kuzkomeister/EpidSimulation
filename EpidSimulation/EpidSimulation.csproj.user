@@ -9,6 +9,24 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Views\Configs\UC_AreasInteraction.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Configs\UC_ChancesInfection.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Configs\UC_Diseases.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Configs\UC_Masks.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Configs\UC_SocialActs.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\F_Config.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\F_ConfigDisease.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -27,8 +45,29 @@
     <Compile Update="Views\PagesConfigDisease\P_Prevalence.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Primitive\UC_Period.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Views\Configs\UC_AreasInteraction.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Configs\UC_ChancesInfection.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Configs\UC_Diseases.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Configs\UC_Masks.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Configs\UC_SocialActs.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\F_Config.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\F_Welcome.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -36,6 +75,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\F_ConfigDisease.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\NewStyleDictionary.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\PagesConfigDisease\P_DiseaseParam.xaml">
@@ -48,6 +90,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\PagesConfigDisease\P_Prevalence.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Primitive\UC_Period.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

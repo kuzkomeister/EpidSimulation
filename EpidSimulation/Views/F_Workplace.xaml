@@ -243,7 +243,7 @@
             <Button Content="Отображение области социальной дистанции" Command="{Binding bOnOffDebug_Click}"/>
             <Separator Background="Black"/>
             <Image Source="/Resource/virus.png"/>
-            <Button Content="Параметры модели" Command="{Binding bCreateConfig_Click}"/>
+            <Button Content="Параметры модели" Command="{Binding CmdOpenConfig}"/>
             <Separator Background="Black"/>
             <Image Source="{Binding BIExcel}"/>
             <Button Content="Вывод в Excel" Command="{Binding bCreateExcel_Click}"/>
