@@ -17,9 +17,9 @@ namespace EpidSimulation.Views
     /// <summary>
     /// Логика взаимодействия для F_Config.xaml
     /// </summary>
-    public partial class F_Config : Window
+    public partial class F_ConfigEpidProcces : Window
     {
-        public F_Config()
+        public F_ConfigEpidProcces()
         {
             InitializeComponent();
         }

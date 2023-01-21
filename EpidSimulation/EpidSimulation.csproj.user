@@ -24,7 +24,7 @@
     <Compile Update="Views\Configs\UC_SocialActs.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\F_Config.xaml.cs">
+    <Compile Update="Views\F_ConfigEpidProcces.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\F_ConfigDisease.xaml.cs">
@@ -65,7 +65,7 @@
     <Page Update="Views\Configs\UC_SocialActs.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\F_Config.xaml">
+    <Page Update="Views\F_ConfigEpidProcces.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\F_Welcome.xaml">

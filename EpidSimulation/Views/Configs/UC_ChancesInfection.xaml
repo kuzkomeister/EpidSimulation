@@ -12,15 +12,20 @@
             <StackPanel HorizontalAlignment="Left">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5">
                     <TextBlock Text="Воздушно-капельным путем:"/>
-                    <TextBox Width="50" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBox Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
                     <TextBlock Text="%"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5">
                     <TextBlock Text="Контактным путем:"/>
-                    <TextBox Width="50" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBox Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
                     <TextBlock Text="%"/>
                 </StackPanel>
             </StackPanel>
+
+            <Rectangle Height="1" Fill="Gray" Margin="0,5"/>
+            
+          
+
         </StackPanel>
     </Grid>
 </UserControl>

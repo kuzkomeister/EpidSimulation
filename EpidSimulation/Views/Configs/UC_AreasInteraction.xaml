@@ -4,9 +4,104 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EpidSimulation.Views.Configs"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="ОБЛАСТИ"/>
+             mc:Ignorable="d" Background="White"
+             d:DesignHeight="450" d:DesignWidth="600">
+    <Grid Margin="30,10,30,30">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.6*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.ColumnSpan="2">
+            <TextBlock Text="Размеры областей взаимодействий:" FontWeight="DemiBold" FontSize="13"/>
+
+            <StackPanel Orientation="Vertical" Margin="0" HorizontalAlignment="Left">
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                        <Setter Property="Orientation" Value="Horizontal"/>
+                        <Setter Property="Margin" Value="0,5"/>
+                    </Style>
+                </StackPanel.Resources>
+
+                <StackPanel>
+                    <TextBlock Text="Радиус человека"/>
+                    <TextBox Text="" Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBlock Text="единиц."/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Радиус социальной дистанции"/>
+                    <TextBox Text="" Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBlock Text="единиц."/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Радиус возможного воздушно-капельного события"/>
+                    <TextBox Text="" Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBlock Text="единиц."/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Радиус возможного контактного события"/>
+                    <TextBox Text="" Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBlock Text="единиц."/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.Resources>
+                <Style TargetType="{x:Type Ellipse}">
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+            </Grid.Resources>
+
+            <Ellipse Width="250" Height="250" Fill="DeepSkyBlue" Panel.ZIndex="1"/>
+            <Ellipse Width="200" Height="200" Fill="Pink" Panel.ZIndex="2"/>
+            <Ellipse Width="150" Height="150" Fill="Red" Panel.ZIndex="3"/>
+            <Ellipse Width="100" Height="100" Fill="Gray" Panel.ZIndex="10"/>
+        </Grid>
+        
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type StackPanel}">
+                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                    <Setter Property="Orientation" Value="Horizontal"/>
+                    <Setter Property="Margin" Value="0,5"/>
+                </Style>
+                <Style TargetType="{x:Type Rectangle}">
+                    <Setter Property="Width" Value="30"/>
+                    <Setter Property="Height" Value="30"/>
+                    <Setter Property="RadiusX" Value="2.5"/>
+                    <Setter Property="RadiusY" Value="2.5"/>
+                    <Setter Property="Margin" Value="0,0,5,0"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="TextWrapping" Value="Wrap"/>
+                    <Setter Property="Width" Value="150"/>
+                </Style>
+            </StackPanel.Resources>
+            <StackPanel>
+                <Rectangle Fill="Gray"/>
+                <TextBlock Text=" - область человека" FontWeight="Medium"/>
+            </StackPanel>
+            <StackPanel>
+                <Rectangle Fill="DeepSkyBlue"/>
+                <TextBlock Text=" - область социальной дистанции" FontWeight="Medium"/>
+            </StackPanel>
+            <StackPanel>
+                <Rectangle Fill="Red"/>
+                <TextBlock Text=" - область возможного воздушно-капельного события" FontWeight="Medium"/>
+            </StackPanel>
+            <StackPanel>
+                <Rectangle Fill="Pink"/>
+                <TextBlock Text=" - область возможного контактного события" FontWeight="Medium"/>
+            </StackPanel>
+        </StackPanel>
+        
     </Grid>
 </UserControl>
