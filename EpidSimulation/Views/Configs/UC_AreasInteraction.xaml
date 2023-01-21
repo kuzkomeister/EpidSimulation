@@ -59,10 +59,10 @@
                 </Style>
             </Grid.Resources>
 
-            <Ellipse Width="250" Height="250" Fill="DeepSkyBlue" Panel.ZIndex="1"/>
-            <Ellipse Width="200" Height="200" Fill="Pink" Panel.ZIndex="2"/>
-            <Ellipse Width="150" Height="150" Fill="Red" Panel.ZIndex="3"/>
-            <Ellipse Width="100" Height="100" Fill="Gray" Panel.ZIndex="10"/>
+            <Ellipse Width="150" Height="150" Fill="DeepSkyBlue" Panel.ZIndex="1"/>
+            <Ellipse Width="125" Height="125" Fill="Pink" Panel.ZIndex="2"/>
+            <Ellipse Width="100" Height="100" Fill="Red" Panel.ZIndex="3"/>
+            <Ellipse Width="75" Height="75" Fill="Gray" Panel.ZIndex="10"/>
         </Grid>
         
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">

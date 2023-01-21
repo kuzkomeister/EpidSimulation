@@ -4,9 +4,87 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EpidSimulation.Views.Configs"
-             mc:Ignorable="d" 
+             mc:Ignorable="d" Background="White"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="МАСАЧКИ"/>
-    </Grid>
+    <StackPanel Margin="30,10,30,30">
+        <TextBlock Text="Характеристики маски:" FontWeight="DemiBold" FontSize="13"/>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="0,5,0,0">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type StackPanel}">
+                    <Setter Property="Orientation" Value="Horizontal"/>
+                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                    <Setter Property="Margin" Value="0,5"/>
+                </Style>
+            </StackPanel.Resources>
+
+            <StackPanel>
+                <TextBlock Text="Эффективность защиты маски от заражения:"/>
+                <TextBox Text="" Width="100" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                <TextBlock Text="%"/>
+            </StackPanel>
+            
+            <StackPanel>
+                <TextBlock Text="Эффективность защиты маски от передачи болезни:"/>
+                <TextBox Text="" Width="100" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                <TextBlock Text="%"/>
+            </StackPanel>
+            
+        </StackPanel>
+
+        <Rectangle Height="1" Fill="Gray" Margin="0,5"/>
+
+        <TextBlock Text="Вероятность заражения в ситуациях:" FontWeight="DemiBold" FontSize="13"/>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="1-ый человек" Margin="0,2" FontWeight="Medium"/>
+            <TextBlock Grid.Column="2" Text="2-ой человек" Margin="0,2" FontWeight="Medium"/>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Без маски"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="→" Margin="5,0"/>
+            <TextBlock Grid.Row="1" Grid.Column="2" Text="Без маски"/>
+            <TextBlock Grid.Row="1" Grid.Column="3" Text="=" Margin="5,0"/>
+            <TextBlock Grid.Row="1" Grid.Column="4" Text="___" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="1" Grid.Column="5" Text="%"/>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Без маски"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="→" Margin="5,0"/>
+            <TextBlock Grid.Row="2" Grid.Column="2" Text="В маске"/>
+            <TextBlock Grid.Row="2" Grid.Column="3" Text="=" Margin="5,0"/>
+            <TextBlock Grid.Row="2" Grid.Column="4" Text="___" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="2" Grid.Column="5" Text="%"/>
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="В маске"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="→" Margin="5,0"/>
+            <TextBlock Grid.Row="3" Grid.Column="2" Text="Без маски"/>
+            <TextBlock Grid.Row="3" Grid.Column="3" Text="=" Margin="5,0"/>
+            <TextBlock Grid.Row="3" Grid.Column="4" Text="___" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="3" Grid.Column="5" Text="%"/>
+
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="В маске"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="→" Margin="5,0"/>
+            <TextBlock Grid.Row="4" Grid.Column="2" Text="В маске"/>
+            <TextBlock Grid.Row="4" Grid.Column="3" Text="=" Margin="5,0"/>
+            <TextBlock Grid.Row="4" Grid.Column="4" Text="___" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="4" Grid.Column="5" Text="%"/>
+
+        </Grid>
+        
+
+    </StackPanel>
 </UserControl>
