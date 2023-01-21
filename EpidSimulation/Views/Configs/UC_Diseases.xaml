@@ -20,13 +20,11 @@
                 <Image Source="pack://application:,,,/EpidSimulation;component/Resource/virus.png" Width="100"/>
             </Border>
 
-            <StackPanel Margin="30,0,0,0" >
+            <StackPanel Margin="50,0,0,0" >
                 <StackPanel Orientation="Horizontal" Margin="0,3">
                     <TextBlock Text="Наименование:"/>
                     <TextBox Text="" MinWidth="200" Margin="5,0,0,0" Style="{StaticResource NewStyle.TextBox}"/>
                 </StackPanel>
-                <CheckBox Content="Возможность передачи воздушно-капельным путем" Margin="0,4"/>
-                <CheckBox Content="Возможность передачи контактным путем" Margin="0,3"/>
                 <StackPanel Orientation="Horizontal" Margin="0,3">
                     <TextBlock Text="Шанс на летальный исход:"/>
                     <TextBox Text="" MinWidth="100" Margin="47,0,0,0" Style="{StaticResource NewStyle.TextBox}"/>
@@ -37,7 +35,8 @@
                     <TextBox Text="" MinWidth="100" Margin="5,0,0,0" Style="{StaticResource NewStyle.TextBox}"/>
                     <TextBlock Text="%" Margin="5,0,0,0"/>
                 </StackPanel>
-                
+                <CheckBox Content="Возможность передачи воздушно-капельным путем" Margin="0,4"/>
+                <CheckBox Content="Возможность передачи контактным путем" Margin="0,3"/>
             </StackPanel>
         </StackPanel>
 

@@ -4,9 +4,23 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EpidSimulation.Views.Configs"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" Background="White"
+             d:DesignHeight="350" d:DesignWidth="550">
     <Grid>
-        <TextBlock Text="ШАНСЫ"/>
+        <StackPanel Margin="30,10,30,30">
+            <TextBlock Text="Базовые шансы на заражение:" FontWeight="DemiBold" FontSize="13"/>
+            <StackPanel HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5">
+                    <TextBlock Text="Воздушно-капельным путем:"/>
+                    <TextBox Width="50" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBlock Text="%"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5">
+                    <TextBlock Text="Контактным путем:"/>
+                    <TextBox Width="50" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBlock Text="%"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </UserControl>

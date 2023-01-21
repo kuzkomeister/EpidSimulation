@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         Title="Настройки эпидемического процесса" 
-        Height="450" Width="800">
+        Height="450" Width="850">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -140,7 +140,7 @@
                 </StackPanel.Resources>
 
                 <Button Content="Отмена" IsCancel="True"/>
-                <Button Content="Сохранить"/>
+                <Button Content="Сохранить" IsEnabled="False"/>
             </StackPanel>
         </Border>
     </Grid>
