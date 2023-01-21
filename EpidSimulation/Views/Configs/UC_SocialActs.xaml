@@ -8,7 +8,7 @@
              mc:Ignorable="d" Background="White" 
              d:DesignHeight="350" d:DesignWidth="550">
     <Grid>
-        <StackPanel Margin="30">
+        <StackPanel Margin="30,10,30,30">
             <StackPanel.Resources>
                 <Style TargetType="{x:Type uc:UC_Period}">
                     <Setter Property="Margin" Value="0,5"/>
@@ -17,12 +17,42 @@
             </StackPanel.Resources>
 
             <StackPanel HorizontalAlignment="Left">
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                    </Style>
+                </StackPanel.Resources>
                 <TextBlock Text="Длина периодов ожидания до повторного выполнения:" FontWeight="DemiBold" FontSize="13"/>
-                <uc:UC_Period Text="Между воздушно-капельным событием"/>
-                <uc:UC_Period Text="Между контактным событием"/>
-                <uc:UC_Period Text="Между очищением поверхности"/>
-                <uc:UC_Period Text="Между загрязнением поверхности"/>
-                <uc:UC_Period Text="Между попытками заразится с поверхности"/>
+                <StackPanel Orientation="Horizontal">
+                    <uc:UC_Period Text="Между воздушно-капельным событием"/>
+                    <Border Style="{StaticResource NewStyle.Border.Tip}" ToolTip="Под воздушно-капельными событиями подразумеваются любые действия которые могу привести к заражению воздушно-капельным путем. Например: обычная беседа, чихание с рядом стоящими людьми и прочее.">
+                        <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="Gray"/>
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <uc:UC_Period Text="Между контактным событием"/>
+                    <Border Style="{StaticResource NewStyle.Border.Tip}" ToolTip="Под контактными событиями подразумеваются любые действия которые могут привести к нанесению на поверхность другого человека или на свою болезнь. Например: рукопожатие, передача предмета и прочее. Это не является заражением.">
+                        <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="Gray"/>
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <uc:UC_Period Text="Между очищением поверхности"/>
+                    <Border Style="{StaticResource NewStyle.Border.Tip}" ToolTip="Под очищением поверхности подразумеваются любые действия которые могут очистить поверхность от болезни. Например: мытье рук, дезинфекция и прочее.">
+                        <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="Gray"/>
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <uc:UC_Period Text="Между загрязнением поверхности"/>
+                    <Border Style="{StaticResource NewStyle.Border.Tip}" ToolTip="Под загрязнением поверхности подразумеваются любые действия которые могут нанести на поверхность болезнь. Например: чихание в руки и прочее.">
+                        <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="Gray"/>
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <uc:UC_Period Text="Между попытками заразится с поверхности"/>
+                    <Border Style="{StaticResource NewStyle.Border.Tip}" ToolTip="Под попыткой заразится с поверхности подразумеваются любые действия которые могут привести к заражению контактным путем. Например: контакт грязных рук с раной или ртом при курении и прочее.">
+                        <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="Gray"/>
+                    </Border>
+                </StackPanel>
             </StackPanel>
 
             <Rectangle Height="1" Fill="Gray" Margin="0,5"/>
