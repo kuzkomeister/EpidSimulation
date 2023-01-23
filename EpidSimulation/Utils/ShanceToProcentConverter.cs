@@ -14,8 +14,12 @@ namespace EpidSimulation.Utils
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double res;
-            double.TryParse(value as string, out res);
-            return res / 100.0;
+            if(double.TryParse(value as string, out res))
+            {
+                return res / 100.0;
+            }
+            
+            return 0;
         }
     }
 }

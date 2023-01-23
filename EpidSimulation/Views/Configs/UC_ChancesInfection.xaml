@@ -4,20 +4,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EpidSimulation.Views.Configs"
+             xmlns:vm="clr-namespace:EpidSimulation.ViewModels.Configs"
+             d:DataContext="{d:DesignInstance Type=vm:VMUC_ChancesInfection}"
+             xmlns:conv="clr-namespace:EpidSimulation.Utils"
              mc:Ignorable="d" Background="White"
              d:DesignHeight="350" d:DesignWidth="550">
     <Grid>
+        <Grid.Resources>
+            <conv:ShanceToProcentConverter x:Key="ChanceToProcent"/>
+        </Grid.Resources>
+        
         <StackPanel Margin="30,10,30,30">
             <TextBlock Text="Базовые шансы на заражение:" FontWeight="DemiBold" FontSize="13"/>
             <StackPanel HorizontalAlignment="Left">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5">
                     <TextBlock Text="Воздушно-капельным путем:"/>
-                    <TextBox Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBox Text="{Binding V_ProbabilityInfAirborne, Converter={StaticResource ChanceToProcent}}" 
+                             HorizontalContentAlignment="Center" Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
                     <TextBlock Text="%"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5">
                     <TextBlock Text="Контактным путем:"/>
-                    <TextBox Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBox Text="{Binding V_ProbabilityInfContact, Converter={StaticResource ChanceToProcent}}" 
+                             HorizontalContentAlignment="Center" Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
                     <TextBlock Text="%"/>
                 </StackPanel>
             </StackPanel>

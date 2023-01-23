@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:uc="clr-namespace:EpidSimulation.Views.Primitive"
+             xmlns:vm="clr-namespace:EpidSimulation.ViewModels.Configs"
+             d:DataContext="{d:DesignInstance Type=vm:VMUC_SocialActs}"
              xmlns:local="clr-namespace:EpidSimulation.Views.Configs"
              mc:Ignorable="d" Background="White" 
              d:DesignHeight="350" d:DesignWidth="550">
@@ -24,31 +26,31 @@
                 </StackPanel.Resources>
                 <TextBlock Text="Длина периодов ожидания до повторного выполнения:" FontWeight="DemiBold" FontSize="13"/>
                 <StackPanel Orientation="Horizontal">
-                    <uc:UC_Period Text="Между воздушно-капельным событием"/>
+                    <uc:UC_Period Text="Между воздушно-капельным событием" StartPeriod="{Binding V_TimeAirborne_A, Mode=TwoWay}" EndPeriod="{Binding V_TimeAirborne_B, Mode=TwoWay}"/>
                     <Border Style="{StaticResource NewStyle.Border.Tip}" ToolTip="Под воздушно-капельными событиями подразумеваются любые действия которые могу привести к заражению воздушно-капельным путем. Например: обычная беседа, чихание с рядом стоящими людьми и прочее.">
                         <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="Gray"/>
                     </Border>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <uc:UC_Period Text="Между контактным событием"/>
+                    <uc:UC_Period Text="Между контактным событием" StartPeriod="{Binding V_TimeContact_A, Mode=TwoWay}" EndPeriod="{Binding V_TimeContact_B, Mode=TwoWay}"/>
                     <Border Style="{StaticResource NewStyle.Border.Tip}" ToolTip="Под контактными событиями подразумеваются любые действия которые могут привести к нанесению на поверхность другого человека или на свою болезнь. Например: рукопожатие, передача предмета и прочее. Это не является заражением.">
                         <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="Gray"/>
                     </Border>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <uc:UC_Period Text="Между очищением поверхности"/>
+                    <uc:UC_Period Text="Между очищением поверхности" StartPeriod="{Binding V_TimeWash_A, Mode=TwoWay}" EndPeriod="{Binding V_TimeWash_B, Mode=TwoWay}"/>
                     <Border Style="{StaticResource NewStyle.Border.Tip}" ToolTip="Под очищением поверхности подразумеваются любые действия которые могут очистить поверхность от болезни. Например: мытье рук, дезинфекция и прочее.">
                         <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="Gray"/>
                     </Border>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <uc:UC_Period Text="Между загрязнением поверхности"/>
+                    <uc:UC_Period Text="Между загрязнением поверхности" StartPeriod="{Binding V_TimeInfHand_A, Mode=TwoWay}" EndPeriod="{Binding V_TimeInfHand_B, Mode=TwoWay}"/>
                     <Border Style="{StaticResource NewStyle.Border.Tip}" ToolTip="Под загрязнением поверхности подразумеваются любые действия которые могут нанести на поверхность болезнь. Например: чихание в руки и прочее.">
                         <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="Gray"/>
                     </Border>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <uc:UC_Period Text="Между попытками заразится с поверхности"/>
+                    <uc:UC_Period Text="Между попытками заразится с поверхности" StartPeriod="{Binding V_TimeHandToFaceContact_A, Mode=TwoWay}" EndPeriod="{Binding V_TimeHandToFaceContact_B, Mode=TwoWay}"/>
                     <Border Style="{StaticResource NewStyle.Border.Tip}" ToolTip="Под попыткой заразится с поверхности подразумеваются любые действия которые могут привести к заражению контактным путем. Например: контакт грязных рук с раной или ртом при курении и прочее.">
                         <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="Gray"/>
                     </Border>

@@ -22,11 +22,13 @@
             <Run Text=" от"/>
         </TextBlock>
 
-        <TextBox Text="{Binding ElementName=UCP, Path=StartPeriod, Mode=TwoWay}"/>
+        <TextBox Text="{Binding ElementName=UCP, Path=StartPeriod, Mode=TwoWay}"
+                 HorizontalContentAlignment="Center"/>
 
         <TextBlock Text="до"/>
 
-        <TextBox Text="{Binding ElementName=UCP, Path=EndPeriod, Mode=TwoWay}"/>
+        <TextBox Text="{Binding ElementName=UCP, Path=EndPeriod, Mode=TwoWay}"
+                 HorizontalContentAlignment="Center"/>
 
         <TextBlock Text="итераций"/>
     </StackPanel>

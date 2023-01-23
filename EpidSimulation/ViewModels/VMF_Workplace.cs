@@ -699,11 +699,11 @@ namespace EpidSimulation.ViewModels
         public RelayCommand CmdOpenConfig { get => new RelayCommand(_DoOpenConfig); }
         private void _DoOpenConfig()
         {
-            var formConfig = new F_ConfigEpidProcces();
+            var formConfig = new F_ConfigEpidProcces(Config.Clone() as Config);
             if (formConfig.ShowDialog() ?? false)
             {
                 var vm = formConfig.DataContext as VMF_ConfigEpidProcces;
-
+                Config = vm.Config.Model;
             }
         }
 

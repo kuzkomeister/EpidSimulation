@@ -13,319 +13,319 @@ namespace EpidSimulation.ViewModels
     {
         public VM_Config(Config config)
         {
-            _model = config; 
+            Model = config; 
         }
 
-        private Config _model;
+        public Config Model { private set; get; }
 
         #region [ Свойства VM ]
 
         public string V_Name 
         {
-            get => _model.Name;
+            get => Model.Name;
             set
             {
-                _model.Name = value;
+                Model.Name = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeIncub_A 
         {
-            get => _model.TimeIncub_A;
+            get => Model.TimeIncub_A;
             set
             {
-                _model.TimeIncub_A = value;
+                Model.TimeIncub_A = value;
                 OnPropertyChanged();
             } 
         }
 
         public int V_TimeIncub_B
         {
-            get => _model.TimeIncub_B;
+            get => Model.TimeIncub_B;
             set
             {
-                _model.TimeIncub_B = value;
+                Model.TimeIncub_B = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeProdorm_A 
         {
-            get => _model.TimeProdorm_A;
+            get => Model.TimeProdorm_A;
             set
             {
-                _model.TimeProdorm_A = value;
+                Model.TimeProdorm_A = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeProdorm_B 
         {
-            get => _model.TimeProdorm_B;
+            get => Model.TimeProdorm_B;
             set
             {
-                _model.TimeProdorm_B = value;
+                Model.TimeProdorm_B = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeRecovery_A
         {
-            get => _model.TimeRecovery_A;
+            get => Model.TimeRecovery_A;
             set
             {
-                _model.TimeRecovery_A = value;
+                Model.TimeRecovery_A = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeRecovery_B
         {
-            get => _model.TimeRecovery_B;
+            get => Model.TimeRecovery_B;
             set
             {
-                _model.TimeRecovery_B = value;
+                Model.TimeRecovery_B = value;
                 OnPropertyChanged();
             }
         }
 
         public double V_ProbabilityDie 
         {
-            get => _model.ProbabilityDie;
+            get => Model.ProbabilityDie;
             set
             {
-                _model.ProbabilityDie = value;
+                Model.ProbabilityDie = value;
                 OnPropertyChanged();
             }
         }
 
         public double V_ProbabilityAsymptomatic 
         {
-            get => _model.ProbabilityAsymptomatic;
+            get => Model.ProbabilityAsymptomatic;
             set
             {
-                _model.ProbabilityAsymptomatic = value;
+                Model.ProbabilityAsymptomatic = value;
                 OnPropertyChanged();
             }
         }
 
         public double V_RadiusHuman 
         {
-            get => _model.RadiusHuman;
+            get => Model.RadiusHuman;
             set
             {
-                _model.RadiusHuman = value;
+                Model.RadiusHuman = value;
                 OnPropertyChanged();
             }
         }
 
         public double V_RadiusAirborne 
         {
-            get => _model.RadiusAirborne;
+            get => Model.RadiusAirborne;
             set
             {
-                _model.RadiusAirborne = value;
+                Model.RadiusAirborne = value;
                 OnPropertyChanged();
             }
         }
 
         public double V_RadiusContact 
         {
-            get => _model.RadiusContact;
+            get => Model.RadiusContact;
             set
             {
-                _model.RadiusContact = value;
+                Model.RadiusContact = value;
                 OnPropertyChanged();
             }
         }
 
         public double V_RadiusSocDist 
         {
-            get => _model.RadiusSocDist;
+            get => Model.RadiusSocDist;
             set
             {
-                _model.RadiusSocDist = value;
+                Model.RadiusSocDist = value;
                 OnPropertyChanged();
             }
         }
 
         public double V_ProbabilityInfContact 
         {
-            get => _model.ProbabilityInfContact;
+            get => Model.ProbabilityInfContact;
             set
             {
-                _model.ProbabilityInfContact = value;
+                Model.ProbabilityInfContact = value;
                 OnPropertyChanged();
             }
         }
 
         public double V_ProbabilityInfAirborne 
         {
-            get => _model.ProbabilityInfAirborne;
+            get => Model.ProbabilityInfAirborne;
             set
             {
-                _model.ProbabilityInfAirborne = value;
+                Model.ProbabilityInfAirborne = value;
                 OnPropertyChanged();
             }
         }
 
         public double V_MaskProtectionFor 
         {
-            get => _model.MaskProtectionFor;
+            get => Model.MaskProtectionFor;
             set
             {
-                _model.MaskProtectionFor = value;
+                Model.MaskProtectionFor = value;
                 OnPropertyChanged();
             }
         }
 
         public double V_MaskProtectionFrom 
         {
-            get => _model.MaskProtectionFrom;
+            get => Model.MaskProtectionFrom;
             set
             {
-                _model.MaskProtectionFrom = value;
+                Model.MaskProtectionFrom = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeAirborne_A 
         {
-            get => _model.TimeAirborne_A;
+            get => Model.TimeAirborne_A;
             set 
             { 
-                _model.TimeAirborne_A = value;
+                Model.TimeAirborne_A = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeAirborne_B 
         {
-            get => _model.TimeAirborne_B;
+            get => Model.TimeAirborne_B;
             set
             {
-                _model.TimeAirborne_B = value;
+                Model.TimeAirborne_B = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeHandToFaceContact_A 
         {
-            get => _model.TimeHandToFaceContact_A;
+            get => Model.TimeHandToFaceContact_A;
             set
             {
-                _model.TimeHandToFaceContact_A = value;
+                Model.TimeHandToFaceContact_A = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeHandToFaceContact_B 
         {
-            get => _model.TimeHandToFaceContact_B;
+            get => Model.TimeHandToFaceContact_B;
             set
             {
-                _model.TimeHandToFaceContact_B = value;
+                Model.TimeHandToFaceContact_B = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeWash_A 
         {
-            get => _model.TimeWash_A;
+            get => Model.TimeWash_A;
             set
             {
-                _model.TimeWash_A = value;
+                Model.TimeWash_A = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeWash_B 
         {
-            get => _model.TimeWash_B;
+            get => Model.TimeWash_B;
             set
             {
-                _model.TimeWash_B = value;
+                Model.TimeWash_B = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeContact_A 
         {
-            get => _model.TimeContact_A;
+            get => Model.TimeContact_A;
             set
             {
-                _model.TimeContact_A = value;
+                Model.TimeContact_A = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeContact_B 
         {
-            get => _model.TimeContact_B;
+            get => Model.TimeContact_B;
             set
             {
-                _model.TimeContact_B = value;
+                Model.TimeContact_B = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeInfHand_A 
         {
-            get => _model.TimeInfHand_A;
+            get => Model.TimeInfHand_A;
             set
             {
-                _model.TimeInfHand_A = value;
+                Model.TimeInfHand_A = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeInfHand_B 
         {
-            get => _model.TimeInfHand_B;
+            get => Model.TimeInfHand_B;
             set
             {
-                _model.TimeInfHand_B = value;
+                Model.TimeInfHand_B = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeChangeDirect_A 
         {
-            get => _model.TimeChangeDirect_A;
+            get => Model.TimeChangeDirect_A;
             set
             {
-                _model.TimeChangeDirect_A = value;
+                Model.TimeChangeDirect_A = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_TimeChangeDirect_B 
         {
-            get => _model.TimeChangeDirect_B;
+            get => Model.TimeChangeDirect_B;
             set
             {
-                _model.TimeChangeDirect_B = value;
+                Model.TimeChangeDirect_B = value;
                 OnPropertyChanged();
             }
         }
 
         public double V_MaxDist 
         {
-            get => _model.MaxDist;
+            get => Model.MaxDist;
             set
             {
-                _model.MaxDist = value;
+                Model.MaxDist = value;
                 OnPropertyChanged();
             }
         }
 
         public int V_MaxTryes 
         {
-            get => _model.MaxTryes;
+            get => Model.MaxTryes;
             set
             {
-                _model.MaxTryes = value;
+                Model.MaxTryes = value;
                 OnPropertyChanged();
             }
         }

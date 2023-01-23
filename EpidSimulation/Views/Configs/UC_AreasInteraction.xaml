@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:EpidSimulation.ViewModels.Configs"
+             d:DataContext="{d:DesignInstance Type=vm:VMUC_AreasInteraction}"
              xmlns:local="clr-namespace:EpidSimulation.Views.Configs"
              mc:Ignorable="d" Background="White"
              d:DesignHeight="450" d:DesignWidth="600">
@@ -29,41 +31,49 @@
                 </StackPanel.Resources>
 
                 <StackPanel>
-                    <TextBlock Text="Радиус человека"/>
-                    <TextBox Text="" Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
-                    <TextBlock Text="единиц."/>
-                </StackPanel>
-                <StackPanel>
-                    <TextBlock Text="Радиус социальной дистанции"/>
-                    <TextBox Text="" Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
-                    <TextBlock Text="единиц."/>
-                </StackPanel>
-                <StackPanel>
                     <TextBlock Text="Радиус возможного воздушно-капельного события"/>
-                    <TextBox Text="" Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBox Text="{Binding V_RadiusAirborne, Mode=TwoWay}" HorizontalContentAlignment="Center" Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
                     <TextBlock Text="единиц."/>
                 </StackPanel>
                 <StackPanel>
                     <TextBlock Text="Радиус возможного контактного события"/>
-                    <TextBox Text="" Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBox Text="{Binding V_RadiusContact, Mode=TwoWay}" HorizontalContentAlignment="Center" Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
                     <TextBlock Text="единиц."/>
                 </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Радиус социальной дистанции"/>
+                    <TextBox Text="{Binding V_RadiusSocDist, Mode=TwoWay}" HorizontalContentAlignment="Center" Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBlock Text="единиц."/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Радиус человека"/>
+                    <TextBox Text="{Binding V_RadiusHuman, Mode=TwoWay}" HorizontalContentAlignment="Center" Width="75" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBlock Text="единиц."/>
+                </StackPanel>
+                
             </StackPanel>
         </StackPanel>
 
-        <Grid Grid.Row="1">
+        
+        <Grid Grid.Row="1" Margin="15">
             <Grid.Resources>
                 <Style TargetType="{x:Type Ellipse}">
                     <Setter Property="HorizontalAlignment" Value="Center"/>
                     <Setter Property="VerticalAlignment" Value="Center"/>
                 </Style>
             </Grid.Resources>
-
-            <Ellipse Width="150" Height="150" Fill="DeepSkyBlue" Panel.ZIndex="1"/>
-            <Ellipse Width="125" Height="125" Fill="Pink" Panel.ZIndex="2"/>
-            <Ellipse Width="100" Height="100" Fill="Red" Panel.ZIndex="3"/>
-            <Ellipse Width="75" Height="75" Fill="Gray" Panel.ZIndex="10"/>
+            <Viewbox>
+                <Grid>
+                    <Ellipse Width="{Binding RelativeSource={RelativeSource Self}, Path=Height}" Height="{Binding V_RadiusSocDist}" Fill="DeepSkyBlue" Panel.ZIndex="{Binding V_ZIndexSocDist}"/>
+                    <Ellipse Width="{Binding RelativeSource={RelativeSource Self}, Path=Height}" Height="{Binding V_RadiusContact}" Fill="Pink" Panel.ZIndex="{Binding V_ZIndexContact}"/>
+                    <Ellipse Width="{Binding RelativeSource={RelativeSource Self}, Path=Height}" Height="{Binding V_RadiusAirborne}" Fill="Red" Panel.ZIndex="{Binding V_ZIndexAirBorne}"/>
+                    <Ellipse Width="{Binding RelativeSource={RelativeSource Self}, Path=Height}" Height="{Binding V_RadiusHuman}" Fill="Gray" Panel.ZIndex="10"/>
+                </Grid>
+            </Viewbox>
+         
         </Grid>
+       
+       
         
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
             <StackPanel.Resources>

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+using EpidSimulation.Models;
 using EpidSimulation.ViewModels;
 
 namespace EpidSimulation.Views
@@ -21,10 +22,10 @@ namespace EpidSimulation.Views
     /// </summary>
     public partial class F_ConfigEpidProcces : Window
     {
-        public F_ConfigEpidProcces()
+        public F_ConfigEpidProcces(Config model)
         {
             InitializeComponent();
-            DataContext = new VMF_ConfigEpidProcces();
+            DataContext = new VMF_ConfigEpidProcces(model);
         }
     }
 }

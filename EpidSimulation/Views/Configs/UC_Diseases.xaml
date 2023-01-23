@@ -7,9 +7,13 @@
              d:DataContext="{d:DesignInstance Type=vm:VMUC_Diseases}"
              xmlns:local="clr-namespace:EpidSimulation.Views.Configs"
              xmlns:uc="clr-namespace:EpidSimulation.Views.Primitive"
+             xmlns:conv="clr-namespace:EpidSimulation.Utils"
              mc:Ignorable="d" Background="White"
              d:DesignHeight="350" d:DesignWidth="550">
     <Grid>
+        <Grid.Resources>
+            <conv:ShanceToProcentConverter x:Key="ChanceToProcent"/>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -27,16 +31,18 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,3">
                     <TextBlock Text="Шанс на летальный исход:"/>
-                    <TextBox Text="" MinWidth="100" Margin="47,0,0,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBox Text="{Binding V_ProbabilityDie, Converter={StaticResource ChanceToProcent}}" 
+                             HorizontalContentAlignment="Center" MinWidth="100" Margin="47,0,0,0" Style="{StaticResource NewStyle.TextBox}"/>
                     <TextBlock Text="%" Margin="5,0,0,0"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,3">
                     <TextBlock Text="Шанс на бессимптомное течение:"/>
-                    <TextBox Text="" MinWidth="100" Margin="5,0,0,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBox Text="{Binding V_ProbabilityAsymptomatic, Converter={StaticResource ChanceToProcent}}" 
+                             HorizontalContentAlignment="Center" MinWidth="100" Margin="5,0,0,0" Style="{StaticResource NewStyle.TextBox}"/>
                     <TextBlock Text="%" Margin="5,0,0,0"/>
                 </StackPanel>
-                <CheckBox Content="Возможность передачи воздушно-капельным путем" Margin="0,4"/>
-                <CheckBox Content="Возможность передачи контактным путем" Margin="0,3"/>
+                <CheckBox Content="Возможность передачи воздушно-капельным путем" Margin="0,4" IsEnabled="False"/>
+                <CheckBox Content="Возможность передачи контактным путем" Margin="0,3" IsEnabled="False"/>
             </StackPanel>
         </StackPanel>
 
@@ -57,9 +63,9 @@
             <StackPanel HorizontalAlignment="Left">
                 
                 
-                <uc:UC_Period Text="Инкубационный период"/>
-                <uc:UC_Period Text="Продормальный период"/>
-                <uc:UC_Period Text="Клинический период"/>
+                <uc:UC_Period Text="Инкубационный период" StartPeriod="{Binding V_TimeIncub_A, Mode=TwoWay}" EndPeriod="{Binding V_TimeIncub_B, Mode=TwoWay}"/>
+                <uc:UC_Period Text="Продормальный период" StartPeriod="{Binding V_TimeProdorm_A, Mode=TwoWay}" EndPeriod="{Binding V_TimeProdorm_B, Mode=TwoWay}"/>
+                <uc:UC_Period Text="Клинический период" StartPeriod="{Binding V_TimeRecovery_A, Mode=TwoWay}" EndPeriod="{Binding V_TimeRecovery_B, Mode=TwoWay}"/>
             </StackPanel>
             
         

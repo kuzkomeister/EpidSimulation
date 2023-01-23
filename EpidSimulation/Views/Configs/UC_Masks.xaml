@@ -4,9 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EpidSimulation.Views.Configs"
+             xmlns:vm="clr-namespace:EpidSimulation.ViewModels.Configs"
+             d:DataContext="{d:DesignInstance Type=vm:VMUC_Masks}"
+             xmlns:conv="clr-namespace:EpidSimulation.Utils"
              mc:Ignorable="d" Background="White"
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Margin="30,10,30,30">
+        <StackPanel.Resources>
+            <conv:ShanceToProcentConverter x:Key="ChanceToProcent"/>
+        </StackPanel.Resources>
         <TextBlock Text="Характеристики маски:" FontWeight="DemiBold" FontSize="13"/>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="0,5,0,0">
             <StackPanel.Resources>
@@ -19,13 +25,13 @@
 
             <StackPanel>
                 <TextBlock Text="Эффективность защиты маски от заражения:"/>
-                <TextBox Text="" Width="100" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                <TextBox Text="{Binding V_MaskProtectionFrom, Converter={StaticResource ChanceToProcent}}" HorizontalContentAlignment="Center" Width="100" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
                 <TextBlock Text="%"/>
             </StackPanel>
             
             <StackPanel>
                 <TextBlock Text="Эффективность защиты маски от передачи болезни:"/>
-                <TextBox Text="" Width="100" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
+                <TextBox Text="{Binding V_MaskProtectionFor, Converter={StaticResource ChanceToProcent}}" HorizontalContentAlignment="Center" Width="100" Margin="5,0" Style="{StaticResource NewStyle.TextBox}"/>
                 <TextBlock Text="%"/>
             </StackPanel>
             
@@ -59,28 +65,28 @@
             <TextBlock Grid.Row="1" Grid.Column="1" Text="→" Margin="5,0"/>
             <TextBlock Grid.Row="1" Grid.Column="2" Text="Без маски"/>
             <TextBlock Grid.Row="1" Grid.Column="3" Text="=" Margin="5,0"/>
-            <TextBlock Grid.Row="1" Grid.Column="4" Text="___" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="1" Grid.Column="4" Text="{Binding V_InfInf, Converter={StaticResource ChanceToProcent}, StringFormat={}{0:F1}}" HorizontalAlignment="Center"/>
             <TextBlock Grid.Row="1" Grid.Column="5" Text="%"/>
 
             <TextBlock Grid.Row="2" Grid.Column="0" Text="Без маски"/>
             <TextBlock Grid.Row="2" Grid.Column="1" Text="→" Margin="5,0"/>
             <TextBlock Grid.Row="2" Grid.Column="2" Text="В маске"/>
             <TextBlock Grid.Row="2" Grid.Column="3" Text="=" Margin="5,0"/>
-            <TextBlock Grid.Row="2" Grid.Column="4" Text="___" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="2" Grid.Column="4" Text="{Binding V_InfMask, Converter={StaticResource ChanceToProcent}, StringFormat={}{0:F1}}" HorizontalAlignment="Center"/>
             <TextBlock Grid.Row="2" Grid.Column="5" Text="%"/>
 
             <TextBlock Grid.Row="3" Grid.Column="0" Text="В маске"/>
             <TextBlock Grid.Row="3" Grid.Column="1" Text="→" Margin="5,0"/>
             <TextBlock Grid.Row="3" Grid.Column="2" Text="Без маски"/>
             <TextBlock Grid.Row="3" Grid.Column="3" Text="=" Margin="5,0"/>
-            <TextBlock Grid.Row="3" Grid.Column="4" Text="___" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="3" Grid.Column="4" Text="{Binding V_MaskInf, Converter={StaticResource ChanceToProcent}, StringFormat={}{0:F1}}" HorizontalAlignment="Center"/>
             <TextBlock Grid.Row="3" Grid.Column="5" Text="%"/>
 
             <TextBlock Grid.Row="4" Grid.Column="0" Text="В маске"/>
             <TextBlock Grid.Row="4" Grid.Column="1" Text="→" Margin="5,0"/>
             <TextBlock Grid.Row="4" Grid.Column="2" Text="В маске"/>
             <TextBlock Grid.Row="4" Grid.Column="3" Text="=" Margin="5,0"/>
-            <TextBlock Grid.Row="4" Grid.Column="4" Text="___" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="4" Grid.Column="4" Text="{Binding V_MaskMask, Converter={StaticResource ChanceToProcent}, StringFormat={}{0:F1}}" HorizontalAlignment="Center"/>
             <TextBlock Grid.Row="4" Grid.Column="5" Text="%"/>
 
         </Grid>
