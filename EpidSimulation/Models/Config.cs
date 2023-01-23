@@ -11,6 +11,8 @@ namespace EpidSimulation.Models
 
         #region [ Поля и свойства ]
 
+        public string Name { get; set; }
+
         // Инкубационный период
         private int _timeIncub_a, _timeIncub_b;       
         public int TimeIncub_A {

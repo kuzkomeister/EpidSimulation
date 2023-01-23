@@ -5,6 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:uc="clr-namespace:EpidSimulation.Views.Configs"
         xmlns:local="clr-namespace:EpidSimulation.Views"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:vm="clr-namespace:EpidSimulation.ViewModels"
+        d:DataContext="{d:DesignInstance Type=vm:VMF_ConfigEpidProcces}"
         mc:Ignorable="d"
         ResizeMode="NoResize"
         Title="Настройки эпидемического процесса" 
@@ -60,7 +63,7 @@
         <Border Grid.Column="1" Margin="5"
                 BorderThickness="1" BorderBrush="Gray">
             <Grid>
-                <uc:UC_Diseases>
+                <uc:UC_Diseases DataContext="{Binding V_Diseases}">
                     <uc:UC_Diseases.Style>
                         <Style TargetType="{x:Type UserControl}">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -73,7 +76,7 @@
                     </uc:UC_Diseases.Style>
                 </uc:UC_Diseases>
                 
-                <uc:UC_SocialActs>
+                <uc:UC_SocialActs DataContext="{Binding V_SocialActs}">
                     <uc:UC_SocialActs.Style>
                         <Style TargetType="{x:Type UserControl}">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -86,7 +89,7 @@
                     </uc:UC_SocialActs.Style>
                 </uc:UC_SocialActs>
 
-                <uc:UC_ChancesInfection>
+                <uc:UC_ChancesInfection DataContext="{Binding V_ChancesInfection}">
                     <uc:UC_ChancesInfection.Style>
                         <Style TargetType="{x:Type UserControl}">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -99,7 +102,7 @@
                     </uc:UC_ChancesInfection.Style>
                 </uc:UC_ChancesInfection>
 
-                <uc:UC_AreasInteraction>
+                <uc:UC_AreasInteraction DataContext="{Binding V_AreasInteraction}">
                     <uc:UC_AreasInteraction.Style>
                         <Style TargetType="{x:Type UserControl}">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -112,7 +115,7 @@
                     </uc:UC_AreasInteraction.Style>
                 </uc:UC_AreasInteraction>
 
-                <uc:UC_Masks>
+                <uc:UC_Masks DataContext="{Binding V_Masks}">
                     <uc:UC_Masks.Style>
                         <Style TargetType="{x:Type UserControl}">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -132,7 +135,7 @@
                 Background="Gray">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <StackPanel.Resources>
-                    <Style TargetType="{x:Type Button}">
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource NewStyle.Button}">
                         <Setter Property="Height" Value="20"/>
                         <Setter Property="Width" Value="100"/>
                         <Setter Property="Margin" Value="10,0"/>
@@ -140,7 +143,9 @@
                 </StackPanel.Resources>
 
                 <Button Content="Отмена" IsCancel="True"/>
-                <Button Content="Сохранить" IsEnabled="False"/>
+                <Button Content="Сохранить" IsEnabled="{Binding V_CanSave}" 
+                        Command="{Binding CmdSave}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
             </StackPanel>
         </Border>
     </Grid>

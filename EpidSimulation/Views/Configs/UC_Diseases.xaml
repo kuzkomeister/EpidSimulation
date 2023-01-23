@@ -23,7 +23,7 @@
             <StackPanel Margin="50,0,0,0" >
                 <StackPanel Orientation="Horizontal" Margin="0,3">
                     <TextBlock Text="Наименование:"/>
-                    <TextBox Text="" MinWidth="200" Margin="5,0,0,0" Style="{StaticResource NewStyle.TextBox}"/>
+                    <TextBox Text="{Binding V_Name}" MinWidth="200" Margin="5,0,0,0" Style="{StaticResource NewStyle.TextBox}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,3">
                     <TextBlock Text="Шанс на летальный исход:"/>

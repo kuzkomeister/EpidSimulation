@@ -700,9 +700,12 @@ namespace EpidSimulation.ViewModels
         private void _DoOpenConfig()
         {
             var formConfig = new F_ConfigEpidProcces();
-            formConfig.ShowDialog();
-        }
+            if (formConfig.ShowDialog() ?? false)
+            {
+                var vm = formConfig.DataContext as VMF_ConfigEpidProcces;
 
+            }
+        }
 
         #endregion
 

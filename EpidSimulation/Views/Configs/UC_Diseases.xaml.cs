@@ -25,7 +25,6 @@ namespace EpidSimulation.Views.Configs
         public UC_Diseases()
         {
             InitializeComponent();
-            DataContext = new VMUC_Diseases();
         }
     }
 }
