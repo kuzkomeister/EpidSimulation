@@ -409,8 +409,7 @@ namespace EpidSimulation.ViewModels
         public RelayCommand CmdOpenAbout { get => new RelayCommand(_DoOpenAbout); }
         private void _DoOpenAbout()
         {
-            F_Welcome wHelp = new F_Welcome();
-            wHelp.ShowDialog();
+            (new F_About()).ShowDialog();
         }
 
         /// <summary>

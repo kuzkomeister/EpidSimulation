@@ -7,19 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resource\excelLogo.png" />
-    <None Remove="Resource\ExcelLogoOff.jpg" />
-    <None Remove="Resource\ExcelLogoOn.png" />
-    <None Remove="Resource\Gigiena.jpg" />
-    <None Remove="Resource\Mask.png" />
-    <None Remove="Resource\meeting.jpg" />
-    <None Remove="Resource\pause.png" />
-    <None Remove="Resource\play.png" />
-    <None Remove="Resource\Sneeze.png" />
-    <None Remove="Resource\SocDistHidden.jpg" />
-    <None Remove="Resource\SocDistVisible.jpg" />
-    <None Remove="Resource\virus.png" />
-    <None Remove="Resource\Vopros.jpg" />
+    <None Remove="Resources\logo.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,13 +30,7 @@
     <Resource Include="Resources\ExcelLogoOn.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resource\Gigiena.jpg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resource\Mask.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resource\meeting.jpg">
+    <Resource Include="Resources\logo.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\pause.png">
@@ -57,19 +39,10 @@
     <Resource Include="Resources\play.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resource\Sneeze.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Resources\SocDistHidden.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\SocDistVisible.jpg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resource\virus.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resource\Vopros.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

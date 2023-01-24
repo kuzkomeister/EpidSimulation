@@ -24,10 +24,10 @@
     <Compile Update="Views\Configs\UC_SocialActs.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\F_ConfigEpidProcces.xaml.cs">
+    <Compile Update="Views\F_About.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\F_Welcome.xaml.cs">
+    <Compile Update="Views\F_ConfigEpidProcces.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Primitive\UC_Period.xaml.cs">
@@ -50,10 +50,10 @@
     <Page Update="Views\Configs\UC_SocialActs.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\F_ConfigEpidProcces.xaml">
+    <Page Update="Views\F_About.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\F_Welcome.xaml">
+    <Page Update="Views\F_ConfigEpidProcces.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\F_Workplace.xaml">

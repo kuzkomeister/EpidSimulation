@@ -10,8 +10,7 @@
         Height="780" Width="1320" 
         ResizeMode="CanResize" 
         WindowStartupLocation="CenterScreen" 
-        WindowState="Maximized" 
-        Icon="/Resource/virus.png">
+        WindowState="Maximized" >
    
     <Grid>
         <Grid.RowDefinitions>
