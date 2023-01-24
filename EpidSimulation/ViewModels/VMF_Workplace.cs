@@ -429,17 +429,6 @@ namespace EpidSimulation.ViewModels
             }
         }
 
-        public ICommand bCreateConfig_Click => new RelayCommand(_DoCreateConfig_Click, _AlwaysTrue);
-        private void _DoCreateConfig_Click()
-        {
-            if (!_statusExcel)
-            {
-                F_ConfigDisease wConfig = new F_ConfigDisease(this);
-                wConfig.ShowDialog();
-            }
-        }
-
-
 
         public ICommand bCreateHelp_Click => new RelayCommand(_DoCreateHelp_Click, _AlwaysTrue);
         private void _DoCreateHelp_Click()
