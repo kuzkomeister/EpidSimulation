@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
+using EpidSimulation.ViewModels;
 
 namespace EpidSimulation.Views
 {
@@ -11,6 +12,7 @@ namespace EpidSimulation.Views
         public F_Workplace()
         {
             InitializeComponent();
+            DataContext = new VMF_Workplace();
         }
 
         private void IntPreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -18,11 +20,6 @@ namespace EpidSimulation.Views
             e.Handled = !(Char.IsDigit(e.Text, 0));
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            F_Welcome wHelp = new F_Welcome();
-            wHelp.ShowDialog();
-        }
     }
 
 }

@@ -3,31 +3,51 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:EpidSimulation.ViewModels"
+        xmlns:vm="clr-namespace:EpidSimulation.ViewModels"
+        d:DataContext="{d:DesignInstance Type=vm:VMF_Workplace}"
         mc:Ignorable="d"
-        Title="Моделирование эпидемии" Height="780" Width="1320" ResizeMode="CanResize" WindowStartupLocation="CenterScreen" WindowState="Maximized" Icon="/Resource/virus.png" Loaded="Window_Loaded">
-    <Window.Resources>
-        <local:VMF_Workplace x:Key="VMF_Workplace"/>
-    </Window.Resources>
-
-    <Grid DataContext="{StaticResource VMF_Workplace}">
+        Title="Моделирование эпидемии" 
+        Height="780" Width="1320" 
+        ResizeMode="CanResize" 
+        WindowStartupLocation="CenterScreen" 
+        WindowState="Maximized" 
+        Icon="/Resource/virus.png">
+   
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="0.5*"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+
+        <Menu Grid.ColumnSpan="2" MaxHeight="20">
+            <MenuItem>
+                <MenuItem.Header>
+                    <CheckBox Style="{StaticResource NewStyle.CheckBox.SimSwitcher}" IsChecked="{Binding V_SimStatus, Mode=TwoWay}"/>
+                </MenuItem.Header>
+            </MenuItem>
+            <MenuItem>
+                <MenuItem.Header>
+                    <CheckBox Style="{StaticResource NewStyle.CheckBox.SocSwitcher}" IsChecked="{Binding V_SocVisStatus, Mode=TwoWay}"/>
+                </MenuItem.Header>
+            </MenuItem>
+            <MenuItem>
+                <MenuItem.Header>
+                    <CheckBox Style="{StaticResource NewStyle.CheckBox.ExcelSwitcher}" IsChecked="{Binding V_ExcelStatus, Mode=TwoWay}"/>
+                </MenuItem.Header>
+            </MenuItem>
+            <MenuItem Header="Параметры модели" Command="{Binding CmdOpenConfig}"/>
+            <MenuItem Header="О программе" Command="{Binding CmdOpenAbout}"/>
+        </Menu>
 
         <Canvas Grid.Column="0" Grid.Row="1">
             <ContentPresenter Content="{Binding CanvasMap}"/>
         </Canvas>
-        
-        <TabControl Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
-            <TabControl.InputBindings>
-                <KeyBinding Key="Space" Command="{Binding bStartStopSimulation_Click}"/>
-            </TabControl.InputBindings>
+
+        <TabControl Grid.Column="1" Grid.Row="1">
             <TabItem Header="Статистика" DataContext="{Binding CurSimulation}">
                 <TabItem.Content>
                     <StackPanel Orientation="Vertical">
@@ -218,12 +238,12 @@
                         <TextBox Text="{Binding AmountVzdAll}" PreviewTextInput="IntPreviewTextInput"/>
                     </StackPanel>
 
-                    <CheckBox Content="Коллизия" IsChecked="{Binding StatusCollision}" Margin="20,10,0,0"/>
+                    <CheckBox Content="Коллизия" IsChecked="{Binding V_CollStatus}" Margin="20,10,0,0"/>
                     <TextBlock Text="*Рекомендуется переключать режим коллизии только перед созданием нового моделирования" TextWrapping="Wrap"/>
 
                     <StackPanel HorizontalAlignment="Center">
-                        <Button Command="{Binding bClearFields_Click}" Content="Обнулить все" Width="100" Height="25" Margin="25"/>
-                        <Button Command="{Binding bCreateSimulation_Click}" Content="Создать" Width="100" Height="25" Margin="20"/>
+                        <Button Command="{Binding CmdClearInputData}" Content="Обнулить все" Width="100" Height="25" Margin="25"/>
+                        <Button Command="{Binding CmdSendInputDataToSimulation}" Content="Создать" Width="100" Height="25" Margin="20"/>
                     </StackPanel>
 
                     
@@ -232,25 +252,5 @@
             </TabItem>
         </TabControl>
 
-        <ToolBar Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Background="White">
-            <Button Command="{Binding bStartStopSimulation_Click}">
-                <Image Source="{Binding BIStartStopSim}"/>
-            </Button>
-            <Separator Background="Black"/>
-            <Image Source="{Binding BISocDist}"/>
-            <Button Content="Отображение области социальной дистанции" Command="{Binding bOnOffDebug_Click}"/>
-            <Separator Background="Black"/>
-            <Image Source="/Resource/virus.png"/>
-            <Button Content="Параметры модели" Command="{Binding CmdOpenConfig}"/>
-            <Separator Background="Black"/>
-            <Image Source="{Binding BIExcel}"/>
-            <Button Content="Вывод в Excel" Command="{Binding bCreateExcel_Click}"/>
-            <Separator Background="Black"/>
-            <Image Source="/Resource/Vopros.jpg"/>
-            <Button Content="Справка" Command="{Binding bCreateHelp_Click}"/>
-        </ToolBar>
-
-        
-        
     </Grid>
 </Window>

@@ -61,4 +61,70 @@
         <Setter Property="Opacity" Value="0.625"/>
     </Style>
 
+    <Style x:Key="NewStyle.CheckBox.SimSwitcher" TargetType="{x:Type CheckBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <Image Name="imgCB" Cursor="Hand" 
+                           Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" />
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="imgCB" Property="Source" Value="/Resources/pause.png"/>
+                            <Setter TargetName="imgCB" Property="ToolTip" Value="Остановить"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter TargetName="imgCB" Property="Source" Value="/Resources/play.png"/>
+                            <Setter TargetName="imgCB" Property="ToolTip" Value="Запустить"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NewStyle.CheckBox.SocSwitcher" TargetType="{x:Type CheckBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <Image Name="imgCB" Cursor="Hand" 
+                           Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" />
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="imgCB" Property="Source" Value="/Resources/SocDistVisible.jpg"/>
+                            <Setter TargetName="imgCB" Property="ToolTip" Value="Выключить"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter TargetName="imgCB" Property="Source" Value="/Resources/SocDistHidden.jpg"/>
+                            <Setter TargetName="imgCB" Property="ToolTip" Value="Включить"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NewStyle.CheckBox.ExcelSwitcher" TargetType="{x:Type CheckBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <Image Name="imgCB" Cursor="Hand" 
+                           Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" />
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="imgCB" Property="Source" Value="/Resources/ExcelLogoOn.png"/>
+                            <Setter TargetName="imgCB" Property="ToolTip" Value="Выключить"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter TargetName="imgCB" Property="Source" Value="/Resources/ExcelLogoOff.jpg"/>
+                            <Setter TargetName="imgCB" Property="ToolTip" Value="Включить"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

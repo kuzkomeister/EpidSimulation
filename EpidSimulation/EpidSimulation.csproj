@@ -36,10 +36,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resource\ExcelLogoOff.jpg">
+    <Resource Include="Resources\ExcelLogoOff.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resource\ExcelLogoOn.png">
+    <Resource Include="Resources\ExcelLogoOn.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\Gigiena.jpg">
@@ -51,19 +51,19 @@
     <Resource Include="Resource\meeting.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resource\pause.png">
+    <Resource Include="Resources\pause.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resource\play.png">
+    <Resource Include="Resources\play.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\Sneeze.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resource\SocDistHidden.jpg">
+    <Resource Include="Resources\SocDistHidden.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resource\SocDistVisible.jpg">
+    <Resource Include="Resources\SocDistVisible.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\virus.png">

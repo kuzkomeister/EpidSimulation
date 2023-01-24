@@ -46,11 +46,7 @@ namespace EpidSimulation.ViewModels
         private QuadTree _curNode;
         
         private DispatcherTimer _timer;
-        private bool _statusTimer = false;
 
-        private bool _statusDebug = false;
-
-        private bool _statusExcel = false;
         private int _curLine = 2;
         private Excel.Application _excelApp;
 
@@ -63,84 +59,8 @@ namespace EpidSimulation.ViewModels
         public double WindowWidth { set; get; }
         public double WindowHeight { set; get; }
 
-        #region BitMapImages
-
-        private BitmapImage _biSocDistHidden = new BitmapImage();
-        private BitmapImage _biSocDistVisible = new BitmapImage();
-
-        private BitmapImage _biSocDist;
-        public BitmapImage BISocDist 
-        {
-            set
-            {
-                _biSocDist = value;
-                OnPropertyChanged();
-            } 
-            get => _biSocDist; 
-        }
-
-        private BitmapImage _biStart = new BitmapImage();
-        private BitmapImage _biStop = new BitmapImage();
-
-        private BitmapImage _biStartStopSim;
-        public BitmapImage BIStartStopSim
-        {
-            set
-            {
-                _biStartStopSim = value;
-                OnPropertyChanged();
-            }
-            get => _biStartStopSim;
-        }
-
-        private BitmapImage _biExcelOn = new BitmapImage();
-        private BitmapImage _biExcelOff = new BitmapImage();
-
-        private BitmapImage _biExcel;
-        public BitmapImage BIExcel
-        {
-            set
-            {
-                _biExcel = value;
-                OnPropertyChanged();
-            }
-            get => _biExcel;
-        }
-        #endregion
-
         public VMF_Workplace()
         {
-            #region InitBitMapImages
-
-            //_biExcelOn.BeginInit();
-            //_biExcelOn.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/ExcelLogoOn.png");
-            //_biExcelOn.EndInit();
-
-            //_biExcelOff.BeginInit();
-            //_biExcelOff.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/ExcelLogoOff.jpg");
-            //_biExcelOff.EndInit();
-
-            //_biSocDistVisible.BeginInit();
-            //_biSocDistVisible.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/SocDistVisible.jpg");
-            //_biSocDistVisible.EndInit();
-
-            //_biSocDistHidden.BeginInit();
-            //_biSocDistHidden.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/SocDistHidden.jpg");
-            //_biSocDistHidden.EndInit();
-
-            //_biStart.BeginInit();
-            //_biStart.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/play.png");
-            //_biStart.EndInit();
-
-            //_biStop.BeginInit();
-            //_biStop.UriSource = new Uri("C:/Users/User/Desktop/Diplom/Application/EpidSimulation/EpidSimulation/Resource/pause.png");
-            //_biStop.EndInit();
-            #endregion
-
-            BISocDist = _biSocDistVisible;
-            BIStartStopSim = _biStart;
-            BIExcel = _biExcelOn;
-
             Config = new Config();
             CurSimulation = new Simulation();  
             CurSimulation.SetNewSession(
@@ -158,7 +78,7 @@ namespace EpidSimulation.ViewModels
             _timer = new DispatcherTimer();
             _timer.Tick += new EventHandler(TimerTick);
             _timer.Interval = new TimeSpan(10000);
-            _statusTimer = false;
+            V_SimStatus = false;
 
             _regionBackground = new Rectangle
             {
@@ -294,11 +214,11 @@ namespace EpidSimulation.ViewModels
 
                 if (vis)
                 {
-                    figure.SetVisible(0, _statusDebug);
+                    figure.SetVisible(0, V_SocVisStatus);
                 }
                 else
                 {
-                    figure.SetVisible(1, _statusDebug);
+                    figure.SetVisible(1, V_SocVisStatus);
                 }
             }
         }
@@ -357,136 +277,147 @@ namespace EpidSimulation.ViewModels
 
         #endregion
 
-        // Итерация основного таймера 
-        private void TimerTick(object sender, EventArgs e)
-        {
-            CurSimulation.Iterate();
-            if (CurSimulation.StatusChanges)
-                WriteLineExcel();
-            if (_statusExcel && CurSimulation.IterFinal != 0)
-            {
-                _timer.Stop();
-                _statusTimer = false;
-                BIStartStopSim = _biStart;
-                _curLine--;
-                CreateDiagramm("A1", "H" + _curLine.ToString(), "Диаграмма эпид процесса", "График количества заболевших", 1);
-            }
-            ClearDeads();
-        }
+        #endregion
 
-        private bool _statusCollision = false;
-        public bool StatusCollision
+        #region [ Свойства VM ]
+
+        /// <summary>
+        /// Статус работы симуляции
+        /// </summary>
+        public bool V_SimStatus 
         {
+            get => _timer.IsEnabled;
             set
             {
-                _statusCollision = value;
+                if (_timer.IsEnabled)
+                {
+                    _timer.Stop();
+                }
+                else
+                {
+                    _timer.Start();
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Статус режима коллизии
+        /// </summary>
+        public bool V_CollStatus 
+        {
+            get => _TEMP_CollStatus;
+            set
+            {
+                _TEMP_CollStatus = value;
                 CurSimulation.OnOffCollision(value);
+                OnPropertyChanged();
             }
-            get => _statusCollision;
         }
+        // TODO: убрать хранение в модель
+        private bool _TEMP_CollStatus = false;
 
-        // Включить/Выключить симуляцию
-        public ICommand bStartStopSimulation_Click => new RelayCommand(_DoStartStopSimulation_Click, _AlwaysTrue);
-        private void _DoStartStopSimulation_Click()
+        /// <summary>
+        /// Статус видимости социальной дистанции
+        /// </summary>
+        public bool V_SocVisStatus 
         {
-            if (_statusTimer)
+            get => _TEMP_SocVisStatus;
+            set
             {
-                _timer.Stop();
-                _statusTimer = false;
-                BIStartStopSim = _biStart;
-            }
-            else
-            {
-                _timer.Start();
-                _statusTimer = true;
-                BIStartStopSim = _biStop;
+                _TEMP_SocVisStatus = value;
+                if (!value)
+                {
+                    foreach (VM_Human figure in _figures)
+                    {
+                        if (figure.human.SocDist && figure.CondCircle.Visibility == 0)
+                            figure.SocDistCircle.Visibility = Visibility.Visible;
+                    }
+                }
+                else
+                {
+                    foreach (VM_Human figure in _figures)
+                    {
+                        if (figure.SocDistCircle != null)
+                            figure.SocDistCircle.Visibility = Visibility.Hidden;
+                    }
+                }
+                OnPropertyChanged();
             }
         }
+        // TODO: убрать хранение в модель
+        private bool _TEMP_SocVisStatus = false;
 
-        // Включить/Выключить отображение соц дистанции
-        public ICommand bOnOffDebug_Click => new RelayCommand(_DoOnOffDebug_Click, _AlwaysTrue);
-        private void _DoOnOffDebug_Click()
+        /// <summary>
+        /// Статус режима вывода результатов в Excel
+        /// </summary>
+        public bool V_ExcelStatus 
         {
-            if (!_statusDebug)
+            get => _TEMP_ExcelStatus;
+            set
             {
-                foreach (VM_Human figure in _figures)
+                if (!_TEMP_ExcelStatus)
                 {
-                    if (figure.human.SocDist && figure.CondCircle.Visibility == 0)
-                        figure.SocDistCircle.Visibility = Visibility.Visible;
+                    try
+                    {
+                        _excelApp = new Excel.Application { Visible = true };
+                        CreateWorkbook();
+                        _TEMP_ExcelStatus = true;
+                        _curLine = 2;
+                        WriteLineExcel();
+                        WriteConfigExcel();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
                 }
-                BISocDist = _biSocDistHidden;
-                _statusDebug = true;
+                else
+                {
+                    _curLine--;
+                    CreateDiagramm("A1", "H" + _curLine.ToString(), "Диаграмма эпид процесса", "График количества заболевших", 1);
+                    _excelApp.Quit();
+                    _TEMP_ExcelStatus = false;
+                }
+                OnPropertyChanged();
             }
-            else
+        }
+        // TODO: убрать хранение в модель
+        private bool _TEMP_ExcelStatus = false;
+
+        #endregion
+
+        #region [ Команды ]
+
+        /// <summary>
+        /// Открытие окна настроек модели
+        /// </summary>
+        public RelayCommand CmdOpenConfig { get => new RelayCommand(_DoOpenConfig); }
+        private void _DoOpenConfig()
+        {
+            var formConfig = new F_ConfigEpidProcces(Config.Clone() as Config);
+            if (formConfig.ShowDialog() ?? false)
             {
-                foreach (VM_Human figure in _figures)
-                {
-                    if (figure.SocDistCircle != null)
-                        figure.SocDistCircle.Visibility = Visibility.Hidden;
-                }
-                BISocDist = _biSocDistVisible;
-                _statusDebug = false;
+                var vm = formConfig.DataContext as VMF_ConfigEpidProcces;
+                Config = vm.Config.Model;
             }
         }
 
-
-        public ICommand bCreateHelp_Click => new RelayCommand(_DoCreateHelp_Click, _AlwaysTrue);
-        private void _DoCreateHelp_Click()
+        /// <summary>
+        /// Открытие окна о программе
+        /// </summary>
+        public RelayCommand CmdOpenAbout { get => new RelayCommand(_DoOpenAbout); }
+        private void _DoOpenAbout()
         {
             F_Welcome wHelp = new F_Welcome();
             wHelp.ShowDialog();
         }
 
-        public ICommand bCreateSimulation_Click => new RelayCommand(_DoCreateSimulation_Click, _AlwaysTrue);
-        private void _DoCreateSimulation_Click()
-        {
-            CurSimulation.SetNewSession(
-                        SizeWidth, SizeHeight,
-                        AmountZdNothing, AmountZdMask, AmountZdSocDist, AmountZdAll,
-                        AmountIncNothing, AmountIncMask, AmountIncSocDist, AmountIncAll,
-                        AmountProdNothing, AmountProdMask, AmountProdSocDist, AmountProdAll,
-                        AmountClinNothing, AmountClinMask, AmountClinSocDist, AmountClinAll,
-                        AmountVzdNothing, AmountVzdMask, AmountVzdSocDist, AmountVzdAll,
-                        AmountAsymptNothing, AmountAsymptMask, AmountAsymptSocDist, AmountAsymptAll,
-                        StatusCollision);
-            _curNode = CurSimulation.Root;
-            ClearMap();
-            CreateAndAddFigures(CurSimulation.People);
-
-            _regionBackground.Width = CurSimulation.SizeWidth;
-            _regionBackground.Height = CurSimulation.SizeHeight;
-            _lineHMP.Y1 = CurSimulation.SizeHeight / 2;
-            _lineHMP.X2 = CurSimulation.SizeWidth;
-            _lineHMP.Y2 = CurSimulation.SizeHeight / 2;
-
-            _lineVMP.X1 = CurSimulation.SizeWidth / 2;
-            _lineVMP.X2 = CurSimulation.SizeWidth / 2;
-            _lineVMP.Y2 = CurSimulation.SizeHeight;
-
-            WindowHeight = 750;
-            WindowWidth = 1920 / 2;
-
-            _scaleNode.ScaleX = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
-            _scaleNode.ScaleY = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
-
-            _timer.Stop();
-            _statusTimer = false;
-            BIStartStopSim = _biStart;
-            _statusDebug = false;
-            BISocDist = _biSocDistVisible;
-            CurSimulation.OnOffCollision(StatusCollision);
-
-            if (_statusExcel && _excelApp.Visible)
-            {
-                CreateWorkbook();
-                _curLine = 2;
-                WriteLineExcel();
-                WriteConfigExcel();
-            }
-        }
-
-        public ICommand bClearFields_Click => new RelayCommand(_DoClearFields_Click, _AlwaysTrue);
-        private void _DoClearFields_Click()
+        /// <summary>
+        /// Очистить вводные данные
+        /// </summary>
+        public RelayCommand CmdClearInputData { get => new RelayCommand(_DoClearInputData); }
+        private void _DoClearInputData()
         {
             SizeWidth = 10; SizeHeight = 10;
             AmountZdNothing = 0; AmountZdMask = 0; AmountZdSocDist = 0; AmountZdAll = 0;
@@ -510,44 +441,69 @@ namespace EpidSimulation.ViewModels
             OnPropertyChanged(nameof(AmountAsymptSocDist)); OnPropertyChanged(nameof(AmountAsymptAll));
         }
 
-        public ICommand bCreateExcel_Click => new RelayCommand(_DoCreateExcel_Click, _AlwaysTrue);
-        private void _DoCreateExcel_Click()
+        /// <summary>
+        /// Отправить вводные данные в модель симуляции
+        /// </summary>
+        public RelayCommand CmdSendInputDataToSimulation { get; set; }
+        private void _DoSendInputDataToSimulation()
         {
-            if (!_statusExcel)
-            {
-                try
-                {
-                    _excelApp = new Excel.Application { Visible = true };
-                    CreateWorkbook();
-                    _statusExcel = true;
-                    _curLine = 2;
-                    WriteLineExcel();
-                    WriteConfigExcel();
-                    BIExcel = _biExcelOff;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }
-            else
-            {
+            CurSimulation.SetNewSession(
+                        SizeWidth, SizeHeight,
+                        AmountZdNothing, AmountZdMask, AmountZdSocDist, AmountZdAll,
+                        AmountIncNothing, AmountIncMask, AmountIncSocDist, AmountIncAll,
+                        AmountProdNothing, AmountProdMask, AmountProdSocDist, AmountProdAll,
+                        AmountClinNothing, AmountClinMask, AmountClinSocDist, AmountClinAll,
+                        AmountVzdNothing, AmountVzdMask, AmountVzdSocDist, AmountVzdAll,
+                        AmountAsymptNothing, AmountAsymptMask, AmountAsymptSocDist, AmountAsymptAll,
+                        V_CollStatus);
+            _curNode = CurSimulation.Root;
+            ClearMap();
+            CreateAndAddFigures(CurSimulation.People);
 
-                _curLine--;
-                CreateDiagramm("A1", "H" + _curLine.ToString(), "Диаграмма эпид процесса", "График количества заболевших", 1);
-                _excelApp.Quit();
-                _statusExcel = false;
-                BIExcel = _biExcelOn;
+            _regionBackground.Width = CurSimulation.SizeWidth;
+            _regionBackground.Height = CurSimulation.SizeHeight;
+            _lineHMP.Y1 = CurSimulation.SizeHeight / 2;
+            _lineHMP.X2 = CurSimulation.SizeWidth;
+            _lineHMP.Y2 = CurSimulation.SizeHeight / 2;
+
+            _lineVMP.X1 = CurSimulation.SizeWidth / 2;
+            _lineVMP.X2 = CurSimulation.SizeWidth / 2;
+            _lineVMP.Y2 = CurSimulation.SizeHeight;
+
+            WindowHeight = 750;
+            WindowWidth = 1920 / 2;
+
+            _scaleNode.ScaleX = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
+            _scaleNode.ScaleY = Math.Min(WindowWidth / CurSimulation.SizeWidth, WindowHeight / CurSimulation.SizeHeight);
+
+            _timer.Stop();
+            V_SimStatus = false;
+            V_SocVisStatus = false;
+            CurSimulation.OnOffCollision(V_CollStatus);
+
+            if (V_ExcelStatus && _excelApp.Visible)
+            {
+                CreateWorkbook();
+                _curLine = 2;
+                WriteLineExcel();
+                WriteConfigExcel();
             }
         }
 
+        #endregion
+
+        #region [ Служебные методы для Excel ]
+
+        /// <summary>
+        /// Создать журнал в Excel
+        /// </summary>
         private void CreateWorkbook()
         {
             _excelApp.Workbooks.Close();
-            _excelApp.SheetsInNewWorkbook = 1; 
+            _excelApp.SheetsInNewWorkbook = 1;
             Excel.Workbook workbook = _excelApp.Workbooks.Add(Type.Missing);
             workbook.Windows[1].Zoom = 77;
-            workbook.Saved = true; 
+            workbook.Saved = true;
 
             Excel.Sheets excelSheets = _excelApp.Workbooks.get_Item(1).Sheets;
             Excel.Worksheet workSheet = (Excel.Worksheet)excelSheets.get_Item(1);
@@ -587,9 +543,12 @@ namespace EpidSimulation.ViewModels
             cells.Borders.Weight = Excel.XlBorderWeight.xlThin;
         }
 
+        /// <summary>
+        /// Заполнить строку в Excel
+        /// </summary>
         private void WriteLineExcel()
         {
-            if (_statusExcel && _excelApp.Visible)
+            if (V_ExcelStatus && _excelApp.Visible)
             {
                 Excel.Sheets excelSheets = _excelApp.Workbooks.get_Item(1).Sheets;
                 Excel.Worksheet workSheet = (Excel.Worksheet)excelSheets.get_Item(1);
@@ -617,14 +576,17 @@ namespace EpidSimulation.ViewModels
             }
         }
 
+        /// <summary>
+        /// Вывести настройки модели в Excel
+        /// </summary>
         private void WriteConfigExcel()
         {
-            if (_statusExcel && _excelApp.Visible)
+            if (V_ExcelStatus && _excelApp.Visible)
             {
                 Excel.Sheets excelSheets = _excelApp.Workbooks.get_Item(1).Sheets;
                 Excel.Worksheet workSheet = (Excel.Worksheet)excelSheets.get_Item(1);
 
-                Excel.Range cells = (Excel.Range)workSheet.get_Range("K2","S32");
+                Excel.Range cells = (Excel.Range)workSheet.get_Range("K2", "S32");
                 cells.Merge(Type.Missing);
                 cells.Borders.ColorIndex = 1;
                 cells.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
@@ -636,18 +598,18 @@ namespace EpidSimulation.ViewModels
                     "\nПродолжительность инкубационного периоде: от " + Config.TimeIncub_A + " до " + Config.TimeIncub_B + " итерации" +
                     "\nПродолжительность продромального периода: от " + Config.TimeProdorm_A + " до " + Config.TimeProdorm_B + " итерации" +
                     "\nПродолжительность клинического периода: от " + Config.TimeRecovery_A + " до " + Config.TimeRecovery_B + " итерации" +
-                    "\nЛетальность заболевания: " + Config.ProbabilityDie*100 + " %" +
-                    "\nЧастота бессимптомных: " + Config.ProbabilityAsymptomatic*100 + " %" +
+                    "\nЛетальность заболевания: " + Config.ProbabilityDie * 100 + " %" +
+                    "\nЧастота бессимптомных: " + Config.ProbabilityAsymptomatic * 100 + " %" +
                     "\n\nУровень взаимодействия" +
                     "\nРадиус человека: " + Config.RadiusHuman +
                     "\nДальность возможных рукопожатий: " + (Config.RadiusContact - Config.RadiusHuman) +
                     "\nДальность возможных встреч: " + (Config.RadiusAirborne - Config.RadiusHuman) +
                     "\nРадиус социальной дистанции: " + (Config.RadiusSocDist - Config.RadiusHuman) +
                     "\n\nУровень распространения: " +
-                    "\nБазовый шанс заразиться воздушно-капельным путем: " + Config.ProbabilityInfAirborne*100 + " %" +
-                    "\nБазовый шанс заразиться контактным путем: " + Config.ProbabilityInfContact*100 + " %" +
-                    "\nЭффективность защиты маски заразить кого-то: " + Config.MaskProtectionFrom*100 + " %" +
-                    "\nЭффективность защиты маски заразиться от кого-то " + Config.MaskProtectionFor*100 + " %" +
+                    "\nБазовый шанс заразиться воздушно-капельным путем: " + Config.ProbabilityInfAirborne * 100 + " %" +
+                    "\nБазовый шанс заразиться контактным путем: " + Config.ProbabilityInfContact * 100 + " %" +
+                    "\nЭффективность защиты маски заразить кого-то: " + Config.MaskProtectionFrom * 100 + " %" +
+                    "\nЭффективность защиты маски заразиться от кого-то " + Config.MaskProtectionFor * 100 + " %" +
                     "\n\nУровень заболеваемости" +
                     "\nВремя до следующей возможной встречи: от " + Config.TimeAirborne_A + " до " + Config.TimeAirborne_B + " итерации" +
                     "\nВремя до следующего возможного рукопожатия: от " + Config.TimeContact_A + " до " + Config.TimeContact_B + " итерации" +
@@ -658,9 +620,17 @@ namespace EpidSimulation.ViewModels
             }
         }
 
+        /// <summary>
+        /// Создать диаграмму результатов в Excel
+        /// </summary>
+        /// <param name="coord1"></param>
+        /// <param name="coord2"></param>
+        /// <param name="listName"></param>
+        /// <param name="diagrName"></param>
+        /// <param name="numSheet"></param>
         private void CreateDiagramm(string coord1, string coord2, string listName, string diagrName, int numSheet)
         {
-            if (_statusExcel && _excelApp.Visible)
+            if (V_ExcelStatus && _excelApp.Visible)
             {
                 Excel.Sheets excelSheets = _excelApp.Workbooks.get_Item(1).Sheets;
                 Excel.Worksheet workSheet = (Excel.Worksheet)excelSheets.get_Item(numSheet);
@@ -679,27 +649,24 @@ namespace EpidSimulation.ViewModels
 
         #endregion
 
-        #region [ Свойства VM ]
-
-        #endregion
-
-        #region [ Команды ]
-
-        public RelayCommand CmdOpenConfig { get => new RelayCommand(_DoOpenConfig); }
-        private void _DoOpenConfig()
+        /// <summary>
+        /// Итерация симуляции
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TimerTick(object sender, EventArgs e)
         {
-            var formConfig = new F_ConfigEpidProcces(Config.Clone() as Config);
-            if (formConfig.ShowDialog() ?? false)
+            CurSimulation.Iterate();
+            if (CurSimulation.StatusChanges)
+                WriteLineExcel();
+            if (V_ExcelStatus && CurSimulation.IterFinal != 0)
             {
-                var vm = formConfig.DataContext as VMF_ConfigEpidProcces;
-                Config = vm.Config.Model;
+                _timer.Stop();
+                V_SimStatus = false;
+                _curLine--;
+                CreateDiagramm("A1", "H" + _curLine.ToString(), "Диаграмма эпид процесса", "График количества заболевших", 1);
             }
+            ClearDeads();
         }
-
-        #endregion
-
-
-
-
     }
 }
