@@ -21,7 +21,7 @@
 
         <StackPanel Orientation="Horizontal" Margin="30,10" >
             <Border BorderBrush="Gray" BorderThickness="1">
-                <Image Source="pack://application:,,,/EpidSimulation;component/Resource/virus.png" Width="100"/>
+                <Image Source="pack://application:,,,/EpidSimulation;component/Resources/virus.png" Width="100"/>
             </Border>
 
             <StackPanel Margin="50,0,0,0" >

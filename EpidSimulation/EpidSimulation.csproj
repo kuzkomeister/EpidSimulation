@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="Resources\logo.png" />
+    <None Remove="Resources\virus.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +44,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\SocDistVisible.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\virus.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
